@@ -1,0 +1,67 @@
+
+GUI_Grip_DefPoint =
+{
+	sName -> _P(1);
+	vPos -> _P(2);
+	colNormal -> _P(3);
+	colPick -> _P(4);
+	
+	scGrip = Scene( sName );
+	scGripPick = Scene( sName + "_Pick" );
+	EnableScenePick( scGrip, true );
+	EnableSceneDrag( scGrip, 2, false, true );
+	EnableSceneDragInScreenPlane( scGrip, 2, false, true );
+	SetSceneDragFactor( scGrip, 2, false, [ 1, 1, 1 ] );
+	SetSceneDragData( scGrip, 2, false, [vPos(2), vPos(3), vPos(4)] );
+	EnableSceneNotify( scGrip, true, "MouseDrag" );
+	EnableSceneAutoTranslate( scGrip, true );
+	
+	DrawToScene( scGrip );
+		:colNormal;
+		DrawSphere( VecE3( 0,0,0 ), 0.05 );
+	DrawToScene( scGripPick );
+		:colPick;
+		DrawSphere( VecE3( 0,0,0 ), 0.07 );
+	DrawToScene();
+	SetPickScene( scGrip, scGripPick );
+	
+	scGrip
+}
+
+GUI_Grip_GetPoint = 
+{
+	scGrip -> _P(1);
+
+	vPos = VecE3( GetSceneDragData( scGrip, 2, false ) );
+/*	
+	if ( ExecMode & EM_PICK_DRAG )
+	{
+		if ( Type( PickData( ["name"] ) ) != "no value" )
+		{
+			if ( PickData( "name" ) == sName )
+				vPos = VecE3( PickData( ["drag", 3] ) );
+		}
+	}
+*/	
+	vPos
+}
+
+
+/// Test GUI Grip
+if ( ExecMode & EM_CHANGE )
+{
+	scGripPnt = GUI_Grip_DefPoint( "Test", VecE3(0,0,0), Yellow, MRed );
+}
+
+DefVarsE3();
+DrawArrow( id, e1 ) :Red;
+DrawArrow( id, e2 ) :Green;
+DrawArrow( id, e3 ) :Blue;
+
+
+:scGripPnt;
+?vA = GUI_Grip_GetPoint( scGripPnt );
+
+DrawLine( vA, proj( vA, e1^e2 ) ) :Blue;
+DrawLine( vA, proj( vA, e2^e3 ) ) :Red;
+DrawLine( vA, proj( vA, e3^e1 ) ) :Green;

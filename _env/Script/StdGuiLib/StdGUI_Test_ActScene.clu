@@ -1,0 +1,78 @@
+/// Image Scene: Step 7
+
+// Things that should only be done once at the start of the script
+if ( ExecMode & EM_CHANGE )
+{
+	// Include the Image Scene function
+	//# include "StdGUI_ImageScene.clu"
+	//# include "StdGUI_ActScene.clu"
+	//# include "StdGUI_ActEvent_Length.clu"
+
+	///////////////////////////////////////////////////////////
+	// Create a light element to switch lighting off
+	// Light 1 is the standard light, which is by default switched on.
+	liA = Light( "A", 1 /* Light 1 */); 
+	// Disable the light. Note that the light still has to be 
+	// applied with the ':' operator to take effect.
+	EnableLight( liA, false );
+	
+	// Create an ambient light element, to set ambient light to maximum
+	aliA = AmbientLight( "A" );
+	// Set ambient light to white.
+	SetAmbientLight( aliA, White );
+	
+	///////////////////////////////////////////////////////////
+	
+	// Load an example image
+	imgA = ReadImg( "ImgEx1.jpg" );
+	
+	// Size of image
+	lImgSize = Size( imgA );
+	
+	// Create the first image scene
+	StdGUI_ImageScene_Create( lImage, "Test", imgA );
+	
+	// Set zoom range
+	StdGUI_ImageScene_SetZoomRange( lImage, 0.25, 16 );
+
+	// Make the image scene an action scene
+	// It makes the main image scene sensitive to mouse input
+	// and reacts to left mouse button with control pressed
+	StdGUI_ActScene_Create( lActScene, lImage("scene_main"), [[1,true]] );
+	
+	// Add a raw event
+	// Name: "DragLine"
+	// Reacts to events of scene: "Test"
+	// drag type: 2
+	StdGUI_ActScene_AddEvent( lActScene, "DragLine", "Test", "left", true );
+	
+	// Make the raw event a drag-line event
+	StdGUI_ActEvent_Length_Create( lActScene("event_list", "DragLine"), lImage("scene_draw") );
+	
+}
+
+// Apply lights.
+// Switch localized light off
+:liA;
+// Set Ambient light to maximum
+:aliA;
+
+shImage = lImage("shader_std");
+
+// Let user vary the contrast of the image
+dContrast = Slider( "Contrast", -2, 2, 0.01, 0 );
+SetShaderUniformVar( shImage, "fContrast", dContrast );
+
+// Let user vary the brightness of the image
+dBrightness = Slider( "Brightness", 0, 4, 0.01, 1 );
+SetShaderUniformVar( shImage, "fBrightness", dBrightness );
+
+?PickData;
+	
+// React to events
+StdGUI_ActScene_HandleEvent( lActScene );
+
+// Draw the image scene
+:lImage("scene_main");
+
+

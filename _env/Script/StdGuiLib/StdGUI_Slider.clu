@@ -1,0 +1,129 @@
+// Test Adaptive redraw of scene
+
+StdGUI_Slider_Create =
+{
+	scSlider -> _P(1);
+	sName = _P(2);
+	lData -> _P(3);
+	
+	iPixW = lData("width_pixel");
+	lBorder = lData("border");
+	lAlign = lData("align");
+	dValue = lData("value");
+	
+	bUseRefScene = false;
+	if ( Type(lData(["ref_scene"])) != "Empty" )
+	{
+		bUseRefScene = true;
+		scRef = lData("ref_scene");
+		lRefOrig = lData("ref_orig");
+	}
+	
+	lCol -> lData("colors");		
+	colPing = lCol("act");
+
+
+	imgHandle = ::lStdGUIRes("slider", "handle");
+	imgBG = ::lStdGUIRes("slider", "bg");	
+	
+	if ( dValue < 0 ) dValue = 0;
+	else if ( dValue > 1 ) dValue = 1;
+	
+	lS = Size(imgBG);
+	iPixH = (iPixW - 2*lBorder(1)) * lS(2)/lS(1);
+	
+	iWidth = 1;
+	iHeight = 1;
+	lS = Size(imgHandle);
+	iObjW = iWidth / 10;
+	iObjH = 1;
+	iWidth = iWidth + iObjW;
+
+	shPing = ::Shader_Blob_Ping_Image();
+	shDefault = Shader( sName + "_tex_Default" );
+	
+	texHandle = Texture(sName + "_tex_Handle");
+	SetTextureImage( texHandle, imgHandle);
+	SetTextureBlendType( texHandle, "interpolate", "modulate" );
+	
+	texBG = Texture(sName + "_tex_BG");
+	SetTextureImage( texBG, imgBG);
+	SetTextureBlendType( texBG, "interpolate", "interpolate" );
+	
+	shPing("Var", "fPi", Pi );
+	shPing("Var", "colMain", colPing );
+	shPing("Var", "texImg", texHandle );
+	
+	scHandleObj = Scene(sName + "_HandleObj");
+	DrawToScene( scHandleObj );
+		SetTexture(imgHandle);
+		DrawPlane(VecE3(0,0), VecE3(iObjW,0), VecE3(0,iObjH) );
+		SetTexture();
+	DrawToScene();
+	
+	scHandle = Scene( sName );
+	EnableScenePick( scHandle, true );
+	EnableSceneDrag( scHandle, 1, false, true );
+	EnableSceneNotify( scHandle, true, "MouseDrag" );
+	EnableSceneAutoTranslate( scHandle, true );
+	SetSceneDragBasis( scHandle, 1, false, [ VecE3(1,0), VecE3(0,0), VecE3(0,0) ] );
+	EnableSceneDragRange( scHandle, 1, false, true );
+	SetSceneDragRange( scHandle, 1, false, [ [ 0, 1], [0,0], [0,0] ] );
+	SetSceneDragData( scHandle, 1, false, [dValue,0,0] );
+	//EnableSceneDragInProjBasis( scHandle, 1, false, true );
+	EnableSceneDragInScreenPlane( scHandle, 1, false, true );
+	SetSceneAutoDragControl( scHandle, 
+			[ [ 2, false ] /* Scale */, 
+			  [ 2, true  ] /* Rotate1 */, 
+			  [ 1, false ] /* Translate */,
+			  [ 1, true  ] /* Rotate2 */
+			] );
+
+
+		
+	DrawToScene( scHandle );
+		:scHandleObj;
+	DrawToScene();
+	
+	scHandlePick = Scene( sName + "_Pick" );
+	DrawToScene( scHandlePick );
+		:AnimShader(shPing, "fTime", "fTimeStep" );
+		:shPing;
+		:scHandleObj;
+		:shDefault;
+	DrawToScene();
+	
+	SetPickScene( scHandle, scHandlePick );
+
+	scSlider = Scene( sName + "_Slider" );
+	EnableSceneResetFrame( scSlider, true );
+	SetSceneViewport(scSlider, 0, 0, iPixW, iPixH );
+	SetSceneViewportBorder(scSlider, lBorder(1), lBorder(2), 
+									lBorder(1), lBorder(2) );
+	SetSceneViewportAlign( scSlider, lAlign(1), lAlign(2) );
+
+	if ( bUseRefScene )
+	{
+		SetSceneViewportOriginRef( scSlider, scRef, lRefOrig(1), lRefOrig(2) );
+	}
+	else
+	{
+		SetSceneViewportLocal(scSlider, true, false, 0 );
+	}
+	
+	iW2 = iWidth/2;
+	iH2 = iHeight/2;
+	SetSceneOverlay(scSlider, -iW2,iW2, -iH2,iH2, -1,1 );
+	
+	DrawToScene( scSlider );
+		:White + Alpha;
+		:texBG;
+		DrawPlane(VecE3(0,0,-0.1), VecE3(iWidth,0), VecE3(0,iHeight));
+		SetTexture();
+		TranslateFrame(-0.5,0,0.01);
+		:scHandle;
+
+	DrawToScene();
+	
+}
+

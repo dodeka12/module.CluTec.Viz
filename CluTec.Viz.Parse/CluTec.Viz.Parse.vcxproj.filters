@@ -1,0 +1,351 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CLUCodeBase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CLUParse.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cluparsing.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CLUPreParse.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CodeBase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CodeBinaryOperator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CodeBreak.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CodeCreateRefVarList.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CodeCreateVarList.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CodeData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CodeElement.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CodeElementList.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CodeErrorList.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CodeFunction.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CodeIf.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CodeLabel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CodeLoop.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CodeNumber.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CodeOperator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CodeString.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CodeVar.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CodeVarList.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Defines.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Encode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EncodeWithoutDraw.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ExtFunc_DLLMain.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectClass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OCIDSymDef.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OCKeywordBreak.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OCKeywordElse.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OCKeywordIf.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OCKeywordLoop.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OCKeywordThen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OCLabel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OCNumber.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OCObjSepSym.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OCOpCloseCurlyBracket.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OCOpCloseRoundBracket.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OCOpCloseSquareBracket.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OCOpComma.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OCOperator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OCOpOpenCurlyBracket.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OCOpOpenRoundBracket.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OCOpOpenSquareBracket.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OCOpStd.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OCString.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Parse.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ParseBase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ParseMessageList.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ParseTypes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Stack.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SyncSerialComm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="VarList.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CLUCodeBase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CLUCodeBase_Operators.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CLUCodeBase_Present.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CLUCodeBase_String.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CLUCodeBase_VexList.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CLUParse.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CLUPreParse.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CodeBase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CodeBinaryOperator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CodeBreak.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CodeCreateRefVarList.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CodeCreateVarList.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CodeData.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CodeElement.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CodeElementList.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CodeErrorList.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CodeFunction.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CodeIf.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CodeLabel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CodeLoop.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CodeNumber.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CodeOperator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CodeString.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CodeVar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CodeVarList.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Encode.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EncodeWithoutDraw.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectClass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OCKeywordBreak.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OCKeywordElse.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OCKeywordIf.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OCKeywordLoop.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OCKeywordThen.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OCLabel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OCNumber.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OCObjSepSym.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OCOpCloseCurlyBracket.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OCOpCloseRoundBracket.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OCOpCloseSquareBracket.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OCOpComma.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OCOperator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OCOpOpenCurlyBracket.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OCOpOpenRoundBracket.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OCOpOpenSquareBracket.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OCOpStd.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OCString.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Parse.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ParseBase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ParseMessageList.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Stack.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SyncSerialComm.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TempLib.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="VarList.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros">
+    <CtIncDir_CluTecCore>$(SolutionDir)CluTec.Core.$(CtDepVer_CluTecCore)\</CtIncDir_CluTecCore>
+    <CtIncDir_CluVizExt>$(CtDistIncDir)CluViz.Ext.$(CtDepVer_CluVizExt)\</CtIncDir_CluVizExt>
+  </PropertyGroup>
+  <PropertyGroup />
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <PreprocessorDefinitions>NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <BuildMacro Include="CtIncDir_CluTecCore">
+      <Value>$(CtIncDir_CluTecCore)</Value>
+    </BuildMacro>
+    <BuildMacro Include="CtIncDir_CluVizExt">
+      <Value>$(CtIncDir_CluVizExt)</Value>
+    </BuildMacro>
+  </ItemGroup>
+</Project>

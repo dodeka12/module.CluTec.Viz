@@ -1,0 +1,171 @@
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// project:   CluTec.Viz.Draw
+// file:      OGLDirectWrite.h
+//
+// summary:   Declares the ogl direct write class
+//
+//            Copyright (c) 2019 by Christian Perwass.
+//
+//            This file is part of the CluTecLib library.
+//
+//            The CluTecLib library is free software: you can redistribute it and / or modify
+//            it under the terms of the GNU Lesser General Public License as published by
+//            the Free Software Foundation, either version 3 of the License, or
+//            (at your option) any later version.
+//
+//            The CluTecLib library is distributed in the hope that it will be useful,
+//            but WITHOUT ANY WARRANTY; without even the implied warranty of
+//            MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+//            GNU Lesser General Public License for more details.
+//
+//            You should have received a copy of the GNU Lesser General Public License
+//            along with the CluTecLib library.
+//            If not, see <http://www.gnu.org/licenses/>.
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+#pragma once
+#include "OGLBaseElement.h"
+
+#include "DWrite.h"
+#include "GDITextRenderer.h"
+#include "ImageReference.h"
+
+struct SFontParameter
+{
+	CStrMem sFontName;
+	float fFontSize;
+	unsigned char ucFontColor[3];
+
+	float fBaseAlpha;
+
+	DWRITE_FONT_WEIGHT xFontWeight;
+	DWRITE_FONT_STYLE xFontStyle;
+	DWRITE_FONT_STRETCH xFontStretch;
+	DWRITE_TEXT_ALIGNMENT xFontAlignment;
+
+	int iWordWrapBoxWidthPx;
+
+	bool operator!=(const SFontParameter& xParamA);
+	bool operator==(const SFontParameter& xParamA);
+};
+
+class CLUDRAW_API OGLDirectWrite
+{
+public:
+
+	OGLDirectWrite();
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	/// \brief
+	/// 	Initializes the directWrite context and offscreen buffer
+	///
+	/// \return True if it succeeds, false if it fails.
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	bool Init();
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	/// \brief
+	/// 	Draw text
+	///
+	/// \param [in,out]	xImage	The image.
+	/// \param [in,out]	sText 	The text.
+	/// \param	xFontParams   	The font parameters to be used.
+	///
+	/// \return True if it succeeds, false if it fails.
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	bool RenderTextImage(CImageReference& xImage, CStrMem& sText, SFontParameter xFontParams);
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	/// \brief
+	/// 	Renders the text image. The last used font parameters are used for rendering
+	///
+	/// \param [in,out]	xImage	The image.
+	/// \param [in,out]	sText 	The text.
+	///
+	/// \return True if it succeeds, false if it fails.
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	bool RenderTextImage(CImageReference& xImage, CStrMem& sText);
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	/// \brief
+	/// 	Gets the currently used Font parameter
+	///
+	/// \return The font parameter.
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	SFontParameter GetFontParameter();
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	/// \brief
+	/// 	Sets font parameter to be used
+	///
+	/// \param [in,out]	xFontParameter	The font parameter.
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	void SetFontParameter(SFontParameter& xFontParameter);
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	/// \brief
+	/// 	Sets default font parameter
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	void SetDefaultFontParameter();
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	/// \brief
+	/// 	Destroys this instance and cleanup all used memory
+	///
+	/// \return True if it succeeds, false if it fails.
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	bool Destroy();
+
+private:
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	/// \brief
+	/// 	Converts a string to a wchar_t pointer.
+	/// 	New memory will be allocated by this function. You need to delete the pointer after usage.
+	///
+	/// \param [in,out]	sString	The string.
+	///
+	/// \return sString as a wchar_t*.
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	wchar_t* toWChar(const CStrMem& sString);
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	/// \brief
+	/// 	Copies the bitmap to an Cluviz image
+	/// 	This function will apply some postprocessing to the bitmap data before transfering the imagedata to the cluviz image
+	///
+	/// \param	xHDCBitmap	  	The hdc bitmap.
+	/// \param	xHBmp		  	Handle of the h bitmap.
+	/// \param [in,out]	xImage	The image.
+	///
+	/// \return True if it succeeds, false if it fails.
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	bool CopyBitmapToImage(HDC xHDCBitmap, HBITMAP xHBmp, CImageReference& xImage, float fBaseAlpha);
+
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	/// \brief
+	/// 	Applies the Font Parameter
+	///
+	/// \param	xFontParameter	The font parameter.
+	///
+	/// \return True if it succeeds, false if it fails.
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	bool ApplyTextFormat(const SFontParameter& xFontParameter);
+
+	IDWriteBitmapRenderTarget* m_pxBitmapRenderTarget;
+	IDWriteFactory* m_pxDWriteFactory;
+	IDWriteTextFormat* m_pxTextFormat;
+	IDWriteRenderingParams* m_pxRenderingParams;
+	IDWriteGdiInterop* m_pxGDIInterop;
+	IDWriteTextLayout* m_pTextLayout;
+
+	GdiTextRenderer* m_pxGDITextRenderer;
+	HDC m_HDCScreen;
+
+	SFontParameter m_xCurrentFontParameter;
+	SFontParameter m_xPreviousFontParameter;
+
+	int m_iRenderTargetW;
+	int m_iRenderTargetH;
+};

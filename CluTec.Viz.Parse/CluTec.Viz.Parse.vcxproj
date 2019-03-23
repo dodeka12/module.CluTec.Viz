@@ -1,0 +1,324 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RTM|Win32">
+      <Configuration>RTM</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RTM|x64">
+      <Configuration>RTM</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{935151D5-F91A-4B9A-8B3A-B147D6D5B506}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>CluTecVizParse</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RTM|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RTM|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(SolutionDir)_global.2.0\PropSheets\CluTec.Type.Lib.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(SolutionDir)_global.2.0\PropSheets\CluTec.Type.Lib.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(SolutionDir)_global.2.0\PropSheets\CluTec.Type.Lib.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='RTM|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(SolutionDir)_global.2.0\PropSheets\CluTec.Type.Lib.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(SolutionDir)_global.2.0\PropSheets\CluTec.Type.Lib.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='RTM|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(SolutionDir)_global.2.0\PropSheets\CluTec.Type.Lib.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(CtIncDir_CluVizExt)libiconv;$(CtIncDir_CluVizExt);$(CtIncDir_CluTecCore);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(CtIncDir_CluVizExt)libiconv;$(CtIncDir_CluVizExt);$(CtIncDir_CluTecCore);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(CtIncDir_CluVizExt)libiconv;$(CtIncDir_CluVizExt);$(CtIncDir_CluTecCore);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RTM|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(CtIncDir_CluVizExt)libiconv;$(CtIncDir_CluVizExt);$(CtIncDir_CluTecCore);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(CtIncDir_CluVizExt)libiconv;$(CtIncDir_CluVizExt);$(CtIncDir_CluTecCore);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RTM|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(CtIncDir_CluVizExt)libiconv;$(CtIncDir_CluVizExt);$(CtIncDir_CluTecCore);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CLUCodeBase.h" />
+    <ClInclude Include="CLUParse.h" />
+    <ClInclude Include="cluparsing.h" />
+    <ClInclude Include="CLUPreParse.h" />
+    <ClInclude Include="CodeBase.h" />
+    <ClInclude Include="CodeBinaryOperator.h" />
+    <ClInclude Include="CodeBreak.h" />
+    <ClInclude Include="CodeCreateRefVarList.h" />
+    <ClInclude Include="CodeCreateVarList.h" />
+    <ClInclude Include="CodeData.h" />
+    <ClInclude Include="CodeElement.h" />
+    <ClInclude Include="CodeElementList.h" />
+    <ClInclude Include="CodeErrorList.h" />
+    <ClInclude Include="CodeFunction.h" />
+    <ClInclude Include="CodeIf.h" />
+    <ClInclude Include="CodeLabel.h" />
+    <ClInclude Include="CodeLoop.h" />
+    <ClInclude Include="CodeNumber.h" />
+    <ClInclude Include="CodeOperator.h" />
+    <ClInclude Include="CodeString.h" />
+    <ClInclude Include="CodeVar.h" />
+    <ClInclude Include="CodeVarList.h" />
+    <ClInclude Include="Defines.h" />
+    <ClInclude Include="Encode.h" />
+    <ClInclude Include="EncodeWithoutDraw.h" />
+    <ClInclude Include="ExtFunc_DLLMain.h" />
+    <ClInclude Include="ObjectClass.h" />
+    <ClInclude Include="OCIDSymDef.h" />
+    <ClInclude Include="OCKeywordBreak.h" />
+    <ClInclude Include="OCKeywordElse.h" />
+    <ClInclude Include="OCKeywordIf.h" />
+    <ClInclude Include="OCKeywordLoop.h" />
+    <ClInclude Include="OCKeywordThen.h" />
+    <ClInclude Include="OCLabel.h" />
+    <ClInclude Include="OCNumber.h" />
+    <ClInclude Include="OCObjSepSym.h" />
+    <ClInclude Include="OCOpCloseCurlyBracket.h" />
+    <ClInclude Include="OCOpCloseRoundBracket.h" />
+    <ClInclude Include="OCOpCloseSquareBracket.h" />
+    <ClInclude Include="OCOpComma.h" />
+    <ClInclude Include="OCOperator.h" />
+    <ClInclude Include="OCOpOpenCurlyBracket.h" />
+    <ClInclude Include="OCOpOpenRoundBracket.h" />
+    <ClInclude Include="OCOpOpenSquareBracket.h" />
+    <ClInclude Include="OCOpStd.h" />
+    <ClInclude Include="OCString.h" />
+    <ClInclude Include="Parse.h" />
+    <ClInclude Include="ParseBase.h" />
+    <ClInclude Include="ParseMessageList.h" />
+    <ClInclude Include="ParseTypes.h" />
+    <ClInclude Include="Stack.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="SyncSerialComm.h" />
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="VarList.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="CLUCodeBase.cpp" />
+    <ClCompile Include="CLUCodeBase_Operators.cpp" />
+    <ClCompile Include="CLUCodeBase_Present.cpp" />
+    <ClCompile Include="CLUCodeBase_String.cpp" />
+    <ClCompile Include="CLUCodeBase_VexList.cpp" />
+    <ClCompile Include="CLUParse.cpp" />
+    <ClCompile Include="CLUPreParse.cpp" />
+    <ClCompile Include="CodeBase.cpp" />
+    <ClCompile Include="CodeBinaryOperator.cpp" />
+    <ClCompile Include="CodeBreak.cpp" />
+    <ClCompile Include="CodeCreateRefVarList.cpp" />
+    <ClCompile Include="CodeCreateVarList.cpp" />
+    <ClCompile Include="CodeData.cpp" />
+    <ClCompile Include="CodeElement.cpp" />
+    <ClCompile Include="CodeElementList.cpp" />
+    <ClCompile Include="CodeErrorList.cpp" />
+    <ClCompile Include="CodeFunction.cpp" />
+    <ClCompile Include="CodeIf.cpp" />
+    <ClCompile Include="CodeLabel.cpp" />
+    <ClCompile Include="CodeLoop.cpp" />
+    <ClCompile Include="CodeNumber.cpp" />
+    <ClCompile Include="CodeOperator.cpp" />
+    <ClCompile Include="CodeString.cpp" />
+    <ClCompile Include="CodeVar.cpp" />
+    <ClCompile Include="CodeVarList.cpp" />
+    <ClCompile Include="Encode.cpp" />
+    <ClCompile Include="EncodeWithoutDraw.cpp" />
+    <ClCompile Include="ObjectClass.cpp" />
+    <ClCompile Include="OCKeywordBreak.cpp" />
+    <ClCompile Include="OCKeywordElse.cpp" />
+    <ClCompile Include="OCKeywordIf.cpp" />
+    <ClCompile Include="OCKeywordLoop.cpp" />
+    <ClCompile Include="OCKeywordThen.cpp" />
+    <ClCompile Include="OCLabel.cpp" />
+    <ClCompile Include="OCNumber.cpp" />
+    <ClCompile Include="OCObjSepSym.cpp" />
+    <ClCompile Include="OCOpCloseCurlyBracket.cpp" />
+    <ClCompile Include="OCOpCloseRoundBracket.cpp" />
+    <ClCompile Include="OCOpCloseSquareBracket.cpp" />
+    <ClCompile Include="OCOpComma.cpp" />
+    <ClCompile Include="OCOperator.cpp" />
+    <ClCompile Include="OCOpOpenCurlyBracket.cpp" />
+    <ClCompile Include="OCOpOpenRoundBracket.cpp" />
+    <ClCompile Include="OCOpOpenSquareBracket.cpp" />
+    <ClCompile Include="OCOpStd.cpp" />
+    <ClCompile Include="OCString.cpp" />
+    <ClCompile Include="Parse.cpp" />
+    <ClCompile Include="ParseBase.cpp" />
+    <ClCompile Include="ParseMessageList.cpp" />
+    <ClCompile Include="Stack.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='RTM|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='RTM|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="SyncSerialComm.cpp" />
+    <ClCompile Include="TempLib.cpp" />
+    <ClCompile Include="VarList.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

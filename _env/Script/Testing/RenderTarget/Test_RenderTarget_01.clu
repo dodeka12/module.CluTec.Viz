@@ -1,0 +1,69 @@
+// Render Target Test 1
+EnableAntiAliasing(true);
+
+if ( ExecMode & EM_CHANGE )
+{
+	rtDef = RenderTarget("Default");
+	rtA = RenderTarget("A");
+	SetRenderTargetSize(rtA, 4000, 4000, 8);
+
+	scA = Scene("A");
+	DrawToScene(scA);
+		:MRed;
+		DrawSphere(VecE3(0,0), 1);
+		:Blue;
+		DrawLine(VecE3(-1,-1), VecE3(1,1));
+	DrawToScene();
+	
+	scBG = Scene("BG");
+	SetSceneViewport(scBG, 0, 0, 1, 1);
+	SetSceneDepthLevel(scBG, -1);
+	EnableSceneResetFrame(scBG, true);
+	SetSceneOverlay(scBG, 0, 1, 0, 1, -1, 1, false);
+	DrawToScene(scBG);
+		:MWhite;
+		DrawPlane(VecE3(0.5, 0.5), VecE3(1,0), VecE3(0,1));
+	DrawToScene();
+	
+	scWorld = Scene("World");
+	SetSceneViewport(scWorld, 0, 0, 1, 1);
+	DrawToScene(scWorld);
+		:scA;
+		:scBG;
+	DrawToScene();
+	
+	imgA = Image(1,1);
+	scImage = Scene("Image");
+	EnableSceneResetFrame(scImage, true);
+	SetSceneOverlay(scImage, -1, 1, -1, 1, -1, 1, true);
+	SetSceneViewport(scImage, 0.5, 0, 0.5, 1);
+	DrawToScene(scImage);
+		SetImageAlign(0.5, 0.5);
+		:imgA;
+	DrawToScene();
+		
+		
+}
+
+:scWorld;
+
+Button("Draw");
+Button("Show");
+if (ToolName == "Draw")
+{
+	SetSceneViewport(scWorld, 0, 0, 1, 1);
+	:rtA;
+	:scWorld;
+	:rtDef;
+	//SetSceneViewport(scWorld, 0, 0, 0.5, 1);
+}
+else if ( ToolName == "Show") 
+{
+	//SetSceneViewport(scWorld, 0, 0, 0.5, 1);
+
+	GetRenderTargetImage(rtA, imgA);
+	?WriteImage(@"C:\Users\perwass\Pictures\RenderTarget_01.jpg", imgA);
+	?imgA;
+}
+
+//:scImage;

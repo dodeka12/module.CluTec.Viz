@@ -1,0 +1,52 @@
+
+//# include "StdGUILib.clu"
+// # include "StdGUILib.cbn"
+
+/// Test Program
+_BGColor = DWhite;
+if ( ExecMode & EM_CHANGE )
+{
+	lData = [];
+	
+	lData("file_image") = "MyBut.png";
+	lData("width_pixel") = 150;
+	lData("border") = [5,2];
+	lData("find_image_bounds") = true;
+	
+	lCol -> lData("colors");
+	lCol = [];
+	lCol("act") = Blue;
+
+	StdGUI_ImageButton_Create( scBut, "MyBut", lData);
+	
+	lData("ref_scene") = scBut;
+	lData("ref_orig") = [ false, true ];
+	lData("ref_align") = [0,0];
+	
+	StdGUI_ImageButton_Create( scBut2, "MyBut2", lData);
+	
+	
+	//StdGUI_Slider_Create( scSlider, "MySlider", 1, [Green] );					
+}
+
+if ( StdGUI_Event_Click( sButName, sMouseBut, lMousePos ) )
+{
+	?sButName;
+	?sMouseBut;
+	?lMousePos;
+	lPickData = PickData;
+}
+	?sButName;
+	?sMouseBut;
+	?lMousePos;
+?ToolName;
+?lPickData;
+//SetImgScale( 16 );
+//TranslateFrame( 1, 1, 0 );
+:scBut;
+:scBut2;
+//:scSlider;
+
+//:StdGUI_Text_MultiLine( "Hello\nWorld", 0 );
+
+//?i = i + 1;

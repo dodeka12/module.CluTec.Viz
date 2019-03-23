@@ -1,0 +1,287 @@
+if ( ExecMode & EM_CHANGE )
+{
+	Shader_Point3d_PartId =
+	{
+		sName = _P(1);
+		
+		// The vertex shader
+		sVSCode = @Shader"
+		#version 330
+
+		in vec4 clu_in_vVertex;
+		in vec4 clu_in_vColor;
+		in int clu_in_iPartId;
+		
+		out SFragData
+		{
+			vec4 vColor;
+			vec4 vTex;
+		} xFrag;
+		
+		uniform int clu_iPickedPartId;
+		uniform int clu_iInPickDrawMode;
+		uniform int iSelectedPartId;
+		
+		uniform mat4 clu_matModelView;
+		uniform mat4 clu_matProjection;
+		
+		uniform float clu_pfPointSizeRange[2];
+		uniform float clu_pfPointDistanceAttenuation[3];
+		uniform float clu_fPointFadeThresholdSize;
+		
+		uniform float fTime;
+		uniform float fTimeStep;
+		uniform float fPi;
+		uniform int iEnablePicking;
+		uniform vec4 colPicked;
+		uniform vec4 colSelected;
+		uniform vec4 colPickSel;
+		uniform float fPointSize;
+		
+		void main()
+		{
+			int iPartId = clu_in_iPartId & 0x000FFFFF;
+			float fCurPointSizeFactor = 1.0;
+			
+			// Stores bIsPickedPartId
+			xFrag.vTex.w = 0.0;
+			
+			if ( clu_iInPickDrawMode == 0 && iEnablePicking > 0)
+			{
+				if ( iPartId == clu_iPickedPartId )
+				{
+					if ( iPartId == iSelectedPartId )
+						xFrag.vColor = colPickSel;
+					else
+						xFrag.vColor = colPicked;
+				
+					xFrag.vTex.w = 1.0;		
+					fCurPointSizeFactor = 2.0;
+				}
+				else if ( iPartId == iSelectedPartId )
+				{
+					xFrag.vColor = colSelected;
+					xFrag.vTex.w = -1.0;		
+					fCurPointSizeFactor = 2.0;
+				}
+				else
+				{
+					xFrag.vColor = vec4(0.8 * clu_in_vColor.rgb, clu_in_vColor.a);	
+				}
+			}
+			else
+			{
+				xFrag.vColor = clu_in_vColor;
+			}
+				
+			vec4 vEyeCoord = clu_matModelView * clu_in_vVertex;
+			gl_Position = clu_matProjection * vEyeCoord;
+			float fDist = distance(vEyeCoord, vec4(0.0, 0.0, 0.0, 1.0));
+			float fAtt = sqrt(1.0 / (clu_pfPointDistanceAttenuation[0] +
+			                         (clu_pfPointDistanceAttenuation[1] +
+			                          clu_pfPointDistanceAttenuation[2] * fDist) * fDist));
+			
+			gl_PointSize = clamp(fCurPointSizeFactor * fPointSize * fAtt, 
+							clu_pfPointSizeRange[0], clu_pfPointSizeRange[1]);
+							
+		
+		}
+		";
+	
+		sFSCode = @Shader"
+		#version 330
+
+		in SFragData
+		{
+			vec4 vColor;
+			vec4 vTex;
+		} xFrag;				
+		
+		out vec4 vFragColor;
+
+		uniform int clu_iPickedPartId;
+		uniform int clu_iInPickDrawMode;
+		
+		uniform float fTime;
+		uniform float fTimeStep;
+		uniform float fPi;
+		uniform int iDrawStyle3D;
+		
+		void main()
+		{
+			float fRadius;
+			if ( xFrag.vTex.w > 0.5 || xFrag.vTex.w < -0.5)
+			{
+				fRadius = 0.5;
+			}
+			else
+			{
+				fRadius = 0.96;
+			}
+			const float fGlowSize = 0.1;
+			float fGlowRadius = fRadius - fGlowSize;
+			const vec3 colSpec = vec3(1.0, 1.0, 1.0);
+			const float fDiffPart = 0.6;
+			
+			const float fRingRadius = 0.75;
+			const float fRingWidth = 0.1;
+			
+            vec2 vPos = 2.0 * (gl_PointCoord - vec2(0.5,0.5));
+            float fDelta = length(vPos);
+			
+			float fGlow = clamp(1.0 - (fDelta-fGlowRadius)/(fGlowSize*fGlowRadius), 0.0, 1.0);
+			
+			if (clu_iInPickDrawMode > 0)
+			{
+				if (fGlow > 0.0 )
+				{
+					vFragColor = xFrag.vColor;
+				}
+				else
+				{
+					// Don't draw any fragment for invalid areas.
+					discard;
+				}
+			}
+			else
+			{
+				float fFac = 1.0 - (fDelta*fDelta)/(fRadius*fRadius);
+				float fSpec = pow(clamp(fFac, 0.0, 1.0), 6.0);
+				
+				if (iDrawStyle3D == 0)
+				{
+					fSpec = 0;
+				}
+				vec3 colA = fDiffPart/3*(1.0 + 2*sqrt(fFac)) * xFrag.vColor.rgb
+					+ (1.0 - fDiffPart) * fSpec * colSpec;
+					
+					
+			
+				if ( xFrag.vTex.w > 0.5)
+				{
+					vec2 vRingPos = vec2(cos(fTime*2*fPi), sin(fTime*2*fPi));
+					vec2 vNormPos = normalize(vPos);
+					float fRing = dot(vNormPos, vRingPos)/0.6;
+					fRing = (1.0 - fRing*fRing);
+					fDelta -= fRingRadius;
+					fRing += 1.0 - (pow(fDelta / fRingWidth, 2.0));
+					
+					vec3 colB = xFrag.vColor.rgb;	
+					if ( fFac >= 0.0) 
+						vFragColor = vec4( colA , fGlow );
+					else
+						vFragColor = vec4(colB, fRing);
+				}
+				else if ( xFrag.vTex.w < -0.5 )
+				{
+					fDelta -= fRingRadius;
+					float fRing = 1.0 - (pow(fDelta / fRingWidth, 2.0));
+					
+					vec3 colB = xFrag.vColor.rgb;	
+					if ( fFac >= 0.0) 
+						vFragColor = vec4( colA , fGlow );
+					else
+						vFragColor = vec4(colB, fRing);				
+				}
+				else
+				{
+					vFragColor = vec4( colA , fGlow );
+				}
+			}
+		}
+		";
+		
+		shPartId = Shader( sName + "PartId" );
+		EnableShaderForPicking(shPartId, true);
+		ShaderBuild( shPartId, [sVSCode], [sFSCode] );
+		shPartId("Var", "fPi", Pi);
+		shPartId("Var", "iSelectedPartId", -1);
+		shPartId("Var", "colPicked", Red);
+		shPartId("Var", "colSelected", Green);
+		shPartId("Var", "colPickSel", Yellow);
+		shPartId("Var", "iEnablePicking", true);
+		shPartId("Var", "fPointSize", 200);
+		shPartId("Var", "iDrawStyle3D", true);
+		
+		shPartId break;
+	}
+}
+
+
+// /////////////////////////////////////////////////////////////////////
+// Debugging
+
+if ( false )
+{
+	//SetPointSize(10, 5, 100, 20, 1, 1, 1);
+
+	if ( ExecMode & EM_CHANGE )
+	{	
+		shA = Shader_Point3d_PartId("test");
+		shDef = Shader("Default");
+		
+	    // Create the object
+	    vxA = Object( "Hello", OM_POINTS);
+	
+	    lData = [];
+	
+	    // Set vertices.
+	    lData("vex") = Tensor( [[-1,-1,1], [-0.5,0,0], [-0.48,0.5,0], [-0.47,0.0,0.5], [2,1,0], [1, 1.5, 1]] );
+	
+	    // Set colors, one for each vertex.
+	    lData("col") = Tensor( [[0.3,0.9,0.3], [1.0,0.0,0.0], [0.0,1.0,0.0], [0.0,0.0,1.0], [1,1,0], [0,1,1]] );
+	
+	    // Set an index list
+	    //lData("idx") = Tensor( [ [1,1,2,3,4,5,6,6]] );
+	
+		lData("partid") = Tensor( [1, 2, 3, 4, 5, 6] );
+	    //?lData;
+	
+	    // Set the data to the object
+	    vxA << lData;
+	
+		scA = Scene("A");
+		scAPick = Scene("A_Picked");
+		EnableScenePick(scA, true);
+		SetPickScene(scA, scAPick);
+		EnableSceneNotify(scA, true);
+		DrawToScene(scA);
+			EnablePointSprites(true);
+			:shA;
+			:White;
+			:vxA;
+			//DrawPlane(VecE3(0,0), VecE3(1,0), VecE3(0,1));
+			:shDef;
+			EnablePointSprites(false);
+		DrawToScene();
+	
+		DrawToScene(scAPick);
+			EnablePointSprites(true);
+			:AnimShader(shA, "fTime", "fTimeStep");
+			:shA;
+			:White;
+			:vxA;
+			//DrawPlane(VecE3(0,0), VecE3(1,0), VecE3(0,1));
+			:shDef;
+			EnablePointSprites(false);
+		DrawToScene();
+	
+	}
+	//EnableAntiAliasing(true);
+	
+	?PickData;
+	
+	if ( ExecMode & EM_PICK_SELECT )
+	{
+		if ( PickData("click") == "left" )
+			shA("Var", "iSelectedPartId", PickData("part_id"));
+	}
+	
+	// axes
+	//DrawFrame(3, "box_coord", [4,4,4]);
+	DrawFrame(4, "box_coord", [1,2,1], Color(0.341, 0.341, 0.341), Color(0.176, 0.176, 0.176));
+	
+	:White;
+	//SetTexture(imgA);
+	:scA;
+} // if debug true

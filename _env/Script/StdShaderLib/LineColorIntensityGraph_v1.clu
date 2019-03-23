@@ -1,0 +1,88 @@
+EnableLighting(false);
+_BGColor = White;
+_2dView = true;
+TranslateFrame(-2,-2,0);
+ScaleFrame(4,4,4);
+
+dR = 1;
+fCurLineWidth = 0.2;
+fGlowRadius = fCurLineWidth / 2;
+fGlowSize = 0.5;
+
+:Black;
+DrawLine(VecE3(-1.5*dR,0), VecE3(1.5*dR,0));
+DrawLine(VecE3(0,0), VecE3(0,1));
+:MWhite;
+DrawLine(VecE3(dR,0), VecE3(dR,1));
+DrawLine(VecE3(-dR,0), VecE3(-dR,1));
+:MRed;
+DrawLine(VecE3(dR-fCurLineWidth,0), VecE3(dR-fCurLineWidth,1));
+DrawLine(VecE3(dR+fCurLineWidth,0), VecE3(dR+fCurLineWidth,1));
+
+
+fCol = 
+{
+	fRad = _P(1);
+	fDiffPart = 0.7;
+	
+	fDist = abs(fRad - ::dR);
+	fFac = 1.0 - (fDist^^2) / (::fCurLineWidth^^2);
+	fVal = 1.0 - (fDist - ::fGlowRadius)/(::fGlowSize*::fGlowRadius);
+	//fGlow = min(max(fVal, 0.0), 1.0);
+	
+	fFac = min([max([fFac, 0]), 1]);
+	
+	fI = fDiffPart/3.0 * (1 + 2*sqrt(fFac));
+	
+	vI = VecE3(fRad, fI);
+	
+	vI break;
+}
+
+fSpec = 
+{
+	fRad = _P(1);
+	fDiffPart = 0.7;
+	
+	fDist = abs(fRad - ::dR);
+	fFac = 1.0 - (fDist^^2) / (::fCurLineWidth^^2);
+	fVal = 1.0 - (fDist - ::fGlowRadius)/(::fGlowSize*::fGlowRadius);
+	//fGlow = min(max(fVal, 0.0), 1.0);
+	
+	fFac = min([max([fFac, 0]), 1]);
+	fSpec = fFac^^6.0;
+	
+	fI = (1.0 - fDiffPart) * fSpec;
+	
+	vI = VecE3(fRad, fI);
+	
+	vI break;
+}
+
+fGlow = 
+{
+	fRad = _P(1);
+	fDiffPart = 0.7;
+	
+	fDist = abs(fRad - ::dR);
+	fVal = 1.0 - (fDist - ::fGlowRadius)/(::fGlowSize*::fGlowRadius);
+	fGlow = min([max([fVal, 0.0]), 1.0]);
+		
+	fI = fGlow;
+	
+	vI = VecE3(fRad, fI);
+	
+	vI break;
+}
+
+
+TranslateFrame(0,0,1);
+r = 0;
+:Green;
+:Plot(fCol(r), [r, 0, 1.5, 200]);
+
+:Red;
+:Plot(fSpec(r), [r, 0, 1.5, 200]);
+
+:Blue;
+:Plot(fGlow(r), [r, 0, 1.5, 200]);

@@ -1,0 +1,99 @@
+// Texture mapping of text
+DefVarsE3();
+
+if ( ExecMode & EM_CHANGE )
+{
+	// Color for text
+	:Red;
+	// Only need to create text image once
+	imgText = GetTextImg( "Hello World^2" );
+	
+}
+
+:MWhite;
+TranslateFrame( 0, 2, 0 );
+
+// Set imgText as texture
+SetTexture( imgText, false /* No repitition */,
+					 true  /* It is a text image */ );
+					 
+DrawPlane( id, e1, e2 );
+
+// Switch texture mapping off
+SetTexture();
+
+// Set imgText as texture
+SetTexture( imgText, false /* No repitition */,
+					 true  /* It is a text image */,
+					 true  /* Adjust aspect ratio */ );
+					 
+DrawPlane( 1.1*e1, e1, e2 );
+
+// Switch texture mapping off
+SetTexture();
+
+// Set imgText as texture
+SetTexture( imgText, false /* No repitition */,
+					 true  /* It is a text image */,
+					 true  /* Adjust aspect ratio */,
+					 0.5   /* Scale texture */ );
+					 
+DrawPlane( -1.1*e2, e1, e2 );
+
+// Switch texture mapping off
+SetTexture();
+
+// Set imgText as texture
+SetTexture( imgText, true /* With repitition */,
+					 true  /* It is a text image */,
+					 true  /* Adjust aspect ratio */,
+					 0.5   /* Scale texture */ );
+					 
+DrawPlane( 1.1*e1 -1.1*e2, e1, e2 );
+
+// Switch texture mapping off
+SetTexture();
+
+
+// Set imgText as texture
+SetTexture( imgText, true /* With repitition */,
+					 true  /* It is a text image */,
+					 true  /* Adjust aspect ratio */,
+					 0.5   /* Scale texture */ ,
+					 [2.1, 1] /* Width, Height of plane to which texture is mapped */,
+		   );
+					 
+DrawPlane( 0.55 * e1 -2.2*e2, 2.1*e1, e2 );
+
+// Switch texture mapping off
+SetTexture();
+
+// Set imgText as texture
+SetTexture( imgText, false /* Without repitition */,
+					 true  /* It is a text image */,
+					 true  /* Adjust aspect ratio */,
+					 0.5  /* Scale texture */ ,
+					 [2.1, 1] /* Width, Height of plane to which texture is mapped */,
+					 [0.9, 0.7] /* Align factor horizontal, vertical */, 
+		  );
+					 
+DrawPlane( 0.55 * e1 -3.3*e2, 2.1*e1, e2 );
+
+// Switch texture mapping off
+SetTexture();
+
+// Set imgText as texture
+SetTexture( imgText, false /* Without repitition */,
+					 true  /* It is a text image */,
+					 true  /* Adjust aspect ratio */,
+					 0.5  /* Scale texture */ ,
+					 [2.1, 1] /* Width, Height of plane to which texture is mapped */,
+					 [0.5, 0.5] /* Align factor horizontal, vertical */, 
+					 [false, false] /* Allow up- and down-scaling of texture */
+		  );
+					 
+DrawPlane( 0.55 * e1 -4.4*e2, 2.1*e1, e2 );
+
+// Switch texture mapping off
+SetTexture();
+

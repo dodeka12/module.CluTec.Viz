@@ -1,0 +1,62 @@
+/// Image Scene: Step 7
+EnableLighting(false);
+
+// Things that should only be done once at the start of the script
+if ( ExecMode & EM_CHANGE )
+{
+	// Include the Image Scene function
+	///# include "StdGUI_ImageScene.clu"
+	//# include "StdGUILib_v3_0.cbn"
+	
+	///////////////////////////////////////////////////////////
+	// Load an example image
+	imgA = ReadImg( "ImgEx1.jpg" );
+	imgB = ReadImg( "ImgEx2.jpg" );
+	
+	// Size of image
+	lImgSize = Size( imgA );
+	
+	// Create the first image scene
+	StdGUI_ImageScene_Create( lImage, "Test", imgA );
+	
+	// Set zoom range
+	StdGUI_ImageScene_SetZoomRange( lImage, 0.25, 1024 );
+	
+	// Draw on top of image
+	scDraw = lImage("scene_draw");
+	DrawToScene(scDraw);
+		:Red;
+		DrawLine( VecE3(0,0), VecE3(100,100) );
+	DrawToScene();
+	
+	dContrast = 0;
+	dBrightness = 1.0;
+}
+
+//Button("SetImage");
+
+if ( ToolName == "Reset View" )
+{
+	StdGUI_ImageScene_ResetView(lImage);
+}
+else if ( ToolName == "SetImage" )
+{
+	StdGUI_ImageScene_NewImage( lImage, imgX );
+	?"Image set";
+}
+
+
+
+shImage = lImage("shader_std");
+
+// Let user vary the contrast of the image
+SetShaderUniformVar( shImage, "fContrast", dContrast );
+
+// Let user vary the brightness of the image
+SetShaderUniformVar( shImage, "fBrightness", dBrightness );
+
+// Draw the image scene
+:lImage("scene_main");
+
+?ToolName;
+

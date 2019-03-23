@@ -1,0 +1,122 @@
+// GUI Functions
+
+StdGUI_ImageButton_Create =
+{
+	scBut -> _P(1);
+	sName = _P(2);
+	lData -> _P(3);
+		
+	sImageFile = lData("file_image");
+	iPixW = lData("width_pixel");
+	iPixH = lData("height_pixel");
+	lBorder = lData("border");
+	lAlign = lData("align");
+	bFindBoundBox = lData("find_image_bounds");
+	
+	bUseRefScene = false;
+	if ( Type(lData(["ref_scene"])) != "Empty" )
+	{
+		bUseRefScene = true;
+		scRef = lData("ref_scene");
+		lRefOrig = lData("ref_orig");
+	}
+	
+	lCol -> lData("colors");		
+	colAct = lCol("act");
+	
+	sMsg = ReadImage( sImageFile, imgBut );
+	lS = Size(imgBut);
+
+	if ( bFindBoundBox )
+	{
+		lC = imgBut(1,1);
+		lBox = GetImageBoundingBox( imgBut, Color(lC(1), lC(2), lC(3), lC(4)) );
+		dAX = (lBox(1) + lBox(3)/2) / lS(1);
+		dAY = (lBox(2) + lBox(4)/2) / lS(2);
+		ReshapeImage( imgBut, lBox(3), lBox(4), Black, dAX, dAY );
+		lS = Size(imgBut);
+	}
+		
+	if ( iPixW > 0 )
+	{
+		iPixH = floor((iPixW - 2*lBorder(1)) * lS(2)/lS(1));
+	}
+	else if ( iPixH > 0 )
+	{
+		iPixW = floor((iPixH - 2*lBorder(2)) * lS(1)/lS(2));	
+	}
+	else
+	{
+		iPixW = 100;
+		iPixH = floor((iPixW - 2*lBorder(1)) * lS(2)/lS(1));
+	}
+
+	shPing = ::Shader_Blob_Ping_Image();
+	shDefault = Shader( "Default" );
+	
+	texImg = Texture("Image");
+	SetTextureImage( texImg, imgBut);
+	SetTextureBlendType( texImg, "interpolate", "modulate" );
+	
+	shPing("Var", "fPi", Pi );
+	shPing("Var", "colMain", colAct );
+	shPing("Var", "texImg", texImg );
+
+		
+	scBut = Scene( sName );
+	scButStd = Scene( sName + "-Standard" );
+	scButPick = Scene( sName + "-Pick" );
+	scButClick = Scene( sName + "-Click" );
+	
+	//SetScenePixelOverlay( scButStd );
+	DrawToScene( scButStd );
+		:texImg;
+		DrawPlane( VecE3(0,0,0), VecE3(1,0,0), VecE3(0,1,0) );
+		SetTexture();
+		
+	DrawToScene();
+	
+	DrawToScene( scButPick );
+		//TranslateFrame( 0, 0, 0.5 );
+		//ScaleFrame(1.2, 1.2, 1.2);
+		:AnimShader(shPing, "fTime", "fTimeStep" );
+		:shPing;
+		:scButStd;
+		:shDefault;
+
+	DrawToScene( scButClick );
+		//TranslateFrame( 0, 0, 0.5 );
+		ScaleFrame(0.9, 0.9, 0.9);
+		:AnimShader(shPing, "fTime", "fTimeStep" );
+		:shPing;
+		:scButStd;
+		:shDefault;
+
+	EnableSceneResetFrame( scBut, true );
+	SetSceneViewport(scBut, 0, 0, iPixW, iPixH );
+	SetSceneViewportBorder(scBut, lBorder(1), lBorder(2), 
+									lBorder(1), lBorder(2) );
+	SetSceneViewportAlign( scBut, lAlign(1), lAlign(2) );
+
+	if ( bUseRefScene )
+	{
+		SetSceneViewportOriginRef( scBut, scRef, lRefOrig(1), lRefOrig(2) );
+	}
+	else
+	{
+		SetSceneViewportLocal(scBut, true, false, 0 );
+	}
+	
+	SetSceneOverlay(scBut, -0.5,0.5, -0.5,0.5, -1,1 );
+	
+	EnableScenePick( scBut, true );
+	//EnableSceneNormalize( scBut, true );
+	EnableSceneNotify( scBut, true, "MouseClick" );	
+	EnableSceneDrag( scBut, 1, false, true );
+	SetPickScene( scBut, scButPick );
+	SetPickScene( scBut, scButClick, false, true );
+	DrawToScene( scBut );
+		:scButStd;
+	DrawToScene();
+		
+}

@@ -1,0 +1,30 @@
+// Standard GUI Functions
+
+
+StdGUI_Event_Click =
+{
+	sName -> _P(1);
+	sMouseBut -> _P(2);
+	lPos -> _P(3);
+	
+	if ( ::ExecMode & EM_PICK_SELECT )
+	{
+		sName = PickData( ["name", 1] );
+		sMouseBut = PickData( "click" );
+		lPos = PickData( "pos" );
+		
+		true break;
+	}
+	else if ( ::ExecMode & EM_PICK_DRAG )
+	{
+		
+		sName = PickData( ["name", 1] );
+		iBut = PickData( "drag", 1 );
+		sMouseBut = ::StdGUI_lMouseButNames(iBut);
+		lPos = PickData( "drag", 3 );
+		
+		true break;	
+	}
+
+	false break;
+}

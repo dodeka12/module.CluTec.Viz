@@ -1,0 +1,178 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Template Files">
+      <UniqueIdentifier>{1f9c1d59-e387-4ed7-abc6-a7f13f33047f}</UniqueIdentifier>
+      <Extensions>cxx</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="base.cxx">
+      <Filter>Template Files</Filter>
+    </ClCompile>
+    <ClCompile Include="blade.cxx">
+      <Filter>Template Files</Filter>
+    </ClCompile>
+    <ClCompile Include="bladelist.cxx">
+      <Filter>Template Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cc2ga.cxx">
+      <Filter>Template Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cga.cxx">
+      <Filter>Template Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Cl22.cxx">
+      <Filter>Template Files</Filter>
+    </ClCompile>
+    <ClCompile Include="confga.cxx">
+      <Filter>Template Files</Filter>
+    </ClCompile>
+    <ClCompile Include="e3ga.cxx">
+      <Filter>Template Files</Filter>
+    </ClCompile>
+    <ClCompile Include="e8ga.cxx">
+      <Filter>Template Files</Filter>
+    </ClCompile>
+    <ClCompile Include="el2ga.cxx">
+      <Filter>Template Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GA1p2m.cxx">
+      <Filter>Template Files</Filter>
+    </ClCompile>
+    <ClCompile Include="multiv.cxx">
+      <Filter>Template Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MVInfo.cxx">
+      <Filter>Template Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mvs.cxx">
+      <Filter>Template Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pga.cxx">
+      <Filter>Template Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sta.cxx">
+      <Filter>Template Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="base.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="blade.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="bladelist.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cc2ga.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cc2gainst.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CC2GATables.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cga.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cgainst.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Cl22.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Cl22inst.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Cl22Tables.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="confga.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="confgainst.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ConfGATables.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="e3ga.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="e3gainst.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="E3GATables.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="e8ga.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="e8gainst.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="E8GATables.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="el2ga.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="el2gainst.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="El2GATables.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GA1p2m.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GA1p2mInst.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="multiv.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MVInfo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="mvs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pga.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pgainst.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PGATables.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sta.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="stainst.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="STATables.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

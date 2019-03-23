@@ -1,0 +1,55 @@
+// Texture mapping of text
+DefVarsE3();
+
+if ( ExecMode & EM_CHANGE )
+{
+	// Color for text
+	:Red;
+	// Only need to create text image once
+	imgText = GetTextImg( "Hello World^2" );
+	
+}
+
+:MWhite;
+
+// Set imgText as texture
+SetTexture( imgText, false /* No repitition */,
+					 true  /* It is a text image */ );
+					 
+DrawPlane( id, e1, e2 );
+
+// Switch texture mapping off
+SetTexture();
+
+// Set imgText as texture
+SetTexture( imgText, false /* No repitition */,
+					 true  /* It is a text image */,
+					 true  /* Adjust aspect ratio */ );
+					 
+DrawPlane( 1.1*e1, e1, e2 );
+
+// Switch texture mapping off
+SetTexture();
+
+// Set imgText as texture
+SetTexture( imgText, false /* No repitition */,
+					 true  /* It is a text image */,
+					 true  /* Adjust aspect ratio */,
+					 0.5   /* Scale texture */ );
+					 
+DrawPlane( -1.1*e2, e1, e2 );
+
+// Switch texture mapping off
+SetTexture();
+
+// Set imgText as texture
+SetTexture( imgText, true /* With repitition */,
+					 true  /* It is a text image */,
+					 true  /* Adjust aspect ratio */,
+					 0.5   /* Scale texture */ );
+					 
+DrawPlane( 1.1*e1 -1.1*e2, e1, e2 );
+
+// Switch texture mapping off
+SetTexture();
+

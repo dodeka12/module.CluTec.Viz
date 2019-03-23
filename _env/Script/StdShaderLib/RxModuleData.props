@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros">
+    <RxModName>StdShaderLib</RxModName>
+    <RxModVerA>2</RxModVerA>
+    <RxModVerB>6</RxModVerB>
+    <RxModVerC>4</RxModVerC>
+    <RxModVerD>0</RxModVerD>
+  </PropertyGroup>
+  <PropertyGroup />
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <PreprocessorDefinitions>RX_MODULE_VER_A=$(RxModVerA);RX_MODULE_VER_B=$(RxModVerB);RX_MODULE_VER_C=$(RxModVerC);RX_MODULE_VER_D=$(RxModVerD);RX_MODULE_VER_STR="$(RxModVerA).$(RxModVerB).$(RxModVerC).$(RxModVerD)";RX_MODULE_VER_SHORT_STR="$(RxModVerA).$(RxModVerB)";RX_MODULE_NAME="$(RxModName)";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>RX_MODULE_VER_A=$(RxModVerA);RX_MODULE_VER_B=$(RxModVerB);RX_MODULE_VER_C=$(RxModVerC);RX_MODULE_VER_D=$(RxModVerD);RX_MODULE_VER_STR="$(RxModVerA).$(RxModVerB).$(RxModVerC).$(RxModVerD)\0";RX_MODULE_VER_SHORT_STR="$(RxModVerA).$(RxModVerB)\0";RX_MODULE_NAME="$(RxModName)\0";%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <BuildMacro Include="RxModName">
+      <Value>$(RxModName)</Value>
+    </BuildMacro>
+    <BuildMacro Include="RxModVerA">
+      <Value>$(RxModVerA)</Value>
+    </BuildMacro>
+    <BuildMacro Include="RxModVerB">
+      <Value>$(RxModVerB)</Value>
+    </BuildMacro>
+    <BuildMacro Include="RxModVerC">
+      <Value>$(RxModVerC)</Value>
+    </BuildMacro>
+    <BuildMacro Include="RxModVerD">
+      <Value>$(RxModVerD)</Value>
+    </BuildMacro>
+  </ItemGroup>
+</Project>

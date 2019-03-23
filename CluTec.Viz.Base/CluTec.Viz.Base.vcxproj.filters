@@ -1,0 +1,304 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Template Files">
+      <UniqueIdentifier>{ad2d80c3-1fbb-4a40-ab57-61c87993c8f1}</UniqueIdentifier>
+      <Extensions>cxx</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="balanc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="balbak.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CLUException.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="elmbak.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="elmhes.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="eltran.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ExMinFunc.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hqr.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="hqr2.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Macopt.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="makestr.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="malloc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mathelp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MemBase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Notify.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="pnorm.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="rand.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="statistic.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="StrMessageList.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tsthqr.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="xmalib.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="xutlib.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Array2D.cxx">
+      <Filter>Template Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Array2DObj.cxx">
+      <Filter>Template Files</Filter>
+    </ClCompile>
+    <ClCompile Include="dynlist.cxx">
+      <Filter>Template Files</Filter>
+    </ClCompile>
+    <ClCompile Include="matrix.cxx">
+      <Filter>Template Files</Filter>
+    </ClCompile>
+    <ClCompile Include="mem.cxx">
+      <Filter>Template Files</Filter>
+    </ClCompile>
+    <ClCompile Include="memobj.cxx">
+      <Filter>Template Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MessageList.cxx">
+      <Filter>Template Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ringbuf.cxx">
+      <Filter>Template Files</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticArray.cxx">
+      <Filter>Template Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tensor.cxx">
+      <Filter>Template Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TensorContractLoop.cxx">
+      <Filter>Template Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TensorData.cxx">
+      <Filter>Template Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TensorDoubleLoop.cxx">
+      <Filter>Template Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TensorIdx.cxx">
+      <Filter>Template Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TensorIdx_orig.cxx">
+      <Filter>Template Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TensorIdx_1.cxx">
+      <Filter>Template Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TensorOperators.cxx">
+      <Filter>Template Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TensorPointLoop.cxx">
+      <Filter>Template Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TensorSingleLoop.cxx">
+      <Filter>Template Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CStrMem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Environment.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Array2D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Array2DObj.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="clu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CLUDebug.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CLUException.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="config.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="dynlist.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EISPACK.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ExMinFunc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Macopt.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="makestr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="malloc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="mathelp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="matinst.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="matrix.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="mem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MemBase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="memobj.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MessageList.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MinFuncBase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Notify.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Point.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="rand.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ringbinst.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ringbuf.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticArray.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="statistic.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StrMessageList.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tensinst.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="tensor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TensorContractLoop.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TensorData.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TensorDoubleLoop.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TensorIdx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TensorIdx_1.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TensorIdx_orig.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TensorOperators.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TensorPointLoop.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TensorSingleLoop.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="xmalib.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="xoplib.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="xutlib.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StdVbo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StdVboDrawMode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StdVboDrawModeValues.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CStrMem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Environment.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EnvPathValues.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EnvPath.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

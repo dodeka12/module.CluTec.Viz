@@ -1,0 +1,57 @@
+
+//# include "StdGUILib.clu"
+// # include "StdGUILib.cbn"
+
+/// Test Program
+_BGColor = DWhite;
+
+if ( ExecMode & EM_CHANGE )
+{
+	StdGUI_Button_Create( scButNext, "Next", "Next", [ 1, 0.5 ], 
+							[ MRed, MWhite, Blue ] );
+
+	scControl = Scene( "Control" );
+	SetSceneViewport( scControl, 0, 0, 1, 0.3 );
+	DrawToScene( scControl );
+		:scButNext;
+	DrawToScene();
+
+	sPath = @"C:\Users\Public\Pictures\Sample Pictures\";
+	lFiles = GetDirList( sPath + "*.jpg" )("File");
+	imgA = ReadImg( sPath + lFiles(1) );
+	iImgIdx = 1;
+	iImgCnt = Size( lFiles );
+	
+	StdGUI_ImgView_Create( scImage, "Image", imgA, [ 0, 0.3, 1, 0.7 ] );
+
+}
+
+if ( StdGUI_Event_Click( sButName, sMouseBut, lMousePos ) )
+{
+	?sButName;
+	?sMouseBut;
+	?lMousePos;
+	
+	if ( sMouseBut == "left" )
+	{
+		if ( sButName == "Next" )
+		{
+			iImgIdx = iImgIdx + 1;
+			if ( iImgIdx > iImgCnt )
+				iImgIdx = 1;
+				
+			imgA = ReadImg( sPath + lFiles(iImgIdx) );
+			StdGUI_ImgView_Update( scImage, imgA );			
+		}
+	}
+}
+
+//SetImgScale( 16 );
+
+//TranslateFrame( 1, 1, 0 );
+:scControl;
+
+//:StdGUI_Text_MultiLine( "Hello\nWorld", 0 );
+:scImage;
+?i = i + 1;
+

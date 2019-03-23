@@ -1,0 +1,207 @@
+// Test Adaptive redraw of scene
+
+if ( ExecMode & EM_CHANGE )
+{
+	aliA = AmbientLight( "Main", Black );
+	//SetAmbientLight( aliA, Black );
+	
+	liA = Light( "LA", 1 );
+	EnableLight( liA, true );
+	SetLightPos( liA, VecE3(1,1,3) );
+	SetLightAmbient( liA, DWhite );
+	SetLightDiffuse( liA, DWhite );
+	SetLightSpecular( liA, MWhite );
+	SetLightAttenuation( liA, 0.2, 0.2, 0 );
+
+	scRingObj = Scene( "Ring" );
+	DrawToScene( scRingObj );
+		DefVarsN3();
+		vS = SphereN3( VecE3(0,0,0.11), 0.02 );
+		vP = VecN3(0,0)^VecN3(1,0)^VecN3(0,0,1)^einf;
+		vC = vS & vP;
+		vR = RotorN3( VecE3(1,0,0), 2*Pi / 6 );
+		:Plot( vC = vR * vC * ~vR, [ i, 0, 1, 6 ] );
+		//DrawSphere( VecE3(0,0), 0.12 );	
+	DrawToScene();
+	
+	scRing = Scene( "Ring" );
+	EnableScenePick( scRing, true );
+	EnableSceneDrag( scRing, 1, false, true );
+	EnableSceneNotify( scRing, true, "MouseDrag" );
+	EnableSceneAutoTranslate( scRing, true );
+	SetSceneDragBasis( scRing, 1, false, [ VecE3(1,0), VecE3(0,0), VecE3(0,0) ] );
+	EnableSceneDragRange( scRing, 1, false, true );
+	SetSceneDragRange( scRing, 1, false, [ [ 0, 1], [0,0], [0,0] ] );
+	EnableSceneDragInProjBasis( scRing, 1, false, true );
+	SetSceneAutoDragControl( scRing, 
+			[ [ 2, false ] /* Scale */, 
+			  [ 2, true  ] /* Rotate1 */, 
+			  [ 1, false ] /* Translate */,
+			  [ 1, true  ] /* Rotate2 */
+			] );
+	
+	DrawToScene( scRing );
+		:Blue;
+		:scRingObj;
+	DrawToScene();
+	
+	scRingPick = Scene( "RingPick" );
+	DrawToScene( scRingPick );
+		:Red;
+		:scRingObj;
+	DrawToScene();
+	
+	SetPickScene( scRing, scRingPick );
+
+	:Red;
+	SetTextMagStep( 18 );
+	imgText = GetTextImg( "This is a Slider" );
+	
+	texText = Texture( "texText" );
+	SetTextureImage( texText, imgText, true, 1 );
+	SetTextureWrapType( texText, "clamp" );
+	SetTextureBlendType( texText, "add", "modulate" );
+	
+	lSize = Size( imgText );
+	frText = Frame( "Text", true, "texture" );
+	ScaleFrame( frText, 1.2, 0.8 * lSize(1)/lSize(2), 1 );
+	TranslateFrame( frText, 0.5, 0.5, 0 );
+	RotateFrame( frText, 0,0,1, -90 );
+	TranslateFrame( frText, -0.5, -0.5, 0 );
+	TranslateFrame( frText, 0.495, -0.1, 0 );
+	
+	scSlider = Scene( "Slider" );
+	DrawToScene( scSlider );
+		:MWhite;
+		:frText;
+		:texText;
+		DrawCylinder( VecE3(0,0), VecE3(1,0), 0.1, 6, true );
+		SetTexture();
+		:scRing;
+	DrawToScene();
+	
+	
+/*
+	texDef0 = Texture( "def0" );
+	SetTextureUnit( texDef0, 0 );
+	texDef1 = Texture( "def1" );
+	SetTextureUnit( texDef1, 1 );
+		
+	imgA = ReadImg( "Bosch01_sm.png" );
+	texA = Texture( "texA" );
+	SetTextureImage( texA, imgA, true, 0 );
+	SetTextureWrapType( texA, "repeat" );
+	SetTextureBlendType( texA, "inverse modulate", "add" );
+	
+	lSizeA = Size( imgA );
+	frA = Frame( "Frame A", false, "texture" );
+	ScaleFrame( frA, 4, 4*lSizeA(1)/lSizeA(2), 1 );
+	RotateFrame( frA, 0,0,1, 45 );
+	
+	SetTextMagStep( 24 );
+	:Red;
+	imgB = GetTextImg( "Hello World" );
+	lSizeB = Size( imgB );
+	
+	frB = Frame( "Frame B", false, "texture" );
+	ScaleFrame( frB, 1, lSizeB(1)/lSizeB(2), 1 );
+	TranslateFrame( frB, 0, -0.4, 0 );
+	
+	texB = Texture( "texB" );
+	SetTextureImage( texB, imgB, true, 1 );
+	SetTextureWrapType( texB, "clamp" );
+	SetTextureBlendType( texB, "add", "inverse modulate" );
+
+
+
+
+	scL = Scene( "Light" );
+	ClearScene( scL );
+	DrawToScene( scL );
+		AnimRotateFrame( 0, VecE3(0,0,1), "Constant", 180, 0.1 );
+		:liA;
+	DrawToScene();
+
+
+	scA = Scene( "A" );
+	//EnableSceneResetFrame( scA, true );
+	//SetSceneViewport( scA, 0, 0, 100, 50, true );
+	//SetSceneOverlay( scA, 0, 1, 0, 1, 1, -1, false );
+	//SetSceneViewAngle( scA, 50 );
+	//EnableSceneAdaptiveRedraw( scA, true );
+	EnableScenePick( scA, true );
+	EnableSceneNotify( scA, true, "MouseClick" );
+	DrawToScene( scA );
+		//TranslateFrame( 0, 0, 3 );
+		//ScaleFrame( 1, 1, 1 );
+		:aliA;
+		:liA;
+		:texA;
+		:frA;
+		:texB;
+		:frB;
+		vS = *SphereN3( VecE3(0,0,0), 1 );
+		:Red;
+		:Plot( VecE3( x, y, Scalar(vS . VecN3(x,y))^^2), [x,-1,1,10], [y,-1,1,10] );
+		:texDef0;
+		:texDef1;
+		//AnimRotateFrame( 0, 1,1,1, "Rel_Sinus", 10, 2, 1 );
+		//SetTexture();
+		//:White;
+		//DrawPlane( VecE3(0.5,0.5), VecE3(1,0,2), VecE3(0,1,2) );
+
+	scAPick = Scene( "A Pick" );
+	DrawToScene( scAPick );
+		//TranslateFrame( 0, 0, 3 );
+		//ScaleFrame( 2, 1, 1 );
+		:aliA;
+		:scL;
+		:texA;
+		:frA;
+		:texB;
+		:frB;
+		vS = *SphereN3( VecE3(0,0,0), 1.2 );
+		:White;
+		:Plot( VecE3( x, y,  Scalar(vS . VecN3(x,y))^^2), [x,-1,1,10], [y,-1,1,10] );
+		:texDef0;
+		:texDef1;
+	
+	scAPickAct = Scene( "A Pick Act" );
+	DrawToScene( scAPickAct );
+		//TranslateFrame( 0, 0, 3 );
+		//ScaleFrame( 2, 1, 1 );
+		:aliA;
+		:scL;
+		:texA;
+		:frA;
+		:texB;
+		:frB;
+		vS = *SphereN3( VecE3(0,0,0), 0.8 );
+		:White;
+		:Plot( VecE3( x, y,  Scalar(vS . VecN3(x,y))^^2), [x,-1,1,10], [y,-1,1,10] );
+		:texDef0;
+		:texDef1;
+	
+	SetPickScene( scA, scAPick, false, false );
+	SetPickScene( scA, scAPickAct, false, true );
+	
+	DrawToScene( );
+*/	
+}
+
+:aliA;
+:liA;
+DefVarsE3();
+DrawArrow( id, e1 ):Red;
+DrawArrow( id, e2 ):Green;
+DrawArrow( id, e3 ):Blue;
+
+:MWhite;
+?PickData;
+if (ExecMode & EM_PICK_DRAG )
+{
+	if ( PickData("name", 2) == "Slider" )
+		?dVal = PickData( "drag", 3, 1 );
+}
+
+:scSlider;

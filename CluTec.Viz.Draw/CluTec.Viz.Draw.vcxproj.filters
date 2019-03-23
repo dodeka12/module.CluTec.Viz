@@ -1,0 +1,481 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Template Files">
+      <UniqueIdentifier>{bf88b3e1-74cf-47ce-89a3-9c0cb7b77343}</UniqueIdentifier>
+      <Extensions>cxx;</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="CLUDrawBase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FLTKToolBox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GDITextRenderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageReference.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ImageRepository.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MatrixStack.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLAmbientLight.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLAnimColor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLAnimRotation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLAnimScale.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLAnimShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLAnimTranslation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLBaseElement.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLBaseElementList.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLBaseTransform.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLBEReference.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLBERepository.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLBitmap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLBlend.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLClipPlane.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLColor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLDirectWrite.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLDisplayList.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLDrawBase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLFilterE3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLFilterEl2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLFilterN3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLFilterP3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLFont.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLFrame.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLFrameStack.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLImage.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLLatexText.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLLight.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLLighting.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLLineWidth.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLMaterial.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLMultisample.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLMVFilter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLMVFilterBase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLPeek.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLPixelZoom.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLPointParameter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLPointSprites.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLReadBitmap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLRenderBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLRenderTarget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLRotation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLScale.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLScene.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLText.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLTexture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLTool.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLTranslation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLVertex.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLVertexList.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLVexListE3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLVexListN3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLVexListP2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLVexListP3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLWinFLTK.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLWinGLUT.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLWinMFCstatic.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TempLib.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLImage_Arithmetic.cxx">
+      <Filter>Template Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLImage_Color.cxx">
+      <Filter>Template Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLImage_Exec_AnyType.cxx">
+      <Filter>Template Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLImage_Exec_EqualDataType.cxx">
+      <Filter>Template Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLImage_Exec_EqualType.cxx">
+      <Filter>Template Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLImage_Exec_Single.cxx">
+      <Filter>Template Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLImage_Form.cxx">
+      <Filter>Template Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLImage_Mask.cxx">
+      <Filter>Template Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OGLImage_Pixel.cxx">
+      <Filter>Template Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="bmpdef.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cludraw.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CLUDrawBase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FLTKToolBox.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GDITextRenderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="glxext.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageReference.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageRepository.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="IOGLWinBase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MatrixStack.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OGLAmbientLight.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OGLAnimColor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OGLAnimRotation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OGLAnimScale.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OGLAnimShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OGLAnimTranslation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OGLBaseElement.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OGLBaseElementList.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OGLBaseTransform.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OGLBEReference.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OGLBERepository.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OGLBitmap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OGLBlend.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OGLClipPlane.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OGLColor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OGLDirectWrite.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OGLDisplayList.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OGLDrawBase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OGLFilterE3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OGLFilterEl2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OGLFilterN3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OGLFilterP3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OGLFont.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OGLFrame.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OGLFrameStack.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OGLImage.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OGLImageTypeDef.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OGLLatexText.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OGLLight.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OGLLighting.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OGLLineWidth.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OGLMaterial.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OGLMultisample.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OGLMVFilter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OGLMVFilterBase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OGLObjColorCube.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OGLPeek.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OGLPixelZoom.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OGLPointParameter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OGLPointSprites.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OGLReadBitmap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OGLRenderBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OGLRenderTarget.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OGLRotation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OGLScale.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OGLScene.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OGLSceneWindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OGLShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OGLText.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OGLTexture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OGLTool.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OGLTranslation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OGLVertex.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OGLVertexList.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OGLVexListE3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OGLVexListN3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OGLVexListP2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OGLVexListP3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OGLWindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OGLWinFLTK.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OGLWinGLUT.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OGLWinMFCstatic.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraTransform.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

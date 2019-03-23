@@ -1,0 +1,611 @@
+EnableAntiAliasing( true );
+
+if ( ExecMode & EM_CHANGE )
+{
+
+	Shader_Arrow3d_PartId =
+	{
+
+	sVSCode = @Shader"
+		#version 330
+		uniform mat4 clu_matModelView;
+		uniform int clu_iPickedPartId;
+		uniform int clu_iInPickDrawMode;
+		uniform int iSelectedPartId;
+		uniform int iEnablePicking;
+		
+		uniform vec4 colPicked;
+		uniform vec4 colSelected;
+		uniform vec4 colPickSel;
+		
+		in vec4 clu_in_vVertex;
+		in vec4 clu_in_vColor;
+		in int clu_in_iPartId;
+		
+		
+		out GSData
+		{
+			vec4 vColor; // the color 
+			int iInstance; // instancing ID
+		} xGSData;
+		
+		void main()
+		{
+			// the the PartID 
+			int iPartId = clu_in_iPartId & 0x000FFFFF;
+		
+			// and change the color if we are in Pick mode and are picked/selected
+			if ( clu_iInPickDrawMode == 0)
+			{
+				if ( iPartId == clu_iPickedPartId && iEnablePicking > 0)
+				{
+					if ( iPartId == iSelectedPartId )
+						xGSData.vColor = colPickSel;
+					else
+						xGSData.vColor = colPicked;
+				
+			
+				}
+				else if ( iPartId == iSelectedPartId && iEnablePicking > 0)
+				{
+					xGSData.vColor = colSelected;
+				
+				}
+				else
+				{
+					xGSData.vColor = vec4(0.8 * clu_in_vColor.rgb, clu_in_vColor.a);	
+				}
+			}
+			else
+			{
+			// in Picking mode, we use outr picking color
+				xGSData.vColor = clu_in_vColor;
+			}
+			
+			// set the instance ID
+			xGSData.iInstance = gl_InstanceID;
+			
+			// and pass the vertex position
+			gl_Position = vec4( clu_in_vVertex.xyz, 1.0 );
+		}
+	";	
+	
+	/*
+	Geometry shader for Arrows	
+		uniforms:
+			
+			clu_matProjection
+			u_dArrowHeadLength 		- Factor for the length of the arrowhead. (e.g 0.35 = 35% of the arrow for its head)
+			u_dArrowScale			- Factor for scaling of the arrow.
+			u_fArrowLength			- Factor for the length of the whole arrow.
+			u_fPi					- Pi.
+			u_iMaxCornerPerInstance	- Maximum sides drawn per instance.
+			u_iMaxInstanceCount		- Maximum rendering instances of the arrow.
+	*/
+	sGSCode = @Shader"
+		#version 330
+
+		layout ( lines ) in;
+		layout ( triangle_strip, max_vertices = 73 ) out;
+		
+		in GSData
+		{
+			vec4 vColor;
+			int iInstance;
+		} xGSData[];
+		
+		out FSData
+		{
+			vec4 vColor;
+			vec3 vNormal;
+			vec3 vPos;
+		
+		} xFSData;
+		
+		uniform mat4 clu_matModelView;
+		uniform mat4 clu_matProjection;
+		uniform mat4 clu_matModelViewProjection;
+		uniform int clu_piViewport[4];
+		uniform int clu_iInPickDrawMode;
+	
+		uniform int iEnablePicking;
+
+		uniform float u_fArrowHeadLength;
+		uniform float u_fArrowScale;
+		uniform float u_fMagnitudeFactor;
+		uniform float u_fArrowLength;
+		uniform float u_fPi;
+		uniform int u_iMaxCornerPerInstance;
+		uniform int u_iMaxInstanceCount;
+		
+		
+		/*
+			Draws a full side of an arrow.
+			vPrevVec = Point1 of side strip (Point2 of previous side strip).
+			vCurVec = Point2 of side strip.
+			vPos1 = Startpoint of the arrow.
+			vPos2 = Endpoint of the arrow.
+			vDirPlane = End of the shaft of the arrow / Start of the arrow head. (percentage part of the direction vector)
+			fZoom = Represents the stretching.
+			fMagnitude = Magnitude of the arrow.
+		*/
+		void DrawFullArrowSide( vec3 vPrevVec, vec3 vCurVec, vec3 vPos1, vec3 vPos2, vec3 vDirPlane, float fZoom, vec4 vColor )
+		{
+			vec3 vPlane1P1 = vPrevVec * fZoom + vPos1;
+			vec3 vPlane1P2 = vCurVec * fZoom + vPos1;
+			vec3 vPlane2P1 = vPrevVec * fZoom + vPos1 + vDirPlane;
+			vec3 vPlane2P2 = vCurVec * fZoom + vPos1 + vDirPlane;
+			vec3 vPlane2P3 = vPrevVec * fZoom * 2 + vPos1 + vDirPlane;
+			vec3 vPlane2P4 = vCurVec * fZoom * 2 + vPos1 + vDirPlane;
+			
+			vec3 vNormal = -normalize( cross( vPos1 - vPlane1P1, vPlane1P1 - vPlane1P2 ) );
+			xFSData.vColor = vColor;
+			xFSData.vNormal = vNormal;
+			xFSData.vPos = vPos1;
+			gl_Position = clu_matModelViewProjection * vec4( vPos1, 1 );
+			EmitVertex();
+			xFSData.vColor = vColor;
+			xFSData.vNormal = vNormal;
+			xFSData.vPos = vPlane1P2;
+			gl_Position = clu_matModelViewProjection * vec4( vPlane1P2, 1 );
+			EmitVertex();
+			xFSData.vColor = vColor;
+			xFSData.vNormal = vNormal;
+			xFSData.vPos = vPlane1P1;
+			gl_Position = clu_matModelViewProjection * vec4( vPlane1P1, 1 );
+			EmitVertex();
+			
+			vNormal = normalize( cross( vPlane1P1 - vPlane1P2, vPlane1P2 - vPlane2P2 ) );
+			
+			xFSData.vColor = vColor;
+			xFSData.vNormal = vNormal;
+			xFSData.vPos = vPlane2P2;
+			gl_Position = clu_matModelViewProjection * vec4( vPlane2P2, 1 );
+			EmitVertex();
+			xFSData.vColor = vColor;
+			xFSData.vNormal = vNormal;
+			xFSData.vPos = vPlane2P1;
+			gl_Position = clu_matModelViewProjection * vec4( vPlane2P1, 1 );
+			EmitVertex();
+			
+			vNormal = -normalize( cross( vPlane2P2 - vPlane2P1, vPlane2P1 - vPlane2P3 ) );
+			
+			xFSData.vColor = vColor;
+			xFSData.vNormal = vNormal;
+			xFSData.vPos = vPlane2P4;
+			gl_Position = clu_matModelViewProjection * vec4( vPlane2P4, 1 );
+			EmitVertex();
+			xFSData.vColor = vColor;
+			xFSData.vNormal = vNormal;
+			xFSData.vPos = vPlane2P3;
+			gl_Position = clu_matModelViewProjection * vec4( vPlane2P3, 1 );
+			EmitVertex();
+			
+			vNormal = normalize( cross( vPlane2P3 - vPlane2P4, vPlane2P4 - vPos2 ) );
+			
+			xFSData.vColor = vColor;
+			xFSData.vNormal = vNormal;
+			xFSData.vPos = vPos2;
+			gl_Position = clu_matModelViewProjection * vec4( vPos2, 1 );
+			EmitVertex();
+			EndPrimitive();
+		}
+		
+		void main()
+		{
+			vec4 vColor = xGSData[0].vColor;
+			vec3 vPos1 = vec3( gl_in[0].gl_Position );
+			vec3 vDir = vec3( gl_in[1].gl_Position ) * u_fArrowLength;
+			vec3 vPos2 = vPos1 + vDir;
+			
+			vec2 vPixelSize;
+			vPixelSize.x = 2.0 / float(clu_piViewport[2]);
+			vPixelSize.y = 2.0 / float(clu_piViewport[3]);
+			
+			
+				
+		
+				vec3 vNorm = normalize( vDir );
+				vec3 vNormAbs = abs( vNorm );
+				vec3 vPer1;
+				// Finding the line direction vector based on the lowest value in vNormAbs
+				if( vNormAbs.x < vNormAbs.y )
+				{
+					if( vNormAbs.x < vNormAbs.z )
+					{
+						vPer1 = vec3( 1, 0, 0 );
+					}
+					else
+					{
+						vPer1 = vec3( 0, 0, 1 );
+					}
+				}
+				else
+				{
+					if( vNormAbs.y < vNormAbs.z )
+					{
+						vPer1 = vec3( 0, 1, 0 );
+					}
+					else
+					{
+						vPer1 = vec3( 0, 0, 1 );
+					}
+				}
+				vec3 vPlane1 = cross( vPer1, vNorm );
+				vec3 vPlane2 = cross( vNorm, vPlane1 );
+				
+				// Plane seperating the arrow head and the shaft.
+				vec3 vDirPlane = vDir * u_fArrowHeadLength;
+				
+				//Computing the arrow size in screen space coordinates	
+				// we use the arrow direction AND a perpendicular vector 
+				vec4 vPos1SS = clu_matModelViewProjection * vec4(vPos1, 1);
+				vec4 vPos2SSPerpendicular = clu_matModelViewProjection * vec4(vPos1 + vPer1 * u_fArrowScale , 1);
+				vec4 vPos2SSDir = clu_matModelViewProjection * vec4(vPos1 + normalize(vDir) * u_fArrowScale , 1);
+				
+				// Do perspective division
+				vPos1SS /= vPos1SS.w;
+				vPos2SSPerpendicular /= vPos2SSPerpendicular.w;
+				vPos2SSDir /= vPos2SSDir.w;
+				
+				// now get the larger distance. Either to point in Arrow direction, or the perpendicular one
+				float fDistance = max(distance(vPos1SS.xyz, vPos2SSPerpendicular.xyz), distance(vPos1SS.xyz, vPos2SSDir.xyz));
+			
+				int iCornerCount = u_iMaxCornerPerInstance; //corners for this instance
+		
+					// If the Arrow size is smaller than 1.5 pixel, do not draw this arrow
+					if (fDistance < 2*vPixelSize.x)
+					{
+						return;
+					}
+			
+					// if the arrow thickness is below 7 pixel, reduce the corner count to the minimal available amount
+					if (fDistance < 7 * vPixelSize.x)
+					{
+						iCornerCount = 3;
+					}
+			
+			
+			
+				int iMaxCorners = iCornerCount * u_iMaxInstanceCount; //max corners over all instances.
+				float fAngleStep = 2.0 * u_fPi / float( iMaxCorners );
+			
+				vec3 vCurDir;
+				vec3 vPrevDir;
+				float fAngle;
+				// Computing the start angle for this instance.
+				if( xGSData[0].iInstance == 0 )
+				{
+					vPrevDir = vPlane1;
+					fAngle = fAngleStep;
+				}
+				else
+				{
+					fAngle = ( ( xGSData[0].iInstance ) * iCornerCount ) * fAngleStep;
+					vPrevDir = cos( fAngle ) * vPlane1 + sin( fAngle ) * vPlane2;
+					fAngle += fAngleStep;
+				}
+				
+				// Drawing all sides for this instance.
+				for(int i = 0; i < iCornerCount; ++i, fAngle += fAngleStep)
+				{
+					vCurDir = cos( fAngle ) * vPlane1 + sin( fAngle ) * vPlane2;
+						
+					DrawFullArrowSide( vPrevDir, vCurDir, vPos1, vPos2, vDirPlane, u_fArrowScale, vColor );
+					vPrevDir = vCurDir;
+				}
+			
+		}
+	";
+	
+	/*
+	 Geometry shader for middle till far distance
+		uniforms:
+			clu_matModelView
+			clu_matProjection
+			u_matTranslatMatrix 	- Containing the needed translation.
+			u_fMagnitudeFactor		- Computed value to bring the highest available magnitude to the value 1.0
+			u_fArrowLength			- Factor for the length of the whole arrow.
+			u_fDistanceBorder		- Value for the maximum distance for arrows.
+			u_iShowLines			- Show far lines (1 = show, 0 = hide).
+	*/
+	sGS2Code = @Shader"
+		#version 330
+		
+		layout ( lines ) in;
+		layout ( line_strip, max_vertices = 2 ) out;
+		
+		in GSData
+		{
+			vec4 vColor;
+			int iInstance;
+		} xGSData[];
+		
+		
+		out FSData
+		{
+			vec4 vColor;
+		} xFSData;
+		
+		uniform mat4 clu_matModelView;
+		uniform mat4 clu_matProjection;
+	
+		uniform float u_fMagnitudeFactor;
+		uniform float u_fArrowLength;
+		uniform float u_fDistanceBorder;
+		uniform int u_iShowLines;
+		
+		/* 
+			Computing the MVP Matrix with the needed translation provided via the uniform.
+		*/
+		mat4 TransMatplusMVP()
+		{
+			return clu_matProjection * clu_matModelView;
+		}
+		
+		/*
+			Draws a simple line between two points in the given Color.
+		*/
+		void DrawLine( vec3 vP1, vec3 vP2, vec4 vColor )
+		{
+			xFSData.vColor = vColor;
+			gl_Position = TransMatplusMVP() * vec4( vP1, 1 );
+			EmitVertex();
+			xFSData.vColor = vColor;
+			gl_Position = TransMatplusMVP() * vec4( vP2, 1 );
+			EmitVertex();
+			EndPrimitive();
+		}
+		
+		void main()
+		{
+			
+			
+			vec3 vPos1 = vec3( gl_in[0].gl_Position );
+			vec3 vDir = vec3( gl_in[1].gl_Position ) * u_fArrowLength;
+			vec3 vPos2 = vPos1 + vDir;
+					
+			DrawLine( vPos1, vPos2, xGSData[0].vColor );
+			
+			
+		}
+	";
+	
+	/*
+	Fragment shader for near till middle distances.
+		uniforms:
+			clu_matModelView
+			u_matTranslatMatrix	- Containing the needed translatation.
+			u_vecAmbientColor	- Containing the ambient color value.
+			u_vecDiffuseColor	- Containing the diffuse color value.
+			u_vecLightPosition	- Specifies the position of the light.
+	*/
+	sFSCode = @Shader"
+		#version 330
+		
+		uniform mat4 clu_matModelView;
+		uniform int clu_iInPickDrawMode;
+
+		uniform vec3 u_vecLightPosition;
+		
+		uniform float u_fSpecularFac;
+		uniform float u_fAmbientFac;
+		
+		in FSData
+		{
+			vec4 vColor;
+			vec3 vNormal;
+			vec3 vPos;
+		
+		} xFSData;
+		
+		out vec4 vFragColor;
+		
+		void main()
+		{
+			
+			
+			// having a picking, we do not manipulate the color
+			if (clu_iInPickDrawMode == 1)
+			{
+				vFragColor.rgba = xFSData.vColor;
+				return;
+			}
+			
+			
+			// Pass the color value
+			vec4 vColor = xFSData.vColor;
+						
+			// Computing of needed vecs and mats.
+			mat4 matNewModelView = clu_matModelView;
+			mat3 matNormalMat = mat3( matNewModelView );
+			vec3 vEyeNormal = normalize( matNormalMat * xFSData.vNormal );
+			vec4 vPosition4 = matNewModelView * vec4( xFSData.vPos, 1 );
+			vec3 vPosition3 = vPosition4.xyz;
+			
+			vec3 vLightDir = normalize( u_vecLightPosition - vPosition3 );
+			// Diffuse value.
+			float fDiff = max( u_fAmbientFac, dot( vEyeNormal, vLightDir) );
+			
+			
+			// Add diffuse and ambient color to the real color. 
+			vFragColor = vec4( fDiff * vColor.rgb, vColor.a);
+	
+			vec3 vReflection = normalize( reflect( -normalize( vLightDir ), normalize( vEyeNormal ) ) );
+			float fSpec = max( 0.0, dot( normalize( vEyeNormal ), vReflection ) );
+			if( fDiff != 0.0 )
+			{
+				// Add specular color.
+				float fSpecular = 0.6 * pow( fSpec, 128.0 );
+				vFragColor.rgb += vec3( fSpecular, fSpecular, fSpecular ) * u_fSpecularFac;
+			}
+			
+		
+		}
+	";
+		
+	/*
+		Fragment shader for middle till far distances.
+			uniforms:
+				u_vecAmbientColor	- Containing the ambient color value.
+	*/
+	sFS2Code = @Shader"
+		#version 330	
+		
+		in FSData
+		{
+			vec4 vColor;
+		} xFSData;
+			
+		out vec4 vFragColor;
+		
+		uniform vec4 u_vecAmbientColor;
+		
+		void main()
+		{
+			// Add ambient color.
+			vFragColor = xFSData.vColor;
+			vFragColor += u_vecAmbientColor;
+		}
+	";
+
+	shDefault = Shader( "Default" );
+	shStageOne = Shader( "StageOne" );
+	shStageTwo = Shader( "Shad2" );
+	ShaderBuild( shStageOne, [sVSCode], [sFSCode], [sGSCode] );
+	ShaderBuild( shStageTwo, [sVSCode], [sFS2Code], [sGS2Code] );
+	
+		EnableShaderForPicking(shStageOne, true);
+		
+	shStageOne( "Var", "u_fPi", Pi );
+	// Ambient light, light position and the magnitude factor for both shader stages.
+	
+	shStageOne( "Var", "u_vecLightPosition", [0, 0, -5] );
+	shStageOne( "Var", "u_fSpecularFac", 0.0 );
+	shStageOne( "Var", "u_fAmbientFac", 0.5 );
+	
+	shStageOne("Var", "colPicked", Color(0.957, 0.576, 0.510));
+	shStageOne("Var", "colSelected", Color(0.953, 0.396, 0.745));
+	shStageOne("Var", "colPickSel", Color(0.890, 0.243, 0.584));		
+	shStageOne("Var", "iEnablePicking", 1);		
+	shStageOne("Var", "iSelectedPartId", -1);		
+	
+	
+
+	//EnableShaderForPicking(shStageOne, true);
+	
+	
+	
+	
+	
+	[shStageOne, shStageTwo]
+	
+	
+}
+
+
+
+}
+
+
+// Debug
+if ( false )
+{
+
+
+	[shStageOne, shStageTwo] = Shader_Arrow3d_PartId();
+	vxA = Object( "Object", OM_LINES );
+	
+	/*
+		Read data from file or use local test data.
+		If read from a file, the file may only contain lines of six values.
+	*/
+	lData = [];
+	//Testdaten
+	lData( "vex" ) = Tensor( [
+	[0, 0, 0], [0.3, -0.3, 0.4],
+	[0, 2, -3], [0.2, 0.2, 0.2],
+	[1, -2, -3], [0.5, 0.2, 0.5],
+	[-2, 1.1, -1.68], [0.1, -0.1, 0.698],
+	[3, 0, -5], [0, 0, -0.2],
+	[1, 4, -1], [0.25, 0, 0],
+	[1, 1, 1], [0.25, 0,0],
+	[1, 1, 1], [-0.25, 0, 0],
+	[1, 1, 1], [0, 0.25, 0],
+	[1, 1, 1], [0, -0.25, 0],
+	[1, 1, 1], [0, 0, 0.25],
+	[1, 1, 1], [0, 0, -0.25],
+	] );
+	
+	
+		//Testdaten
+	lData( "col" ) = Tensor( [
+	[0, 0, 0], [0.3, -0.3, 0.4],
+	[0, 1, 1], [0.2, 0.2, 0.2],
+	[1,0, 1], [0.5, 0.2, 0.5],
+	[0, 1, 0], [0.1, -0.1, 0.698],
+	[1, 0, 0], [0, 0, -0.2],
+	[1, 1, 0], [0.25, 0, 0],
+	[1, 1, 0], [0.25, 0,0],
+	[1, 0, 1], [-0.25, 0, 0],
+	[0, 1, 1], [0, 0.25, 0],
+	[1, 0, 1], [0, -0.25, 0],
+	[0, 0, 1], [0, 0, 0.25],
+	[1, 0, 1], [0, 0, -0.25],
+	] );
+	
+	
+	lData("partid") = Tensor(  [1,1,2,2,3,3,4,4,5,5,6,6,7,7,8,8,9,9,10,10,11,11,12,12] );
+	
+
+	
+	vxA << lData;
+	
+	SetLineWidth( 1.8 );
+	_BGColor = White;
+	
+	// Sliders and boxes
+	fDirLengthFactor = Slider( "VectorLengthFactor", 1, 10, 0.001, 5.970 );
+	fArrowHeadLength = 1 - Slider( "Arrowhead length", 0.001,1, 0.001, 0.350 );
+	fArrowScale = Slider( "Arrow-Scale", 0.001, 0.1, 0.001, 0.050 );
+	iShowLines = CheckBox( "Show far lines?", 1 );
+	
+	iSliderInstances = Slider( "Number of Instances:", 1, 50, 1, 1 );
+	iSliderCornersPerInstance = Slider( "Amount of corners per instance:", 3, 9, 1, 9 );
+	
+	
+	iNumOfInstances = iSliderInstances;
+	iMaxCornersPerInstance = iSliderCornersPerInstance;
+	
+	
+	vxA( "InstanceCount", iNumOfInstances );
+	
+	shStageOne( "Var", "u_fArrowHeadLength", fArrowHeadLength );
+	shStageOne( "Var", "u_fArrowScale", fArrowScale );
+	
+	shStageOne( "Var", "u_fArrowLength", fDirLengthFactor );
+	shStageOne( "Var", "u_iMaxInstanceCount", iNumOfInstances );
+	shStageOne( "Var", "u_iMaxCornerPerInstance", iMaxCornersPerInstance );
+	
+	shStageTwo( "Var", "u_fArrowLength", fDirLengthFactor );
+	
+	scMain = Scene( "scMain" );
+	
+	EnableScenePick(scMain, true);
+	EnableSceneNotify(scMain, true);
+	DrawToScene( scMain );
+		:shStageOne;
+		:vxA;
+		:shStageTwo;
+		:vxA;
+	DrawToScene();
+	
+	:scMain;
+
+	?PickData;
+	if ( PickData("click") == "left" )
+	{
+			shStageOne("Var", "iSelectedPartId", PickData("part_id"));
+	}
+
+}

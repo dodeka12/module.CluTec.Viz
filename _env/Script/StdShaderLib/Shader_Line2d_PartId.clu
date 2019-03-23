@@ -1,0 +1,737 @@
+if ( ExecMode & EM_CHANGE )
+{
+	Shader_Line2d_PartId =
+	{
+		sName = _P(1);
+		
+		sVSCode = @Shader"
+		#version 330
+		
+		in vec4 clu_in_vVertex;
+		in vec4 clu_in_vColor;
+		in vec4 clu_in_vNormal;
+		in vec4 clu_in_vTex0;
+		in int clu_in_iPartId;
+			
+		out SVertexData
+		{
+			vec4 vColor;
+			vec4 vTex;
+			vec4 vNormal;
+			float fIsPickedPartId;
+		} xVertex;
+		
+		uniform int clu_iPickedPartId;
+		uniform int clu_iInPickDrawMode;
+		
+		uniform float fTime;
+		uniform float fTimeStep;
+		uniform float fPi;
+		uniform int iSelectedPartId;
+		uniform vec4 colPicked;
+		uniform vec4 colSelected;
+		uniform vec4 colPickSel;
+		uniform int iEnablePicking;
+		
+		void main()
+		{
+			int iPartId = clu_in_iPartId & 0x000FFFFF;
+			xVertex.fIsPickedPartId = 0.0;
+			
+			if ( clu_iInPickDrawMode == 0)
+			{
+				if ( iPartId == clu_iPickedPartId && iEnablePicking > 0)
+				{
+					if ( iPartId == iSelectedPartId )
+						xVertex.vColor = colPickSel;
+					else
+						xVertex.vColor = colPicked;
+				
+					xVertex.fIsPickedPartId = 1.0;		
+				}
+				else if ( iPartId == iSelectedPartId && iEnablePicking > 0)
+				{
+					xVertex.vColor = colSelected;
+					xVertex.fIsPickedPartId = -1.0;		
+				}
+				else
+				{
+					xVertex.vColor = vec4(0.8 * clu_in_vColor.rgb, clu_in_vColor.a);	
+				}
+			}
+			else
+			{
+				xVertex.vColor = clu_in_vColor;
+			}
+			
+			xVertex.vNormal = clu_in_vNormal;
+			xVertex.vTex = clu_in_vTex0;
+			gl_Position = vec4(clu_in_vVertex.xyz, 1.0);
+		}
+		";
+		
+		sGSCode = @Shader"
+		#version 330
+		
+		precision highp float;
+		
+		layout (lines_adjacency) in;
+		layout (triangle_strip, max_vertices = 24) out;
+	
+		in SVertexData
+		{
+			vec4 vColor;
+			vec4 vTex;
+			vec4 vNormal;
+			float fIsPickedPartId;
+		} xVertex[];
+		
+		out SFragData
+		{
+			vec4 vColor;
+			vec4 vTex;
+			float fTotalLen;
+			float fSegmentTime;
+			float fTotalTime;
+		} xFrag;
+			
+		uniform mat4 clu_matModelViewProjection;
+		uniform mat4 clu_matModelView;
+		uniform mat4 clu_matProjection;
+		//uniform mat4 clu_matInvModelViewProjection;
+		//uniform vec4 clu_vOpticalCenter;
+		uniform int clu_piViewport[4];
+		//uniform float clu_pfDepthRange[2];
+		uniform int clu_iInPickDrawMode;
+		uniform float clu_fLineWidth;
+	
+		vec3 EvalScreenPos(vec4 vWorldPos)
+		{
+			vec4 vA = clu_matModelViewProjection * vWorldPos;
+			vA /= vA.w;
+			return vA.xyz;
+		}
+		
+		vec2 IntersectionPoint(vec2 vP1, vec2 vD1, vec2 vP2, vec2 vD2)
+		{
+			vec2 vDelta = vP2 - vP1;
+			vec2 vA = vDelta - dot(vDelta, vD1)*vD1;
+			vec2 vB = vD2 - dot(vD2,vD1)*vD1;
+			
+			float fA;
+			
+			if ( abs(vB.x) > abs(vB.y) )
+				fA = -vA.x / vB.x;
+			else
+				fA = -vA.y / vB.y;
+			
+			return vP2 + fA * vD2;
+		}
+		
+		vec3 EvalBorderIntersection(vec3 vPos, vec3 vBasisX, vec3 vBasisY, vec3 vX, vec3 vY, float fWidth)
+		{
+			vec2 vP1 = vec2(0, -fWidth);
+			vec2 vD1 = vec2(1, 0);
+			vec2 vP2, vD2;
+			vec3 vPnt = -fWidth * vY;
+			vP2.x = dot(vPnt, vBasisX);
+			vP2.y = dot(vPnt, vBasisY);
+			vD2.x = dot(vX, vBasisX);
+			vD2.y = dot(vX, vBasisY);
+			
+			vec2 vI = IntersectionPoint(vP1, vD1, vP2, vD2);
+			vec3 vDir = vI.x * vBasisX + vI.y * vBasisY;	
+
+			if ( length(vDir) > fWidth )
+			{
+				vPnt = fWidth * normalize(vDir) + vPos;
+			}
+			else
+			{
+				vPnt = vDir + vPos;
+			}
+			return vPnt;	
+		}
+		
+		void DrawLine(vec3 vA, vec3 vB)
+		{
+			xFrag.vColor = vec4(1, 1, 1, 1);
+			gl_Position = clu_matProjection * vec4(vA, 1);
+			EmitVertex();
+
+			xFrag.vColor = vec4(1, 0.5, 0.2, 1);
+			gl_Position = clu_matProjection * vec4(vB, 1);
+			EmitVertex();
+			
+			EndPrimitive();
+		}
+
+		void DrawDir(vec3 vA, vec3 vDir)
+		{
+			xFrag.vColor = vec4(1, 1, 1, 1);
+			gl_Position = clu_matProjection * vec4(vA, 1);
+			EmitVertex();
+
+			xFrag.vColor = vec4(1, 0.5, 0.2, 1);
+			gl_Position = clu_matProjection * vec4(vA + vDir, 1);
+			EmitVertex();
+			
+			EndPrimitive();
+		}
+		
+		void DrawDirC(vec3 vA, vec3 vDir)
+		{
+			xFrag.vColor = vec4(1, 1, 1, 1);
+			gl_Position = clu_matProjection * vec4(vA - 0.5*vDir, 1);
+			EmitVertex();
+
+			xFrag.vColor = vec4(1, 0.5, 0.2, 1);
+			gl_Position = clu_matProjection * vec4(vA + 0.5*vDir, 1);
+			EmitVertex();
+			
+			EndPrimitive();
+		}
+		
+		void AddVertex(vec3 vA, vec4 vColor, vec2 vTex, 
+						float fIsPickedPartId, float fTotalLen, 
+						float fSegmentTime, float fTotalTime)
+		{
+			xFrag.vColor = vColor;
+			xFrag.vTex = vec4(vTex.xy, 0, fIsPickedPartId);
+			xFrag.fTotalLen = fTotalLen; //xVertex[1].vTex.y;
+			xFrag.fSegmentTime = fSegmentTime; //xVertex[1].vNormal.x;
+			xFrag.fTotalTime = fTotalTime; //xVertex[1].vNormal.y;
+			gl_Position = clu_matProjection * vec4(vA, 1);
+			EmitVertex();
+		}
+		
+		void main()
+		{
+			const float fMinLen = 0.01;
+			float fLineWidth = clu_fLineWidth;
+			
+			vec2 vPixelSize;
+			vPixelSize.x = 2.0 / float(clu_piViewport[2]);
+			vPixelSize.y = 2.0 / float(clu_piViewport[3]);
+			
+			
+			vec3 vPos[4];
+			vec3 vLineDir[3];
+			vec3 vNormal[2];
+			vec3 vPerp[4];
+			float fLineLen[3];
+			
+			bool bIsFirst = (distance(gl_in[0].gl_Position, gl_in[1].gl_Position) < 0.001);
+			bool bIsLast = (distance(gl_in[2].gl_Position, gl_in[3].gl_Position) < 0.001);
+			
+			for ( int i = 0; i < 4; ++i )
+			{
+				vPos[i] = vec3(clu_matModelView * gl_in[i].gl_Position);
+			}
+
+			for ( int i = 0; i < 3; ++i )
+			{
+				vLineDir[i] = (vPos[i+1] - vPos[i]);
+				fLineLen[i] = length(vLineDir[i]);
+				vLineDir[i] = normalize(vLineDir[i]);
+			}
+
+			if ( !bIsFirst)
+				fLineWidth = min(fLineLen[0], fLineWidth);
+			
+			if ( !bIsLast )
+				fLineWidth = min(fLineLen[2], fLineWidth);
+				
+			fLineWidth = min(fLineLen[1], fLineWidth);
+
+			bool bIsPar01 = (length(cross(vLineDir[0], vLineDir[1])) < fMinLen);
+			bool bIsPar12 = (length(cross(vLineDir[1], vLineDir[2])) < fMinLen);
+			
+			if (!bIsFirst && !bIsPar01)
+			{
+				vNormal[0] = cross(vLineDir[0], vLineDir[1]);
+			}
+			else
+			{
+				vNormal[0] = vec3(clu_matModelView * vec4(0,0,1,0));
+			}
+				
+			if (!bIsLast && !bIsPar12)
+			{
+				vNormal[1] = cross(vLineDir[1], vLineDir[2]); 	
+			}
+			else
+			{
+				if (bIsPar01)
+					vNormal[1] = vec3(clu_matModelView * vec4(0,0,-1,0));
+				else
+					vNormal[1] = vec3(clu_matModelView * vec4(0,0,1,0));
+			}
+
+
+			//////////////////////////////////////////////////////////////////////
+			// Draw Normals
+			//DrawDir(vPos[1], vNormal[0]);
+			//DrawDir(vPos[2], vNormal[1]);
+			//////////////////////////////////////////////////////////////////////
+
+			//DrawLine(vec3(0,0,-5), vec3(1,0,-6));
+			vPerp[0] = normalize(cross(vLineDir[0], vNormal[0]));
+			vPerp[1] = normalize(cross(vLineDir[1], vNormal[0]));
+			vPerp[2] = normalize(cross(vLineDir[1], vNormal[1]));
+			vPerp[3] = normalize(cross(vLineDir[2], vNormal[1]));
+
+			//DrawDirC(vPos[1], 2 * fLineWidth * (vPerp[0]));
+			//DrawDirC(vPos[1], 2 * fLineWidth * (vPerp[1]));
+			//DrawDirC(vPos[2], 2 * fLineWidth * (vPerp[2]));
+			//DrawDirC(vPos[2], 2 * fLineWidth * (vPerp[3]));
+							
+			
+			vec3 vPntInner1, vPntOuter1;
+			vec3 vPntInner2, vPntOuter2;
+
+			if ( bIsFirst && bIsLast )
+			{
+				AddVertex(vPos[1] - fLineWidth * vPerp[1], xVertex[1].vColor, vec2(-1,-1), 
+					xVertex[1].fIsPickedPartId, xVertex[1].vTex.y, xVertex[1].vNormal.x, xVertex[1].vNormal.y);
+						
+				AddVertex(vPos[1] + fLineWidth * vPerp[1], xVertex[1].vColor, vec2(-1,1), 
+					xVertex[1].fIsPickedPartId, xVertex[1].vTex.y, xVertex[1].vNormal.x, xVertex[1].vNormal.y);
+					
+				AddVertex(vPos[2] - fLineWidth * vPerp[1], xVertex[2].vColor, vec2(1,-1), 
+					xVertex[2].fIsPickedPartId, xVertex[2].vTex.y, xVertex[2].vNormal.x, xVertex[2].vNormal.y);
+						
+				AddVertex(vPos[2] + fLineWidth * vPerp[1], xVertex[2].vColor, vec2(1,1), 
+					xVertex[2].fIsPickedPartId, xVertex[2].vTex.y, xVertex[2].vNormal.x, xVertex[2].vNormal.y);
+
+				EndPrimitive();
+
+			}
+			else if ( bIsFirst )
+			{
+			//return;
+				if ( !bIsPar12 )
+				{
+					vPntInner2 = EvalBorderIntersection(vPos[2], vLineDir[1], vPerp[2], vLineDir[2], vPerp[3], fLineWidth);
+					vPntOuter2 = vPntInner2 + 2 * fLineWidth * normalize(vPerp[2]+vPerp[3]);
+
+					AddVertex(vPos[1] + fLineWidth * vPerp[2], xVertex[1].vColor, vec2(-1,-1), 
+									xVertex[1].fIsPickedPartId, xVertex[1].vTex.y, xVertex[1].vNormal.x, xVertex[1].vNormal.y);
+									
+					AddVertex(vPos[1] - fLineWidth * vPerp[2], xVertex[1].vColor, vec2(-1,1), 
+									xVertex[1].fIsPickedPartId, xVertex[1].vTex.y, xVertex[1].vNormal.x, xVertex[1].vNormal.y);
+									
+					AddVertex(vPntInner2 + 2*fLineWidth * vPerp[2], xVertex[2].vColor, vec2(1,-1), 
+									xVertex[1].fIsPickedPartId, xVertex[2].vTex.y, xVertex[2].vNormal.x, xVertex[2].vNormal.y);
+									
+					AddVertex(vPntInner2, xVertex[2].vColor, vec2(1,1), 
+									xVertex[2].fIsPickedPartId, xVertex[2].vTex.y, xVertex[2].vNormal.x, xVertex[2].vNormal.y);
+									
+					AddVertex(vPntOuter2, xVertex[2].vColor, vec2(1,-1), 
+									xVertex[2].fIsPickedPartId, xVertex[2].vTex.y, xVertex[2].vNormal.x, xVertex[2].vNormal.y);
+				}
+				else
+				{
+					AddVertex(vPos[1] - fLineWidth * vPerp[1], xVertex[1].vColor, vec2(-1,-1), 
+						xVertex[1].fIsPickedPartId, xVertex[1].vTex.y, xVertex[1].vNormal.x, xVertex[1].vNormal.y);
+						
+					AddVertex(vPos[1] + fLineWidth * vPerp[1], xVertex[1].vColor, vec2(-1,1), 
+						xVertex[1].fIsPickedPartId, xVertex[1].vTex.y, xVertex[1].vNormal.x, xVertex[1].vNormal.y);
+						
+					AddVertex(vPos[2] - fLineWidth * vPerp[1], xVertex[2].vColor, vec2(1,-1), 
+						xVertex[2].fIsPickedPartId, xVertex[2].vTex.y, xVertex[2].vNormal.x, xVertex[2].vNormal.y);
+						
+					AddVertex(vPos[2] + fLineWidth * vPerp[1], xVertex[2].vColor, vec2(1,1), 
+						xVertex[2].fIsPickedPartId, xVertex[2].vTex.y, xVertex[2].vNormal.x, xVertex[2].vNormal.y);
+				}
+
+				EndPrimitive();
+			}
+			else if ( !bIsLast )
+			{
+			//return;
+				if ( !bIsPar01 )
+				{
+					vPntInner1 = EvalBorderIntersection(vPos[1], vLineDir[0], vPerp[0], vLineDir[1], vPerp[1], fLineWidth);
+					vPntOuter1 = vPntInner1 + 2 * fLineWidth * normalize(vPerp[0]+vPerp[1]);
+
+					AddVertex(vPntOuter1, xVertex[1].vColor, vec2(-1,1), 
+						xVertex[1].fIsPickedPartId, xVertex[1].vTex.y, xVertex[1].vNormal.x, xVertex[1].vNormal.y);
+						
+					AddVertex(vPntInner1, xVertex[1].vColor, vec2(-1,-1), 
+						xVertex[1].fIsPickedPartId, xVertex[1].vTex.y, xVertex[1].vNormal.x, xVertex[1].vNormal.y);
+						
+					AddVertex(vPntInner1 + 2*fLineWidth * vPerp[1], xVertex[1].vColor, vec2(-1,1), 
+						xVertex[1].fIsPickedPartId, xVertex[1].vTex.y, xVertex[1].vNormal.x, xVertex[1].vNormal.y);
+				}
+				else
+				{
+					AddVertex(vPos[1] - fLineWidth * vPerp[1], xVertex[1].vColor, vec2(-1,-1), 
+						xVertex[1].fIsPickedPartId, xVertex[1].vTex.y, xVertex[1].vNormal.x, xVertex[1].vNormal.y);
+						
+					AddVertex(vPos[1] + fLineWidth * vPerp[1], xVertex[1].vColor, vec2(-1,1), 
+						xVertex[1].fIsPickedPartId, xVertex[1].vTex.y, xVertex[1].vNormal.x, xVertex[1].vNormal.y);
+				}
+				
+				if ( !bIsPar12 )
+				{
+					vPntInner2 = EvalBorderIntersection(vPos[2], vLineDir[1], vPerp[2], vLineDir[2], vPerp[3], fLineWidth);
+					vPntOuter2 = vPntInner2 + 2 * fLineWidth * normalize(vPerp[2]+vPerp[3]);
+
+					AddVertex(vPntInner2 + fLineWidth * (vPerp[2] - vPerp[1]), xVertex[2].vColor, vec2(1,-1), 
+						xVertex[2].fIsPickedPartId, xVertex[2].vTex.y, xVertex[2].vNormal.x, xVertex[2].vNormal.y);
+						
+					AddVertex(vPntInner2 + fLineWidth * (vPerp[2] + vPerp[1]), xVertex[2].vColor, vec2(1,1), 
+						xVertex[2].fIsPickedPartId, xVertex[2].vTex.y, xVertex[2].vNormal.x, xVertex[2].vNormal.y);
+						
+					AddVertex(vPntOuter2, xVertex[2].vColor, vec2(1,sign(dot(vNormal[0], vNormal[1]))), 
+						xVertex[2].fIsPickedPartId, xVertex[2].vTex.y, xVertex[2].vNormal.x, xVertex[2].vNormal.y);
+				}
+				else
+				{
+					AddVertex(vPos[2] - fLineWidth * vPerp[1], xVertex[2].vColor, vec2(1,-1), 
+						xVertex[2].fIsPickedPartId, xVertex[2].vTex.y, xVertex[2].vNormal.x, xVertex[2].vNormal.y);
+						
+					AddVertex(vPos[2] + fLineWidth * vPerp[1], xVertex[2].vColor, vec2(1,1), 
+						xVertex[2].fIsPickedPartId, xVertex[2].vTex.y, xVertex[2].vNormal.x, xVertex[2].vNormal.y);
+				}
+
+				EndPrimitive();
+			}
+			else
+			{
+			//return;
+				vPntInner1 = EvalBorderIntersection(vPos[1], vLineDir[0], vPerp[0], vLineDir[1], vPerp[1], fLineWidth);
+				vPntOuter1 = vPntInner1 + 2 * fLineWidth * normalize(vPerp[0]+vPerp[1]);
+
+				if ( !bIsPar01 )
+				{
+					vPntInner1 = EvalBorderIntersection(vPos[1], vLineDir[0], vPerp[0], vLineDir[1], vPerp[1], fLineWidth);
+					vPntOuter1 = vPntInner1 + 2 * fLineWidth * normalize(vPerp[0]+vPerp[1]);
+
+					AddVertex(vPntOuter1, xVertex[1].vColor, vec2(-1,1), 
+						xVertex[1].fIsPickedPartId, xVertex[1].vTex.y, xVertex[1].vNormal.x, xVertex[1].vNormal.y);
+						
+					AddVertex(vPntInner1, xVertex[1].vColor, vec2(-1,-1), 
+						xVertex[1].fIsPickedPartId, xVertex[1].vTex.y, xVertex[1].vNormal.x, xVertex[1].vNormal.y);
+						
+					AddVertex(vPntInner1 + 2*fLineWidth * vPerp[1], xVertex[1].vColor, vec2(-1,1), 
+						xVertex[1].fIsPickedPartId, xVertex[1].vTex.y, xVertex[1].vNormal.x, xVertex[1].vNormal.y);
+						
+					AddVertex(vPos[2] - fLineWidth * vPerp[1], xVertex[2].vColor, vec2(1,-1), 
+						xVertex[2].fIsPickedPartId, xVertex[2].vTex.y, xVertex[2].vNormal.x, xVertex[2].vNormal.y);
+						
+					AddVertex(vPos[2] + fLineWidth * vPerp[1], xVertex[2].vColor, vec2(1,1), 
+						xVertex[2].fIsPickedPartId, xVertex[2].vTex.y, xVertex[2].vNormal.x, xVertex[2].vNormal.y);
+				}
+				else
+				{
+					AddVertex(vPos[1] + fLineWidth * vPerp[2], xVertex[1].vColor, vec2(-1,1), 
+						xVertex[1].fIsPickedPartId, xVertex[1].vTex.y, xVertex[1].vNormal.x, xVertex[1].vNormal.y);
+						
+					AddVertex(vPos[1] - fLineWidth * vPerp[2], xVertex[1].vColor, vec2(-1,-1), 
+						xVertex[1].fIsPickedPartId, xVertex[1].vTex.y, xVertex[1].vNormal.x, xVertex[1].vNormal.y);
+						
+					AddVertex(vPos[2] + fLineWidth * vPerp[2], xVertex[2].vColor, vec2(1,1), 
+						xVertex[2].fIsPickedPartId, xVertex[2].vTex.y, xVertex[2].vNormal.x, xVertex[2].vNormal.y);
+						
+					AddVertex(vPos[2] - fLineWidth * vPerp[2], xVertex[2].vColor, vec2(1,-1), 
+						xVertex[2].fIsPickedPartId, xVertex[2].vTex.y, xVertex[2].vNormal.x, xVertex[2].vNormal.y);			
+				}
+
+				EndPrimitive();			
+			}
+
+		}
+		
+		";
+		
+		sFSCode = @Shader"
+		#version 330
+		
+		in SFragData
+		{
+			vec4 vColor;
+			vec4 vTex;
+			float fTotalLen;
+			float fSegmentTime;
+			float fTotalTime;
+		} xFrag;
+		
+		out vec4 vFragColor;
+		
+		uniform vec4 clu_vColor;
+		uniform int clu_iPickedPartId;
+		uniform int clu_iInPickDrawMode;
+		
+		uniform float fTime;
+		uniform float fTimeStep;
+		uniform float fPi;
+		uniform float fUnitsPerSecond;
+		uniform float fPointsPerUnitLength;
+		uniform float fGlowLength;
+		uniform int iAnimPointsOnly;
+		uniform int iDoAnimateAll;
+		uniform int iEnablePicking;
+		
+		void main()
+		{
+			//vFragColor = xFrag.vColor;
+			//vFragColor = vec4(xFrag.fSegmentTime-2, 0.3, 0.3, 1);
+			//return;
+			const float fRadius = 0.8;
+			const float fGlowSize = 0.05;
+			const float fGlowRadius = fRadius - fGlowSize;
+			const vec3 colSpec = vec3(1.0, 1.0, 1.0);
+			const float fDiffPart = 0.7;
+	
+	        vec2 vPos = xFrag.vTex.st;
+			float fDelta;
+			
+			if ( xFrag.vTex.z > 0.5 )
+			{
+				fDelta = length(vPos);
+			}
+			else
+			{
+				fDelta = abs(vPos.y);
+			}
+			float fFac = 1.0 - (fDelta*fDelta)/(fRadius*fRadius);
+			float fSpec = pow(clamp(fFac, 0.0, 1.0), 6.0);
+			
+			float fGlow = clamp(1.0 - (fDelta-fGlowRadius)/(fGlowSize*fGlowRadius), 0.0, 1.0);
+			
+			if (clu_iInPickDrawMode != 0)
+			{
+				if (fGlow > 0.0 )
+				{
+					vFragColor = xFrag.vColor;
+				}
+				else
+				{
+					// Don't draw any fragment for invalid areas.
+					discard;
+				}
+			}
+			else
+			{
+				vec3 colA = fDiffPart/3*(1.0 + 2*sqrt(fFac)) * xFrag.vColor.rgb
+					+ (1.0 - fDiffPart) * fSpec * colSpec;
+				
+				if ( (xFrag.vTex.w != 0.0 || iDoAnimateAll > 0))
+				{
+					float fCurrentTime;
+					float fConstColorFactor;
+					float fVarColorFactor;
+					float fGlowLengthRatio;
+					int iPointsPerTrack = max(int(floor(xFrag.fTotalLen + 0.5) * fPointsPerUnitLength), 1);
+
+					if ( xFrag.vTex.w > 0.5 || iDoAnimateAll > 0 )
+					{
+						fCurrentTime = fTime;
+						fConstColorFactor = 0.4;
+						fVarColorFactor = 1.2;
+						fGlowLengthRatio = 5;
+					}
+					else if (xFrag.vTex.w < -0.5)
+					{
+						fCurrentTime = 0.5;
+						fConstColorFactor = 0.6;
+						fVarColorFactor = 0.9;
+						fGlowLengthRatio = 1;
+						iPointsPerTrack *= 3;
+					}
+					
+					float fLightTime, fLightDist;
+					float fMinLightDist = iPointsPerTrack * xFrag.fTotalTime;
+					for ( int i = -iPointsPerTrack+1; i < iPointsPerTrack; ++i )
+					{
+						fLightTime = mod(fCurrentTime/xFrag.fTotalLen * fUnitsPerSecond, 1);
+						fLightDist = (fLightTime - xFrag.fSegmentTime / xFrag.fTotalTime - float(i)/float(iPointsPerTrack)) /  0.01; 
+						if (abs(fLightDist) < abs(fMinLightDist))
+							fMinLightDist = fLightDist;
+					}
+					
+					fLightDist = fMinLightDist;
+					float fA = max(fLightDist, 0);
+					float fB = min(fLightDist, 0); 
+					float fVal = exp(-(fA*fA)/fGlowLength 
+									-(fB*fB)*fGlowLengthRatio/fGlowLength);
+					float fAtt = fConstColorFactor + fVarColorFactor * fVal;
+					float fBorderDist = 1 - (abs(vPos.y) - fRadius) / (1.0 - fRadius);
+					
+					if ( iAnimPointsOnly > 0 && (xFrag.vTex.w > 0.5 || iDoAnimateAll > 0))
+					{
+						fA = exp(-(abs(vPos.y) / fRadius * 0.5 ));
+						vFragColor = vec4( fA * (0.4 + fVal) * xFrag.vColor.rgb , fA * fVal);
+					}
+					else
+					{
+						if ( abs(vPos.y) >= fGlowRadius - 0.05)
+							vFragColor = vec4(fVal*xFrag.vColor.rgb, 
+											fVal * (fGlow + fBorderDist));
+						else
+							vFragColor = vec4( fAtt * colA , fGlow);
+					}
+				}
+				else
+				{
+					vFragColor = vec4( colA , fGlow );
+				}
+			}
+		}
+		";
+	
+		shPartId = Shader( sName + "PartId" );
+		EnableShaderForPicking(shPartId, true);
+		ShaderBuild(shPartId, [sVSCode], [sFSCode], [sGSCode]);
+		shPartId("Var", "iSelectedPartId", -1);
+		
+		shPartId("Var", "colPicked", Color(0.957, 0.576, 0.510));
+		shPartId("Var", "colSelected", Color(0.953, 0.396, 0.745));
+		shPartId("Var", "colPickSel", Color(0.890, 0.243, 0.584));		
+		shPartId("Var", "fUnitsPerSecond", 1);
+		shPartId("Var", "fPointsPerUnitLength", 0.5);
+		shPartId("Var", "fGlowLength", 0.5);
+		shPartId("Var", "iAnimPointsOnly", 0);
+		shPartId("Var", "iDoAnimateAll", 0);
+		shPartId("Var", "iEnablePicking", 1);
+		
+		shPartId break;
+	}
+
+}
+	
+// /////////////////////////////////////////////////////////////////////
+// Debugging
+
+if ( false )
+{
+	if ( ExecMode & EM_CHANGE )
+	{	
+		shA = Shader_Line2d_PartId("test");
+		shDef = Shader("Default");
+		
+	    // Create the object
+	    vxA = Object( "Hello", OM_LINE_STRIP_ADJACENCY);
+	
+	    lData = [];
+	
+		lA = [	VecE3(-1,-1,0), VecE3(-0.5,-0.5,0), VecE3(-0.5,0.3,0), 
+				VecE3(-0.0,-1.9,0), VecE3(2,-1,0), VecE3(1,1.5,0)];
+
+		dTotalLen = 0.0;
+		iIdx = 0;
+		iCnt = Size(lA);
+		loop
+		{
+			iIdx = iIdx + 1;
+			if ( iIdx >= iCnt ) break;
+			
+			dTotalLen = dTotalLen + abs(lA(iIdx+1) - lA(iIdx));
+		}
+		?dTotalLen;
+
+		lTex = List(6);
+		lNorm = List(6);
+		lTex(1) = [0,dTotalLen,0];
+		lNorm(1) = [0,iCnt,0];
+		dLen = 0;
+		iIdx = 0;
+		iCnt = Size(lA);
+		loop
+		{
+			iIdx = iIdx + 1;
+			if ( iIdx >= iCnt ) break;
+			
+			dLen = dLen + abs(lA(iIdx+1) - lA(iIdx));
+			lTex(iIdx+1) = [dLen, dTotalLen, 0];
+			lNorm(iIdx+1) = [iIdx, iCnt, 0];
+		}
+		?lTex;
+		
+	    // Set vertices.
+	    lData("vex") = lA;//Tensor( [[-1,-1,1], [-0.5,0,0], [-0.48,0,0], [-0.47,0.0,0], [2,1,0], [1, 1.5, 1]] );
+	
+	    // Set colors, one for each vertex.
+		lData("col") = Tensor( [[0.3,0.9,0.3], [1.0,0.0,0.0], [0.0,1.0,0.0], 
+								[0.0,0.0,1.0], [1,1,0], [0,1,1]] );
+		lData("tex") = lTex;
+		lData("norm") = lNorm;
+	    // Set an index list
+	    lData("idx") = Tensor( [ [1,1,2,2]] );
+	
+		lData("partid") = Tensor( [1, 1, 1, 1, 1, 1] );
+	    //?lData;
+	
+	    // Set the data to the object
+	    vxA << lData;
+	
+		scA = Scene("A");
+		scAAnim = Scene("AAnim");
+		scAPick = Scene("A_Picked");
+		EnableScene(scAAnim, false);
+		EnableScenePick(scA, true);
+		SetPickScene(scA, scAPick);
+		EnableSceneNotify(scA, true);
+		DrawToScene(scA);
+			:scAAnim;
+			:shA;
+			:White;
+			:vxA;
+			//DrawPlane(VecE3(0,0), VecE3(1,0), VecE3(0,1));
+			:shDef;
+		DrawToScene();
+	
+		DrawToScene(scAAnim);
+			:AnimShader(shA, "fTime", "fTimeStep");
+		DrawToScene();
+		
+		DrawToScene(scAPick);
+			:AnimShader(shA, "fTime", "fTimeStep");
+			:shA;
+			:White;
+			:vxA;
+			//DrawPlane(VecE3(0,0), VecE3(1,0), VecE3(0,1));
+			:shDef;
+		DrawToScene();
+	
+	}
+	//EnableAntiAliasing(true);
+	
+	?PickData;
+	bAnimPointsOnly = CheckBox("Anim Points Only", 0);
+	bDoAnimateAll = CheckBox("Do Animate All", 0);
+	
+	if ( ExecMode & EM_PICK_SELECT )
+	{
+		if ( PickData("click") == "left" )
+			shA("Var", "iSelectedPartId", PickData("part_id"));
+	}
+	else if ( ToolName == "Anim Points Only" )
+	{
+		shA("Var", "iAnimPointsOnly", bAnimPointsOnly);
+	}	
+	else if ( ToolName == "Do Animate All" )
+	{
+		shA("Var", "iDoAnimateAll", bDoAnimateAll);
+		EnableScene(scAAnim, bDoAnimateAll);
+	}
+	
+	_2dView = true;	
+	DrawFrame(3);
+	:DWhite + Alpha;
+	DrawPlane(VecE3(0,0,-0.01), VecE3(3,0), VecE3(0,3));
+	SetLineWidth(Slider("Line Width", 1, 50, 1, 10)/100);
+	:White;
+	//SetTexture(imgA);
+	:scA;
+	
+	TranslateFrame(0,0,0.5);
+		:MWhite;
+	SetPointSize(5);
+	:E3_DRAW_VEC_AS_POINT;
+	:DRAW_POINT_AS_DOT;
+	:lA;
+
+} // if debug true

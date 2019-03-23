@@ -1,0 +1,512 @@
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// project:   CluTec.Viz.OpenGL.Extensions.rtl
+// file:      Extensions.cpp
+//
+// summary:   Implements the extensions class
+//
+//            Copyright (c) 2019 by Christian Perwass.
+//
+//            This file is part of the CluTecLib library.
+//
+//            The CluTecLib library is free software: you can redistribute it and / or modify
+//            it under the terms of the GNU Lesser General Public License as published by
+//            the Free Software Foundation, either version 3 of the License, or
+//            (at your option) any later version.
+//
+//            The CluTecLib library is distributed in the hope that it will be useful,
+//            but WITHOUT ANY WARRANTY; without even the implied warranty of
+//            MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+//            GNU Lesser General Public License for more details.
+//
+//            You should have received a copy of the GNU Lesser General Public License
+//            along with the CluTecLib library.
+//            If not, see <http://www.gnu.org/licenses/>.
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+#include "stdafx.h"
+#include "Extensions.h"
+
+#include "stdio.h"
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+namespace Clu
+{
+	namespace OpenGL
+	{
+		namespace Extensions
+		{
+			/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			/// <summary>
+			/// 	A macro that defines wglGetProcAddress.
+			/// </summary>
+			///
+			/// <param name="TName"> The type name. </param>
+			/// <param name="FName"> The function name. </param>
+			/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			#define GETPROCADDR(TName, FName) \
+				FName = (TName) wglGetProcAddress( #FName)
+
+			/// <summary> Shader available or not. </summary>
+			bool bIsShaderAvailable = false;
+
+			/// <summary> True if OpenGL extensions are initialized. </summary>
+			bool bIsInitialized = false;
+
+			/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			CLU_GLEXT_API bool IsInitialized()
+			{
+				return bIsInitialized;
+			}
+
+			/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			CLU_GLEXT_API bool IsShaderAvailable()
+			{
+				return bIsShaderAvailable;
+			}
+
+			/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			CLU_GLEXT_API bool GetGLVersion(int* piMajor, int* piMinor)
+			{
+				const char* pcVersion = (const char*) glGetString(GL_VERSION);
+
+				if ((pcVersion == 0) || (sscanf_s(pcVersion, "%d.%d", piMajor, piMinor) != 2))
+				{
+					*piMinor = 0;
+					*piMajor = 0;
+					return false;
+				}
+
+				return true;
+			}
+
+			/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			CLU_GLEXT_API bool GetGLSLVersion(int* piMajor, int* piMinor)
+			{
+				int iGLMajor, iGLMinor;
+				if (!GetGLVersion(&iGLMajor, &iGLMinor))
+				{
+					return false;
+				}
+
+				if (iGLMajor < 2)
+				{
+					// No shader supported
+					return false;
+				}
+
+				const char* pcVersion = (const char*) glGetString(GL_SHADING_LANGUAGE_VERSION);
+
+				if ((pcVersion == 0) || (sscanf_s(pcVersion, "%d.%d", piMajor, piMinor) != 2))
+				{
+					*piMinor = 0;
+					*piMajor = 0;
+					return false;
+				}
+
+				return true;
+			}
+
+			/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			CLU_GLEXT_API bool Init()
+			{
+				if (bIsInitialized)
+				{
+					return true;
+				}
+
+				// Check for OpenGL Extensions
+				int iGLVMinor, iGLVMajor;
+				if (!GetGLVersion(&iGLVMajor, &iGLVMinor))
+				{
+					return false;
+				}
+
+				// Initialize WGL ARB functions
+				GETPROCADDR(PFNWGLGETPIXELFORMATATTRIBIVARBPROC, wglGetPixelFormatAttribivARB);
+				GETPROCADDR(PFNWGLGETPIXELFORMATATTRIBFVARBPROC, wglGetPixelFormatAttribfvARB);
+				GETPROCADDR(PFNWGLCHOOSEPIXELFORMATARBPROC, wglChoosePixelFormatARB);
+
+				GETPROCADDR(PFNWGLSWAPINTERVALEXTPROC, wglSwapIntervalEXT);
+				GETPROCADDR(PFNWGLGETSWAPINTERVALEXTPROC, wglGetSwapIntervalEXT);
+
+				GETPROCADDR(PFNWGLCOPYIMAGESUBDATANVPROC, wglCopyImageSubDataNV);
+
+				// Initialize OpenGL functions
+				if (((iGLVMajor == 1) && (iGLVMinor >= 2)) || (iGLVMajor > 1))
+				{
+					GETPROCADDR(PFNGLBLENDCOLORPROC, glBlendColor);
+					GETPROCADDR(PFNGLBLENDEQUATIONPROC, glBlendEquation);
+					GETPROCADDR(PFNGLDRAWRANGEELEMENTSPROC, glDrawRangeElements);
+					GETPROCADDR(PFNGLCOLORTABLEPROC, glColorTable);
+					GETPROCADDR(PFNGLCOLORTABLEPARAMETERFVPROC, glColorTableParameterfv);
+					GETPROCADDR(PFNGLCOLORTABLEPARAMETERIVPROC, glColorTableParameteriv);
+					GETPROCADDR(PFNGLCOPYCOLORTABLEPROC, glCopyColorTable);
+					GETPROCADDR(PFNGLGETCOLORTABLEPROC, glGetColorTable);
+					GETPROCADDR(PFNGLGETCOLORTABLEPARAMETERFVPROC, glGetColorTableParameterfv);
+					GETPROCADDR(PFNGLGETCOLORTABLEPARAMETERIVPROC, glGetColorTableParameteriv);
+					GETPROCADDR(PFNGLCOLORSUBTABLEPROC, glColorSubTable);
+					GETPROCADDR(PFNGLCOPYCOLORSUBTABLEPROC, glCopyColorSubTable);
+					GETPROCADDR(PFNGLCONVOLUTIONFILTER1DPROC, glConvolutionFilter1D);
+					GETPROCADDR(PFNGLCONVOLUTIONFILTER2DPROC, glConvolutionFilter2D);
+					GETPROCADDR(PFNGLCONVOLUTIONPARAMETERFPROC, glConvolutionParameterf);
+					GETPROCADDR(PFNGLCONVOLUTIONPARAMETERFVPROC, glConvolutionParameterfv);
+					GETPROCADDR(PFNGLCONVOLUTIONPARAMETERIPROC, glConvolutionParameteri);
+					GETPROCADDR(PFNGLCONVOLUTIONPARAMETERIVPROC, glConvolutionParameteriv);
+					GETPROCADDR(PFNGLCOPYCONVOLUTIONFILTER1DPROC, glCopyConvolutionFilter1D);
+					GETPROCADDR(PFNGLCOPYCONVOLUTIONFILTER2DPROC, glCopyConvolutionFilter2D);
+					GETPROCADDR(PFNGLGETCONVOLUTIONFILTERPROC, glGetConvolutionFilter);
+					GETPROCADDR(PFNGLGETCONVOLUTIONPARAMETERFVPROC, glGetConvolutionParameterfv);
+					GETPROCADDR(PFNGLGETCONVOLUTIONPARAMETERIVPROC, glGetConvolutionParameteriv);
+					GETPROCADDR(PFNGLGETSEPARABLEFILTERPROC, glGetSeparableFilter);
+					GETPROCADDR(PFNGLSEPARABLEFILTER2DPROC, glSeparableFilter2D);
+					GETPROCADDR(PFNGLGETHISTOGRAMPROC, glGetHistogram);
+					GETPROCADDR(PFNGLGETHISTOGRAMPARAMETERFVPROC, glGetHistogramParameterfv);
+					GETPROCADDR(PFNGLGETHISTOGRAMPARAMETERIVPROC, glGetHistogramParameteriv);
+					GETPROCADDR(PFNGLGETMINMAXPROC, glGetMinmax);
+					GETPROCADDR(PFNGLGETMINMAXPARAMETERFVPROC, glGetMinmaxParameterfv);
+					GETPROCADDR(PFNGLGETMINMAXPARAMETERIVPROC, glGetMinmaxParameteriv);
+					GETPROCADDR(PFNGLHISTOGRAMPROC, glHistogram);
+					GETPROCADDR(PFNGLMINMAXPROC, glMinmax);
+					GETPROCADDR(PFNGLRESETHISTOGRAMPROC, glResetHistogram);
+					GETPROCADDR(PFNGLRESETMINMAXPROC, glResetMinmax);
+					GETPROCADDR(PFNGLTEXIMAGE3DPROC, glTexImage3D);
+					GETPROCADDR(PFNGLTEXSUBIMAGE3DPROC, glTexSubImage3D);
+					GETPROCADDR(PFNGLCOPYTEXSUBIMAGE3DPROC, glCopyTexSubImage3D);
+				}
+
+				if (((iGLVMajor == 1) && (iGLVMinor >= 3)) || (iGLVMajor > 1))
+				{
+					// OpenGL 1.3
+					GETPROCADDR(PFNGLACTIVETEXTUREPROC, glActiveTexture);
+					GETPROCADDR(PFNGLCLIENTACTIVETEXTUREPROC, glClientActiveTexture);
+					GETPROCADDR(PFNGLMULTITEXCOORD1DPROC, glMultiTexCoord1d);
+					GETPROCADDR(PFNGLMULTITEXCOORD1DVPROC, glMultiTexCoord1dv);
+					GETPROCADDR(PFNGLMULTITEXCOORD1FPROC, glMultiTexCoord1f);
+					GETPROCADDR(PFNGLMULTITEXCOORD1FVPROC, glMultiTexCoord1fv);
+					GETPROCADDR(PFNGLMULTITEXCOORD1IPROC, glMultiTexCoord1i);
+					GETPROCADDR(PFNGLMULTITEXCOORD1IVPROC, glMultiTexCoord1iv);
+					GETPROCADDR(PFNGLMULTITEXCOORD1SPROC, glMultiTexCoord1s);
+					GETPROCADDR(PFNGLMULTITEXCOORD1SVPROC, glMultiTexCoord1sv);
+					GETPROCADDR(PFNGLMULTITEXCOORD2DPROC, glMultiTexCoord2d);
+					GETPROCADDR(PFNGLMULTITEXCOORD2DVPROC, glMultiTexCoord2dv);
+					GETPROCADDR(PFNGLMULTITEXCOORD2FPROC, glMultiTexCoord2f);
+					GETPROCADDR(PFNGLMULTITEXCOORD2FVPROC, glMultiTexCoord2fv);
+					GETPROCADDR(PFNGLMULTITEXCOORD2IPROC, glMultiTexCoord2i);
+					GETPROCADDR(PFNGLMULTITEXCOORD2IVPROC, glMultiTexCoord2iv);
+					GETPROCADDR(PFNGLMULTITEXCOORD2SPROC, glMultiTexCoord2s);
+					GETPROCADDR(PFNGLMULTITEXCOORD2SVPROC, glMultiTexCoord2sv);
+					GETPROCADDR(PFNGLMULTITEXCOORD3DPROC, glMultiTexCoord3d);
+					GETPROCADDR(PFNGLMULTITEXCOORD3DVPROC, glMultiTexCoord3dv);
+					GETPROCADDR(PFNGLMULTITEXCOORD3FPROC, glMultiTexCoord3f);
+					GETPROCADDR(PFNGLMULTITEXCOORD3FVPROC, glMultiTexCoord3fv);
+					GETPROCADDR(PFNGLMULTITEXCOORD3IPROC, glMultiTexCoord3i);
+					GETPROCADDR(PFNGLMULTITEXCOORD3IVPROC, glMultiTexCoord3iv);
+					GETPROCADDR(PFNGLMULTITEXCOORD3SPROC, glMultiTexCoord3s);
+					GETPROCADDR(PFNGLMULTITEXCOORD3SVPROC, glMultiTexCoord3sv);
+					GETPROCADDR(PFNGLMULTITEXCOORD4DPROC, glMultiTexCoord4d);
+					GETPROCADDR(PFNGLMULTITEXCOORD4DVPROC, glMultiTexCoord4dv);
+					GETPROCADDR(PFNGLMULTITEXCOORD4FPROC, glMultiTexCoord4f);
+					GETPROCADDR(PFNGLMULTITEXCOORD4FVPROC, glMultiTexCoord4fv);
+					GETPROCADDR(PFNGLMULTITEXCOORD4IPROC, glMultiTexCoord4i);
+					GETPROCADDR(PFNGLMULTITEXCOORD4IVPROC, glMultiTexCoord4iv);
+					GETPROCADDR(PFNGLMULTITEXCOORD4SPROC, glMultiTexCoord4s);
+					GETPROCADDR(PFNGLMULTITEXCOORD4SVPROC, glMultiTexCoord4sv);
+					GETPROCADDR(PFNGLLOADTRANSPOSEMATRIXFPROC, glLoadTransposeMatrixf);
+					GETPROCADDR(PFNGLLOADTRANSPOSEMATRIXDPROC, glLoadTransposeMatrixd);
+					GETPROCADDR(PFNGLMULTTRANSPOSEMATRIXFPROC, glMultTransposeMatrixf);
+					GETPROCADDR(PFNGLMULTTRANSPOSEMATRIXDPROC, glMultTransposeMatrixd);
+					GETPROCADDR(PFNGLSAMPLECOVERAGEPROC, glSampleCoverage);
+					GETPROCADDR(PFNGLCOMPRESSEDTEXIMAGE3DPROC, glCompressedTexImage3D);
+					GETPROCADDR(PFNGLCOMPRESSEDTEXIMAGE2DPROC, glCompressedTexImage2D);
+					GETPROCADDR(PFNGLCOMPRESSEDTEXIMAGE1DPROC, glCompressedTexImage1D);
+					GETPROCADDR(PFNGLCOMPRESSEDTEXSUBIMAGE3DPROC, glCompressedTexSubImage3D);
+					GETPROCADDR(PFNGLCOMPRESSEDTEXSUBIMAGE2DPROC, glCompressedTexSubImage2D);
+					GETPROCADDR(PFNGLCOMPRESSEDTEXSUBIMAGE1DPROC, glCompressedTexSubImage1D);
+					GETPROCADDR(PFNGLGETCOMPRESSEDTEXIMAGEPROC, glGetCompressedTexImage);
+				}
+
+				if (((iGLVMajor == 1) && (iGLVMinor >= 4)) || (iGLVMajor > 1))
+				{
+					// OpenGL 1.4
+					GETPROCADDR(PFNGLBLENDFUNCSEPARATEPROC, glBlendFuncSeparate);
+					GETPROCADDR(PFNGLFOGCOORDFPROC, glFogCoordf);
+					GETPROCADDR(PFNGLFOGCOORDFVPROC, glFogCoordfv);
+					GETPROCADDR(PFNGLFOGCOORDDPROC, glFogCoordd);
+					GETPROCADDR(PFNGLFOGCOORDDVPROC, glFogCoorddv);
+					GETPROCADDR(PFNGLFOGCOORDPOINTERPROC, glFogCoordPointer);
+					GETPROCADDR(PFNGLMULTIDRAWARRAYSPROC, glMultiDrawArrays);
+					GETPROCADDR(PFNGLMULTIDRAWELEMENTSPROC, glMultiDrawElements);
+					GETPROCADDR(PFNGLPOINTPARAMETERFPROC, glPointParameterf);
+					GETPROCADDR(PFNGLPOINTPARAMETERFVPROC, glPointParameterfv);
+					GETPROCADDR(PFNGLPOINTPARAMETERIPROC, glPointParameteri);
+					GETPROCADDR(PFNGLPOINTPARAMETERIVPROC, glPointParameteriv);
+					GETPROCADDR(PFNGLSECONDARYCOLOR3BPROC, glSecondaryColor3b);
+					GETPROCADDR(PFNGLSECONDARYCOLOR3BVPROC, glSecondaryColor3bv);
+					GETPROCADDR(PFNGLSECONDARYCOLOR3DPROC, glSecondaryColor3d);
+					GETPROCADDR(PFNGLSECONDARYCOLOR3DVPROC, glSecondaryColor3dv);
+					GETPROCADDR(PFNGLSECONDARYCOLOR3FPROC, glSecondaryColor3f);
+					GETPROCADDR(PFNGLSECONDARYCOLOR3FVPROC, glSecondaryColor3fv);
+					GETPROCADDR(PFNGLSECONDARYCOLOR3IPROC, glSecondaryColor3i);
+					GETPROCADDR(PFNGLSECONDARYCOLOR3IVPROC, glSecondaryColor3iv);
+					GETPROCADDR(PFNGLSECONDARYCOLOR3SPROC, glSecondaryColor3s);
+					GETPROCADDR(PFNGLSECONDARYCOLOR3SVPROC, glSecondaryColor3sv);
+					GETPROCADDR(PFNGLSECONDARYCOLOR3UBPROC, glSecondaryColor3ub);
+					GETPROCADDR(PFNGLSECONDARYCOLOR3UBVPROC, glSecondaryColor3ubv);
+					GETPROCADDR(PFNGLSECONDARYCOLOR3UIPROC, glSecondaryColor3ui);
+					GETPROCADDR(PFNGLSECONDARYCOLOR3UIVPROC, glSecondaryColor3uiv);
+					GETPROCADDR(PFNGLSECONDARYCOLOR3USPROC, glSecondaryColor3us);
+					GETPROCADDR(PFNGLSECONDARYCOLOR3USVPROC, glSecondaryColor3usv);
+					GETPROCADDR(PFNGLSECONDARYCOLORPOINTERPROC, glSecondaryColorPointer);
+					GETPROCADDR(PFNGLWINDOWPOS2DPROC, glWindowPos2d);
+					GETPROCADDR(PFNGLWINDOWPOS2DVPROC, glWindowPos2dv);
+					GETPROCADDR(PFNGLWINDOWPOS2FPROC, glWindowPos2f);
+					GETPROCADDR(PFNGLWINDOWPOS2FVPROC, glWindowPos2fv);
+					GETPROCADDR(PFNGLWINDOWPOS2IPROC, glWindowPos2i);
+					GETPROCADDR(PFNGLWINDOWPOS2IVPROC, glWindowPos2iv);
+					GETPROCADDR(PFNGLWINDOWPOS2SPROC, glWindowPos2s);
+					GETPROCADDR(PFNGLWINDOWPOS2SVPROC, glWindowPos2sv);
+					GETPROCADDR(PFNGLWINDOWPOS3DPROC, glWindowPos3d);
+					GETPROCADDR(PFNGLWINDOWPOS3DVPROC, glWindowPos3dv);
+					GETPROCADDR(PFNGLWINDOWPOS3FPROC, glWindowPos3f);
+					GETPROCADDR(PFNGLWINDOWPOS3FVPROC, glWindowPos3fv);
+					GETPROCADDR(PFNGLWINDOWPOS3IPROC, glWindowPos3i);
+					GETPROCADDR(PFNGLWINDOWPOS3IVPROC, glWindowPos3iv);
+					GETPROCADDR(PFNGLWINDOWPOS3SPROC, glWindowPos3s);
+					GETPROCADDR(PFNGLWINDOWPOS3SVPROC, glWindowPos3sv);
+				}
+
+				if (((iGLVMajor == 1) && (iGLVMinor >= 5)) || (iGLVMajor > 1))
+				{
+					// OpenGL 1.5
+					GETPROCADDR(PFNGLGENQUERIESPROC, glGenQueries);
+					GETPROCADDR(PFNGLDELETEQUERIESPROC, glDeleteQueries);
+					GETPROCADDR(PFNGLISQUERYPROC, glIsQuery);
+					GETPROCADDR(PFNGLBEGINQUERYPROC, glBeginQuery);
+					GETPROCADDR(PFNGLENDQUERYPROC, glEndQuery);
+					GETPROCADDR(PFNGLGETQUERYIVPROC, glGetQueryiv);
+					GETPROCADDR(PFNGLGETQUERYOBJECTIVPROC, glGetQueryObjectiv);
+					GETPROCADDR(PFNGLGETQUERYOBJECTUIVPROC, glGetQueryObjectuiv);
+					GETPROCADDR(PFNGLBINDBUFFERPROC, glBindBuffer);
+					GETPROCADDR(PFNGLDELETEBUFFERSPROC, glDeleteBuffers);
+					GETPROCADDR(PFNGLGENBUFFERSPROC, glGenBuffers);
+					GETPROCADDR(PFNGLISBUFFERPROC, glIsBuffer);
+					GETPROCADDR(PFNGLBUFFERDATAPROC, glBufferData);
+					GETPROCADDR(PFNGLBUFFERSUBDATAPROC, glBufferSubData);
+					GETPROCADDR(PFNGLGETBUFFERSUBDATAPROC, glGetBufferSubData);
+					GETPROCADDR(PFNGLMAPBUFFERPROC, glMapBuffer);
+					GETPROCADDR(PFNGLUNMAPBUFFERPROC, glUnmapBuffer);
+					GETPROCADDR(PFNGLGETBUFFERPARAMETERIVPROC, glGetBufferParameteriv);
+					GETPROCADDR(PFNGLGETBUFFERPOINTERVPROC, glGetBufferPointerv);
+				}
+
+				if (((iGLVMajor == 2) && (iGLVMinor >= 0)) || (iGLVMajor > 2))
+				{
+					bIsShaderAvailable = true;
+
+					// OpenGL 2.0
+					GETPROCADDR(PFNGLBLENDEQUATIONSEPARATEPROC, glBlendEquationSeparate);
+					GETPROCADDR(PFNGLDRAWBUFFERSPROC, glDrawBuffers);
+					GETPROCADDR(PFNGLSTENCILOPSEPARATEPROC, glStencilOpSeparate);
+					GETPROCADDR(PFNGLSTENCILFUNCSEPARATEPROC, glStencilFuncSeparate);
+					GETPROCADDR(PFNGLSTENCILMASKSEPARATEPROC, glStencilMaskSeparate);
+					GETPROCADDR(PFNGLATTACHSHADERPROC, glAttachShader);
+					GETPROCADDR(PFNGLBINDATTRIBLOCATIONPROC, glBindAttribLocation);
+					GETPROCADDR(PFNGLCOMPILESHADERPROC, glCompileShader);
+					GETPROCADDR(PFNGLCREATEPROGRAMPROC, glCreateProgram);
+					GETPROCADDR(PFNGLCREATESHADERPROC, glCreateShader);
+					GETPROCADDR(PFNGLDELETEPROGRAMPROC, glDeleteProgram);
+					GETPROCADDR(PFNGLDELETESHADERPROC, glDeleteShader);
+					GETPROCADDR(PFNGLDETACHSHADERPROC, glDetachShader);
+					GETPROCADDR(PFNGLDISABLEVERTEXATTRIBARRAYPROC, glDisableVertexAttribArray);
+					GETPROCADDR(PFNGLENABLEVERTEXATTRIBARRAYPROC, glEnableVertexAttribArray);
+					GETPROCADDR(PFNGLGETACTIVEATTRIBPROC, glGetActiveAttrib);
+					GETPROCADDR(PFNGLGETACTIVEUNIFORMPROC, glGetActiveUniform);
+					GETPROCADDR(PFNGLGETATTACHEDSHADERSPROC, glGetAttachedShaders);
+					GETPROCADDR(PFNGLGETATTRIBLOCATIONPROC, glGetAttribLocation);
+					GETPROCADDR(PFNGLGETPROGRAMIVPROC, glGetProgramiv);
+					GETPROCADDR(PFNGLGETPROGRAMINFOLOGPROC, glGetProgramInfoLog);
+					GETPROCADDR(PFNGLGETSHADERIVPROC, glGetShaderiv);
+					GETPROCADDR(PFNGLGETSHADERINFOLOGPROC, glGetShaderInfoLog);
+					GETPROCADDR(PFNGLGETSHADERSOURCEPROC, glGetShaderSource);
+					GETPROCADDR(PFNGLGETUNIFORMLOCATIONPROC, glGetUniformLocation);
+					GETPROCADDR(PFNGLGETUNIFORMFVPROC, glGetUniformfv);
+					GETPROCADDR(PFNGLGETUNIFORMIVPROC, glGetUniformiv);
+					GETPROCADDR(PFNGLGETVERTEXATTRIBDVPROC, glGetVertexAttribdv);
+					GETPROCADDR(PFNGLGETVERTEXATTRIBFVPROC, glGetVertexAttribfv);
+					GETPROCADDR(PFNGLGETVERTEXATTRIBIVPROC, glGetVertexAttribiv);
+					GETPROCADDR(PFNGLGETVERTEXATTRIBPOINTERVPROC, glGetVertexAttribPointerv);
+					GETPROCADDR(PFNGLISPROGRAMPROC, glIsProgram);
+					GETPROCADDR(PFNGLISSHADERPROC, glIsShader);
+					GETPROCADDR(PFNGLLINKPROGRAMPROC, glLinkProgram);
+					GETPROCADDR(PFNGLSHADERSOURCEPROC, glShaderSource);
+					GETPROCADDR(PFNGLUSEPROGRAMPROC, glUseProgram);
+					GETPROCADDR(PFNGLUNIFORM1FPROC, glUniform1f);
+					GETPROCADDR(PFNGLUNIFORM2FPROC, glUniform2f);
+					GETPROCADDR(PFNGLUNIFORM3FPROC, glUniform3f);
+					GETPROCADDR(PFNGLUNIFORM4FPROC, glUniform4f);
+					GETPROCADDR(PFNGLUNIFORM1IPROC, glUniform1i);
+					GETPROCADDR(PFNGLUNIFORM2IPROC, glUniform2i);
+					GETPROCADDR(PFNGLUNIFORM3IPROC, glUniform3i);
+					GETPROCADDR(PFNGLUNIFORM4IPROC, glUniform4i);
+					GETPROCADDR(PFNGLUNIFORM1FVPROC, glUniform1fv);
+					GETPROCADDR(PFNGLUNIFORM2FVPROC, glUniform2fv);
+					GETPROCADDR(PFNGLUNIFORM3FVPROC, glUniform3fv);
+					GETPROCADDR(PFNGLUNIFORM4FVPROC, glUniform4fv);
+					GETPROCADDR(PFNGLUNIFORM1IVPROC, glUniform1iv);
+					GETPROCADDR(PFNGLUNIFORM2IVPROC, glUniform2iv);
+					GETPROCADDR(PFNGLUNIFORM3IVPROC, glUniform3iv);
+					GETPROCADDR(PFNGLUNIFORM4IVPROC, glUniform4iv);
+					GETPROCADDR(PFNGLUNIFORMMATRIX2FVPROC, glUniformMatrix2fv);
+					GETPROCADDR(PFNGLUNIFORMMATRIX3FVPROC, glUniformMatrix3fv);
+					GETPROCADDR(PFNGLUNIFORMMATRIX4FVPROC, glUniformMatrix4fv);
+					GETPROCADDR(PFNGLVALIDATEPROGRAMPROC, glValidateProgram);
+					GETPROCADDR(PFNGLVERTEXATTRIB1DPROC, glVertexAttrib1d);
+					GETPROCADDR(PFNGLVERTEXATTRIB1DVPROC, glVertexAttrib1dv);
+					GETPROCADDR(PFNGLVERTEXATTRIB1FPROC, glVertexAttrib1f);
+					GETPROCADDR(PFNGLVERTEXATTRIB1FVPROC, glVertexAttrib1fv);
+					GETPROCADDR(PFNGLVERTEXATTRIB1SPROC, glVertexAttrib1s);
+					GETPROCADDR(PFNGLVERTEXATTRIB1SVPROC, glVertexAttrib1sv);
+					GETPROCADDR(PFNGLVERTEXATTRIB2DPROC, glVertexAttrib2d);
+					GETPROCADDR(PFNGLVERTEXATTRIB2DVPROC, glVertexAttrib2dv);
+					GETPROCADDR(PFNGLVERTEXATTRIB2FPROC, glVertexAttrib2f);
+					GETPROCADDR(PFNGLVERTEXATTRIB2FVPROC, glVertexAttrib2fv);
+					GETPROCADDR(PFNGLVERTEXATTRIB2SPROC, glVertexAttrib2s);
+					GETPROCADDR(PFNGLVERTEXATTRIB2SVPROC, glVertexAttrib2sv);
+					GETPROCADDR(PFNGLVERTEXATTRIB3DPROC, glVertexAttrib3d);
+					GETPROCADDR(PFNGLVERTEXATTRIB3DVPROC, glVertexAttrib3dv);
+					GETPROCADDR(PFNGLVERTEXATTRIB3FPROC, glVertexAttrib3f);
+					GETPROCADDR(PFNGLVERTEXATTRIB3FVPROC, glVertexAttrib3fv);
+					GETPROCADDR(PFNGLVERTEXATTRIB3SPROC, glVertexAttrib3s);
+					GETPROCADDR(PFNGLVERTEXATTRIB3SVPROC, glVertexAttrib3sv);
+					GETPROCADDR(PFNGLVERTEXATTRIB4NBVPROC, glVertexAttrib4Nbv);
+					GETPROCADDR(PFNGLVERTEXATTRIB4NIVPROC, glVertexAttrib4Niv);
+					GETPROCADDR(PFNGLVERTEXATTRIB4NSVPROC, glVertexAttrib4Nsv);
+					GETPROCADDR(PFNGLVERTEXATTRIB4NUBPROC, glVertexAttrib4Nub);
+					GETPROCADDR(PFNGLVERTEXATTRIB4NUBVPROC, glVertexAttrib4Nubv);
+					GETPROCADDR(PFNGLVERTEXATTRIB4NUIVPROC, glVertexAttrib4Nuiv);
+					GETPROCADDR(PFNGLVERTEXATTRIB4NUSVPROC, glVertexAttrib4Nusv);
+					GETPROCADDR(PFNGLVERTEXATTRIB4BVPROC, glVertexAttrib4bv);
+					GETPROCADDR(PFNGLVERTEXATTRIB4DPROC, glVertexAttrib4d);
+					GETPROCADDR(PFNGLVERTEXATTRIB4DVPROC, glVertexAttrib4dv);
+					GETPROCADDR(PFNGLVERTEXATTRIB4FPROC, glVertexAttrib4f);
+					GETPROCADDR(PFNGLVERTEXATTRIB4FVPROC, glVertexAttrib4fv);
+					GETPROCADDR(PFNGLVERTEXATTRIB4IVPROC, glVertexAttrib4iv);
+					GETPROCADDR(PFNGLVERTEXATTRIB4SPROC, glVertexAttrib4s);
+					GETPROCADDR(PFNGLVERTEXATTRIB4SVPROC, glVertexAttrib4sv);
+					GETPROCADDR(PFNGLVERTEXATTRIB4UBVPROC, glVertexAttrib4ubv);
+					GETPROCADDR(PFNGLVERTEXATTRIB4UIVPROC, glVertexAttrib4uiv);
+					GETPROCADDR(PFNGLVERTEXATTRIB4USVPROC, glVertexAttrib4usv);
+					GETPROCADDR(PFNGLVERTEXATTRIBPOINTERPROC, glVertexAttribPointer);
+				}
+
+				if (((iGLVMajor == 2) && (iGLVMinor >= 1)) || (iGLVMajor > 2))
+				{
+					// OpenGL 2.1
+					GETPROCADDR(PFNGLUNIFORMMATRIX2X3FVPROC, glUniformMatrix2x3fv);
+					GETPROCADDR(PFNGLUNIFORMMATRIX3X2FVPROC, glUniformMatrix3x2fv);
+					GETPROCADDR(PFNGLUNIFORMMATRIX2X4FVPROC, glUniformMatrix2x4fv);
+					GETPROCADDR(PFNGLUNIFORMMATRIX4X2FVPROC, glUniformMatrix4x2fv);
+					GETPROCADDR(PFNGLUNIFORMMATRIX3X4FVPROC, glUniformMatrix3x4fv);
+					GETPROCADDR(PFNGLUNIFORMMATRIX4X3FVPROC, glUniformMatrix4x3fv);
+				}
+
+				if (((iGLVMajor == 3) && (iGLVMinor >= 0)) || (iGLVMajor > 3))
+				{
+					GETPROCADDR(PFNGLCOLORMASKIPROC, glColorMaski);
+					GETPROCADDR(PFNGLGETBOOLEANI_VPROC, glGetBooleani_v);
+					GETPROCADDR(PFNGLGETINTEGERI_VPROC, glGetIntegeri_v);
+					GETPROCADDR(PFNGLENABLEIPROC, glEnablei);
+					GETPROCADDR(PFNGLDISABLEIPROC, glDisablei);
+					GETPROCADDR(PFNGLISENABLEDIPROC, glIsEnabledi);
+					GETPROCADDR(PFNGLBEGINTRANSFORMFEEDBACKPROC, glBeginTransformFeedback);
+					GETPROCADDR(PFNGLENDTRANSFORMFEEDBACKPROC, glEndTransformFeedback);
+					GETPROCADDR(PFNGLBINDBUFFERRANGEPROC, glBindBufferRange);
+					GETPROCADDR(PFNGLBINDBUFFERBASEPROC, glBindBufferBase);
+					GETPROCADDR(PFNGLTRANSFORMFEEDBACKVARYINGSPROC, glTransformFeedbackVaryings);
+					GETPROCADDR(PFNGLGETTRANSFORMFEEDBACKVARYINGPROC, glGetTransformFeedbackVarying);
+					GETPROCADDR(PFNGLCLAMPCOLORPROC, glClampColor);
+					GETPROCADDR(PFNGLBEGINCONDITIONALRENDERPROC, glBeginConditionalRender);
+					GETPROCADDR(PFNGLENDCONDITIONALRENDERPROC, glEndConditionalRender);
+					GETPROCADDR(PFNGLVERTEXATTRIBIPOINTERPROC, glVertexAttribIPointer);
+					GETPROCADDR(PFNGLGETVERTEXATTRIBIIVPROC, glGetVertexAttribIiv);
+					GETPROCADDR(PFNGLGETVERTEXATTRIBIUIVPROC, glGetVertexAttribIuiv);
+					GETPROCADDR(PFNGLVERTEXATTRIBI1IPROC, glVertexAttribI1i);
+					GETPROCADDR(PFNGLVERTEXATTRIBI2IPROC, glVertexAttribI2i);
+					GETPROCADDR(PFNGLVERTEXATTRIBI3IPROC, glVertexAttribI3i);
+					GETPROCADDR(PFNGLVERTEXATTRIBI4IPROC, glVertexAttribI4i);
+					GETPROCADDR(PFNGLVERTEXATTRIBI1UIPROC, glVertexAttribI1ui);
+					GETPROCADDR(PFNGLVERTEXATTRIBI2UIPROC, glVertexAttribI2ui);
+					GETPROCADDR(PFNGLVERTEXATTRIBI3UIPROC, glVertexAttribI3ui);
+					GETPROCADDR(PFNGLVERTEXATTRIBI4UIPROC, glVertexAttribI4ui);
+					GETPROCADDR(PFNGLVERTEXATTRIBI1IVPROC, glVertexAttribI1iv);
+					GETPROCADDR(PFNGLVERTEXATTRIBI2IVPROC, glVertexAttribI2iv);
+					GETPROCADDR(PFNGLVERTEXATTRIBI3IVPROC, glVertexAttribI3iv);
+					GETPROCADDR(PFNGLVERTEXATTRIBI4IVPROC, glVertexAttribI4iv);
+					GETPROCADDR(PFNGLVERTEXATTRIBI1UIVPROC, glVertexAttribI1uiv);
+					GETPROCADDR(PFNGLVERTEXATTRIBI2UIVPROC, glVertexAttribI2uiv);
+					GETPROCADDR(PFNGLVERTEXATTRIBI3UIVPROC, glVertexAttribI3uiv);
+					GETPROCADDR(PFNGLVERTEXATTRIBI4UIVPROC, glVertexAttribI4uiv);
+					GETPROCADDR(PFNGLVERTEXATTRIBI4BVPROC, glVertexAttribI4bv);
+					GETPROCADDR(PFNGLVERTEXATTRIBI4SVPROC, glVertexAttribI4sv);
+					GETPROCADDR(PFNGLVERTEXATTRIBI4UBVPROC, glVertexAttribI4ubv);
+					GETPROCADDR(PFNGLVERTEXATTRIBI4USVPROC, glVertexAttribI4usv);
+					GETPROCADDR(PFNGLGETUNIFORMUIVPROC, glGetUniformuiv);
+					GETPROCADDR(PFNGLBINDFRAGDATALOCATIONPROC, glBindFragDataLocation);
+					GETPROCADDR(PFNGLGETFRAGDATALOCATIONPROC, glGetFragDataLocation);
+					GETPROCADDR(PFNGLUNIFORM1UIPROC, glUniform1ui);
+					GETPROCADDR(PFNGLUNIFORM2UIPROC, glUniform2ui);
+					GETPROCADDR(PFNGLUNIFORM3UIPROC, glUniform3ui);
+					GETPROCADDR(PFNGLUNIFORM4UIPROC, glUniform4ui);
+					GETPROCADDR(PFNGLUNIFORM1UIVPROC, glUniform1uiv);
+					GETPROCADDR(PFNGLUNIFORM2UIVPROC, glUniform2uiv);
+					GETPROCADDR(PFNGLUNIFORM3UIVPROC, glUniform3uiv);
+					GETPROCADDR(PFNGLUNIFORM4UIVPROC, glUniform4uiv);
+					GETPROCADDR(PFNGLTEXPARAMETERIIVPROC, glTexParameterIiv);
+					GETPROCADDR(PFNGLTEXPARAMETERIUIVPROC, glTexParameterIuiv);
+					GETPROCADDR(PFNGLGETTEXPARAMETERIIVPROC, glGetTexParameterIiv);
+					GETPROCADDR(PFNGLGETTEXPARAMETERIUIVPROC, glGetTexParameterIuiv);
+					GETPROCADDR(PFNGLCLEARBUFFERIVPROC, glClearBufferiv);
+					GETPROCADDR(PFNGLCLEARBUFFERUIVPROC, glClearBufferuiv);
+					GETPROCADDR(PFNGLCLEARBUFFERFVPROC, glClearBufferfv);
+					GETPROCADDR(PFNGLCLEARBUFFERFIPROC, glClearBufferfi);
+					GETPROCADDR(PFNGLGETSTRINGIPROC, glGetStringi);
+
+					// ARB Framebuffer Object
+					GETPROCADDR(PFNGLISRENDERBUFFERPROC, glIsRenderbuffer);
+					GETPROCADDR(PFNGLBINDRENDERBUFFERPROC, glBindRenderbuffer);
+					GETPROCADDR(PFNGLDELETERENDERBUFFERSPROC, glDeleteRenderbuffers);
+					GETPROCADDR(PFNGLGENRENDERBUFFERSPROC, glGenRenderbuffers);
+					GETPROCADDR(PFNGLRENDERBUFFERSTORAGEPROC, glRenderbufferStorage);
+					GETPROCADDR(PFNGLGETRENDERBUFFERPARAMETERIVPROC, glGetRenderbufferParameteriv);
+					GETPROCADDR(PFNGLISFRAMEBUFFERPROC, glIsFramebuffer);
+					GETPROCADDR(PFNGLBINDFRAMEBUFFERPROC, glBindFramebuffer);
+					GETPROCADDR(PFNGLDELETEFRAMEBUFFERSPROC, glDeleteFramebuffers);
+					GETPROCADDR(PFNGLGENFRAMEBUFFERSPROC, glGenFramebuffers);
+					GETPROCADDR(PFNGLCHECKFRAMEBUFFERSTATUSPROC, glCheckFramebufferStatus);
+					GETPROCADDR(PFNGLFRAMEBUFFERTEXTURE1DPROC, glFramebufferTexture1D);
+					GETPROCADDR(PFNGLFRAMEBUFFERTEXTURE2DPROC, glFramebufferTexture2D);
+					GETPROCADDR(PFNGLFRAMEBUFFERTEXTURE3DPROC, glFramebufferTexture3D);
+					GETPROCADDR(PFNGLFRAMEBUFFERRENDERBUFFERPROC, glFramebufferRenderbuffer);
+					GETPROCADDR(PFNGLGETFRAMEBUFFERATTACHMENTPARAMETERIVPROC, glGetFramebufferAttachmentParameteriv);
+					GETPROCADDR(PFNGLGENERATEMIPMAPPROC, glGenerateMipmap);
+					GETPROCADDR(PFNGLBLITFRAMEBUFFERPROC, glBlitFramebuffer);
+					GETPROCADDR(PFNGLRENDERBUFFERSTORAGEMULTISAMPLEPROC, glRenderbufferStorageMultisample);
+					GETPROCADDR(PFNGLFRAMEBUFFERTEXTURELAYERPROC, glFramebufferTextureLayer);
+				}
+
+				if (((iGLVMajor == 3) && (iGLVMinor >= 1)) || (iGLVMajor > 3))
+				{
+					GETPROCADDR(PFNGLDRAWARRAYSINSTANCEDPROC, glDrawArraysInstanced);
+					GETPROCADDR(PFNGLDRAWELEMENTSINSTANCEDPROC, glDrawElementsInstanced);
+					GETPROCADDR(PFNGLTEXBUFFERPROC, glTexBuffer);
+					GETPROCADDR(PFNGLPRIMITIVERESTARTINDEXPROC, glPrimitiveRestartIndex);
+				}
+
+				bIsInitialized = true;
+				return true;
+			}
+		}
+	}
+}

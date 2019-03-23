@@ -1,0 +1,28 @@
+//! Title: Standard GUI Library
+//! Version: 3.0
+//! Copyright: (c) 2015 by Christian Perwass
+
+/// Main file for all GUI Functions
+
+if ( ExecMode & EM_CHANGE )
+{
+	//# include "Shader_Func_02.clu"
+	
+	//# include "StdGUI_Slider.clu"
+	//# include "StdGUI_Button.clu"
+	//# include "StdGUI_ImageButton.clu"
+	//# include "StdGUI_Event.clu"
+	//# include "StdGUI_Text.clu"
+	//# include "StdGUI_ActObj.clu"
+	//# include "StdGUI_ImageScene.clu"
+	//# include "StdGUI_ActScene.clu"
+	//# include "StdGUI_ActEvent_Length.clu"
+	
+	StdGUI_lMouseButNames = ["left", "left", "right", "right"];
+	
+	bStdGUIResOK = false;
+	if ( ReadVar("StdGUILib_v3_0.crs", lStdGUIRes, "bin2", [0,0]) == "OK" )
+	{
+		bStdGUIResOK = true;
+	}
+}

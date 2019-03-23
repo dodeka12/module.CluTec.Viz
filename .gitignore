@@ -1,0 +1,16 @@
+vc120*.*
+dlldata.c
+/CluTec.Viz.View/vc140_p.c
+/CluTec.Viz.View/dlldata.c
+/CluTec.Viz.View/vc140.h
+/CluTec.Viz.View/vc140.idl
+/CluTec.Viz.View/vc140.tlb
+/CluTec.Viz.View/vc140_i.c
+*.tlb
+*.aps
+*.idl
+vc140_p.c
+vc140.h
+vc140.idl
+vc140.tlb
+vc140_i.c

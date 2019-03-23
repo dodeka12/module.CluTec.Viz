@@ -1,0 +1,145 @@
+_BGColor = MWhite;
+
+if ( ExecMode & EM_CHANGE )
+{
+//	imgA = ReadImg( "ImgEx1_w10k.jpg" );
+//	imgA = ReadImg( "ImgEx1_w5k.bmp" );
+	imgA = ReadImg( "Garzweiler_1.jpg" );
+//	imgA = ReadImg( "NZStrand1.jpg" );
+//	imgA = ReadImg( "checkers.png" );
+/*	
+	lS = Size( imgA );
+	iW1 = floor(lS(1) / 2);
+	iW2 = lS(1) - iW1;
+	
+	imgA1 = imgA( 1, 1, iW1 + 1, lS(2) );
+	imgA2 = imgA( iW1, 1, iW2 + 1, lS(2) );
+*/
+
+	CreateImagePlane =
+	{
+		scScene -> _P(1);
+		
+		sName -> _P(2);
+		imgA -> _P(3);
+		dScale = _P(4);
+		
+		texA = Texture( sName + "_tex" );
+		EnableTextureInterpolate( texA, false );
+		SetTextureImage( texA, imgA, 
+					false /* MipMap */, 
+					0 /* Tex Unit */, 
+					false /* Border */, 
+					true /* Split */);
+					
+		SetTextureWrapType( texA, "clamp" );
+	
+		lS = Size( imgA );
+		?lT = Size( texA );
+	
+		lTotalSize = lT( "size" );
+		dAspect = lTotalSize(2) / lTotalSize(1);
+	
+		lOffset = lT( "split_offset" );
+		lSize = lT( "split_size" );
+	
+		lOff = TransList( lOffset );
+		lX = lOff(1) * VecE3(dScale,0);
+		lY = dAspect * lOff(2) * VecE3(0,dScale);
+	
+		lS = TransList( lSize );
+		lW = lS(1) * VecE3(dScale,0);
+		lH = dAspect * lS(2) * VecE3(0,dScale);
+
+		lPos = (lX .+ lW / 2) .+ (lY .+ lH / 2);
+	
+		scScene = Scene( sName );
+		DrawToScene( scScene );
+		
+		iCnt = Size( lPos );
+		iIdx = 0;
+		loop
+		{
+			iIdx = iIdx + 1;
+			if ( iIdx > iCnt ) break;
+					
+			:texA;
+			DrawPlane( lPos(iIdx), lW(iIdx), lH(iIdx) );
+		}
+		SetTexture();
+		
+		DrawToScene();
+	}
+	
+	CreateImageCylinder =
+	{
+		scScene -> _P(1);
+		
+		sName -> _P(2);
+		imgA -> _P(3);
+		dRadius = _P(4);
+		dAngleRange = _P(5);
+		
+		texA = Texture( sName + "_tex" );
+		EnableTextureInterpolate( texA, true );
+		SetTextureImage( texA, imgA, 
+					false /* MipMap */, 
+					1 /* Tex Unit */, 
+					false /* Border */, 
+					true /* Split */);
+					
+		SetTextureWrapType( texA, "clamp" );
+	
+		lS = Size( imgA );
+		?lT = Size( texA );
+	
+		lTotalSize = lT( "size" );
+		dAspect = lTotalSize(2) / lTotalSize(1);
+		dScaleY = dAngleRange * dRadius * dAspect;
+	
+		lOffset = lT( "split_offset" );
+		lSize = lT( "split_size" );
+	
+		lOff = TransList( lOffset );
+		lTheta = lOff(1) * dAngleRange;
+		lY = dScaleY * lOff(2);
+	
+		lS = TransList( lSize );
+		lDelta = lS(1) * dAngleRange;
+		lH = dScaleY * lS(2);
+		
+		scScene = Scene( sName );
+		DrawToScene( scScene );
+		
+		dMinDelta = 2*Pi / 32;
+		iCnt = Size( lOffset );
+		iIdx = 0;
+		loop
+		{
+			iIdx = iIdx + 1;
+			if ( iIdx > iCnt ) break;
+					
+			:texA;
+			
+			dDelta = lDelta( iIdx );
+			iStepCnt = floor( dDelta / dMinDelta );
+			iStepCnt = iStepCnt + 1;
+			//dDelta = dDelta / iStepCnt;
+			dTheta = lTheta( iIdx );
+			dY = lY( iIdx );
+			dH = lH( iIdx );
+			
+			:Plot( VecE3( dRadius * cos(dTheta), dY, dRadius * sin(dTheta) ),
+					[ dTheta, dTheta, dTheta + dDelta, iStepCnt ],
+					[ dY, dY, dY + dH, 1 ] );
+		}
+		SetTexture();
+		
+		DrawToScene();
+	}
+
+	//CreateImagePlane( scImage, "Image A", imgA, 6 );
+	CreateImageCylinder( scImage, "Image Cyl", imgA, 1, 2*Pi );
+}
+
+:scImage;

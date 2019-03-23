@@ -1,0 +1,45 @@
+
+//# include "StdGUILib.clu"
+// # include "StdGUILib.cbn"
+
+/// Test Program
+_BGColor = DWhite;
+if ( ExecMode & EM_CHANGE )
+{
+	lData = [];
+	
+	lData("width_pixel") = 250;
+	lData("border") = [5,2];
+	lData("value") = 0.5;
+	lData("align") = [0.5, 0.5];
+	
+	lCol -> lData("colors");
+	lCol = [];
+	lCol("act") = Blue;
+
+	StdGUI_Slider_Create( scSlider, "MySlider", lData);
+	
+	lData("ref_scene") = scSlider;
+	lData("ref_orig") = [ true, true ];
+	lData("align") = [0,1];
+	
+	StdGUI_Slider_Create( scSlider2, "MySlider2", lData);
+
+}
+
+if ( StdGUI_Event_Click( sButName, sMouseBut, lMousePos ) )
+{
+	?sButName;
+	?sMouseBut;
+	?lMousePos;
+	lPickData = PickData;
+}
+
+?sButName;
+?sMouseBut;
+?lMousePos;
+?ToolName;
+?lPickData;
+
+:scSlider;
+:scSlider2;

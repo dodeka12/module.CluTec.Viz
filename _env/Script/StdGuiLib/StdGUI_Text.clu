@@ -1,0 +1,75 @@
+// GUI Text Functions
+
+/// Generate an image where a number of lines of text
+/// are shown on top of each other.
+StdGUI_Text_MultiLine =
+{
+	sText -> _P(1);
+	dAlign = _P(2);
+	
+	lText = List( sText, "\n" );
+	iCnt = Size( lText );
+	lImg = List( iCnt );
+	iPos = 0;
+	loop
+	{
+		iPos = iPos + 1;
+		if ( iPos > iCnt ) break;
+		
+		lImg( iPos ) = GetTextImg( lText( iPos ) );
+	}
+	
+	::StdGUI_Text_StackTextImgList( lImg, dAlign )
+}
+
+// Stack a number of text images on top of each other
+StdGUI_Text_StackTextImgList =
+{
+	lImg -> _P(1);
+	dAlign = _P(2); // 0: left align, 0.5: center, 1: right
+	
+	if ( dAlign < 0)
+		dAlign = 0;
+	else if ( dAlign > 1 )
+		dAlign = 1;
+		
+	iImgCnt = Size( lImg );
+	lWidth = List( iImgCnt );
+	lHeight = List( iImgCnt );
+	
+	iImg = 0;
+	loop
+	{
+		iImg = iImg + 1;
+		if ( iImg > iImgCnt ) break;
+		
+		lS = Size( lImg( iImg ) );
+		lWidth( iImg ) = lS( 1 );
+		lHeight( iImg ) = lS( 2 );
+	}
+	
+	dWidth = max( lWidth );							
+	dHeight = sum( lHeight );
+	dSpace = ceil( 0.4 * dHeight / iImgCnt );
+	dHeight = dHeight + (iImgCnt - 1) * dSpace;
+		
+	imgText = Image( dWidth, dHeight, Color(0,0,0,0) );
+
+	dBottom = dHeight;
+	iImg = 0;
+	loop
+	{
+		iImg = iImg + 1;
+		if ( iImg > iImgCnt ) break;
+	
+		dLeft = ceil( dAlign * (dWidth - lWidth( iImg )) + 1 );
+		dBottom = dBottom - lHeight( iImg );
+		InsertImg( imgText, lImg( iImg ), dLeft, dBottom );
+
+		dBottom = dBottom - dSpace + 1;
+	}
+
+	// return value
+	imgText
+}
+

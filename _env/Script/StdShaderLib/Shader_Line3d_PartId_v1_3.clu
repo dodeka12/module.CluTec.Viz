@@ -1,0 +1,794 @@
+if ( ExecMode & EM_CHANGE )
+{
+	Shader_Line3d_PartId =
+	{
+		sName = _P(1);
+		
+		sVSCode = @Shader"
+		#version 330
+		
+		in vec4 clu_in_vVertex;
+		in vec4 clu_in_vColor;
+		in vec4 clu_in_vNormal;
+		in vec4 clu_in_vTex0;
+		in int clu_in_iPartId;
+			
+		out SVertexData
+		{
+			vec4 vColor;
+			vec4 vTex;
+			vec4 vNormal;
+			float fIsPickedPartId;
+		} xVertex;
+		
+		uniform int clu_iPickedPartId;
+		uniform int clu_iInPickDrawMode;
+		
+		uniform float fTime;
+		uniform float fTimeStep;
+		uniform float fPi;
+		uniform int iSelectedPartId;
+		uniform vec4 colPicked;
+		uniform vec4 colSelected;
+		uniform vec4 colPickSel;
+		uniform int iEnablePicking;
+		
+		void main()
+		{
+			int iPartId = clu_in_iPartId & 0x000FFFFF;		
+			xVertex.fIsPickedPartId = 0.0;
+			
+			if ( clu_iInPickDrawMode == 0)
+			{
+				if ( iPartId == clu_iPickedPartId && iEnablePicking > 0)
+				{
+					if ( iPartId == iSelectedPartId )
+						xVertex.vColor = colPickSel;
+					else
+						xVertex.vColor = colPicked;
+				
+					xVertex.fIsPickedPartId = 1.0;		
+				}
+				else if ( iPartId == iSelectedPartId && iEnablePicking > 0)
+				{
+					xVertex.vColor = colSelected;
+					xVertex.fIsPickedPartId = -1.0;		
+				}
+				else
+				{
+					xVertex.vColor = vec4(0.8 * clu_in_vColor.rgb, clu_in_vColor.a);	
+				}
+			}
+			else
+			{
+				xVertex.vColor = clu_in_vColor;
+			}
+			
+			xVertex.vNormal = clu_in_vNormal;
+			xVertex.vTex = clu_in_vTex0;
+			gl_Position = vec4(clu_in_vVertex.xyz, 1.0);
+		}
+		";
+		
+		sGSCode = @Shader"
+		#version 330
+		
+		precision highp float;
+		
+		layout (lines_adjacency) in;
+//		layout (line_strip, max_vertices = 24) out;
+		layout (triangle_strip, max_vertices = 4) out;
+	
+		in SVertexData
+		{
+			vec4 vColor;
+			vec4 vTex;
+			vec4 vNormal;
+			float fIsPickedPartId;
+		} xVertex[];
+		
+		out SFragData
+		{
+			vec4 vColor;
+			vec4 vTex;
+			float fTotalLen;
+			float fSegmentTime;
+			float fTotalTime;
+			float fLinePixelWidth;
+		} xFrag;
+		
+		out float gl_ClipDistance[gl_MaxClipDistances];
+
+		uniform mat4 clu_matModelViewProjection;
+		uniform mat4 clu_matModelView;
+		uniform mat4 clu_matProjection;
+		uniform mat4 clu_matInvProjection;
+		uniform int clu_piViewport[4];
+		uniform int clu_iInPickDrawMode;
+		uniform vec4 clu_pvClipPlanes[gl_MaxClipDistances];
+
+		uniform float fLinePixelWidthMin;
+		uniform float fMinLineLength;
+		uniform float fMinLineTime;
+		uniform float fLineWidth;
+		
+		vec3 EvalScreenPos(vec4 vWorldPos)
+		{
+			vec4 vA = clu_matModelViewProjection * vWorldPos;
+			vA /= vA.w;
+			return vA.xyz;
+		}
+		
+		vec2 IntersectionPoint(vec2 vP1, vec2 vD1, vec2 vP2, vec2 vD2)
+		{
+			vec2 vDelta = vP2 - vP1;
+			vec2 vA = vDelta - dot(vDelta, vD1)*vD1;
+			vec2 vB = vD2 - dot(vD2,vD1)*vD1;
+			
+			float fA;
+			
+			if ( abs(vB.x) > abs(vB.y) )
+				fA = -vA.x / vB.x;
+			else
+				fA = -vA.y / vB.y;
+			
+			return vP2 + fA * vD2;
+		}
+		
+		vec3 EvalBorderIntersection(vec3 vPos, vec3 vBasisX, vec3 vBasisY, vec3 vX, vec3 vY, float fWidth)
+		{
+			vec2 vP1 = vec2(0, -fWidth);
+			vec2 vD1 = vec2(1, 0);
+			vec2 vP2, vD2;
+			vec3 vPnt = -fWidth * vY;
+			vP2.x = dot(vPnt, vBasisX);
+			vP2.y = dot(vPnt, vBasisY);
+			vD2.x = dot(vX, vBasisX);
+			vD2.y = dot(vX, vBasisY);
+			
+			vec2 vI = IntersectionPoint(vP1, vD1, vP2, vD2);
+			vec3 vDir = vI.x * vBasisX + vI.y * vBasisY;	
+
+			if ( length(vDir) > fWidth )
+			{
+				vPnt = fWidth * normalize(vDir) + vPos;
+			}
+			else
+			{
+				vPnt = vDir + vPos;
+			}
+			return vPnt;	
+		}
+		
+		void DrawLine(vec3 vA, vec3 vB)
+		{
+			xFrag.vColor = vec4(1, 1, 1, 1);
+			gl_Position = clu_matProjection * vec4(vA, 1);
+			EmitVertex();
+
+			xFrag.vColor = vec4(1, 0.5, 0.2, 1);
+			gl_Position = clu_matProjection * vec4(vB, 1);
+			EmitVertex();
+			
+			EndPrimitive();
+		}
+
+		void DrawDir(vec3 vA, vec3 vDir)
+		{
+			xFrag.vColor = vec4(1, 1, 1, 1);
+			gl_Position = clu_matProjection * vec4(vA, 1);
+			EmitVertex();
+
+			xFrag.vColor = vec4(1, 0.5, 0.2, 1);
+			gl_Position = clu_matProjection * vec4(vA + vDir, 1);
+			EmitVertex();
+			
+			EndPrimitive();
+		}
+		
+		void DrawDirC(vec3 vA, vec3 vDir)
+		{
+			xFrag.vColor = vec4(1, 1, 1, 1);
+			gl_Position = clu_matProjection * vec4(vA - 0.5*vDir, 1);
+			EmitVertex();
+
+			xFrag.vColor = vec4(1, 0.5, 0.2, 1);
+			gl_Position = clu_matProjection * vec4(vA + 0.5*vDir, 1);
+			EmitVertex();
+			
+			EndPrimitive();
+		}
+		
+		void AddVertex(vec3 vPos, float vTexY, int iIdx)
+		{
+			xFrag.vColor = xVertex[iIdx].vColor;
+			xFrag.vTex = vec4(xVertex[iIdx].vTex.x, vTexY, 0, xVertex[iIdx].fIsPickedPartId);
+			xFrag.fTotalLen = xVertex[iIdx].vTex.y; 
+			xFrag.fSegmentTime = xVertex[iIdx].vNormal.x;
+			xFrag.fTotalTime = xVertex[iIdx].vNormal.y;
+			gl_Position = clu_matProjection * vec4(vPos, 1);
+			EmitVertex();
+		}
+
+
+		void ClipEyePos(vec4 vEyePos)
+		{
+			for ( int i = 0; i < gl_MaxClipDistances; ++i)
+			{
+				gl_ClipDistance[i] = dot(vEyePos, clu_pvClipPlanes[i]);
+			}
+		}
+
+		void AddVertex(vec4 vPos, float fTexX, float fTexY, float fSegTime, float fLinePixelWidth, int iIdx)
+		{
+			xFrag.vColor = xVertex[iIdx].vColor;
+			xFrag.vTex = vec4(fTexX, fTexY, 0, xVertex[iIdx].fIsPickedPartId);
+			xFrag.fTotalLen = xVertex[iIdx].vTex.y; 
+			xFrag.fSegmentTime = fSegTime; //xVertex[iIdx].vNormal.x;
+			xFrag.fTotalTime = xVertex[iIdx].vNormal.y;
+			xFrag.fLinePixelWidth = fLinePixelWidth;
+			ClipEyePos(clu_matInvProjection * vPos);
+			gl_Position = vPos;
+			EmitVertex();
+		}
+
+		
+		void AddVertex(vec4 vPos, float fTexY, int iIdx)
+		{
+			xFrag.vColor = xVertex[iIdx].vColor;
+			xFrag.vTex = vec4(xVertex[iIdx].vTex.x, fTexY, 0, xVertex[iIdx].fIsPickedPartId);
+			xFrag.fTotalLen = xVertex[iIdx].vTex.y; 
+			xFrag.fSegmentTime = xVertex[iIdx].vNormal.x;
+			xFrag.fTotalTime = xVertex[iIdx].vNormal.y;
+			ClipEyePos(clu_matInvProjection * vPos);
+			gl_Position = vPos;
+			EmitVertex();
+		}
+				
+		void main()
+		{
+			if (xVertex[0].vNormal.y < fMinLineTime)
+			{
+				return;
+			}
+										
+			if (xVertex[0].vTex.y < fMinLineLength)
+			{
+				return;
+			}
+			
+			const float fMinLen = 0.01;
+			float fCurLineWidth = fLineWidth;
+			
+			vec2 vPixelSize;
+			vPixelSize.x = 2.0 / float(clu_piViewport[2]);
+			vPixelSize.y = 2.0 / float(clu_piViewport[3]);
+			
+			
+			vec3 vPos[4];
+			vec3 vLineDir[3];
+			vec3 vNormal[2];
+			vec3 vPerp[4];
+			vec3 vViewPerp[4];
+			vec3 vSemiDir[2];
+
+			float fLineLen[3];
+			
+			bool bIsFirst = (distance(gl_in[0].gl_Position, gl_in[1].gl_Position) < 0.001);
+			bool bIsLast = (distance(gl_in[2].gl_Position, gl_in[3].gl_Position) < 0.001);
+			
+			for ( int i = 0; i < 4; ++i )
+			{
+				vPos[i] = vec3(clu_matModelView * gl_in[i].gl_Position);
+			}
+
+			for ( int i = 0; i < 3; ++i )
+			{
+				vLineDir[i] = (vPos[i+1] - vPos[i]);
+				fLineLen[i] = length(vLineDir[i]);
+				vLineDir[i] = normalize(vLineDir[i]);
+			}
+
+			//bool bIsPar01 = (length(cross(vLineDir[0], vLineDir[1])) < fMinLen);
+			//bool bIsPar12 = (length(cross(vLineDir[1], vLineDir[2])) < fMinLen);
+			
+			const vec3 vOpticalAxis = vec3(0,0,-1);
+			
+			if ( bIsFirst && bIsLast )
+			{
+				vViewPerp[1] = normalize(cross(vOpticalAxis/*vPos[1]*/, vLineDir[1]));
+				vViewPerp[2] = normalize(cross(vOpticalAxis/*vPos[2]*/, vLineDir[1]));
+				vSemiDir[0] = vViewPerp[1];
+				vSemiDir[1] = vViewPerp[2];
+			}
+			else if ( bIsFirst )
+			{
+			//return;
+				vViewPerp[1] = normalize(cross(vOpticalAxis/*vPos[1]*/, vLineDir[1]));
+				vViewPerp[2] = normalize(cross(vOpticalAxis/*vPos[2]*/, vLineDir[1]));
+				vViewPerp[3] = normalize(cross(vOpticalAxis/*vPos[2]*/, vLineDir[2]));
+				
+				vViewPerp[2] = faceforward(vViewPerp[2], -vViewPerp[3], vViewPerp[2]);
+				vSemiDir[0] = vViewPerp[1];
+				vSemiDir[1] = normalize(vViewPerp[2] + vViewPerp[3]);
+			}
+			else if ( bIsLast )
+			{
+			//return;
+				vViewPerp[0] = normalize(cross(vOpticalAxis/*vPos[1]*/, vLineDir[0]));
+				vViewPerp[1] = normalize(cross(vOpticalAxis/*vPos[1]*/, vLineDir[1]));
+				vViewPerp[2] = normalize(cross(vOpticalAxis/*vPos[2]*/, vLineDir[1]));
+
+				vViewPerp[1] = faceforward(vViewPerp[1], -vViewPerp[0], vViewPerp[1]);
+				vSemiDir[0] = normalize(vViewPerp[0] + vViewPerp[1]);
+				vSemiDir[1] = vViewPerp[2];
+			}
+			else
+			{
+			//return;				
+				vViewPerp[0] = normalize(cross(vOpticalAxis, vLineDir[0]));
+				vViewPerp[1] = normalize(cross(vOpticalAxis, vLineDir[1]));
+				vViewPerp[2] = normalize(cross(vOpticalAxis, vLineDir[1]));
+				vViewPerp[3] = normalize(cross(vOpticalAxis, vLineDir[2]));
+/*
+				vViewPerp[0] = normalize(cross(vPos[1], vLineDir[0]));
+				vViewPerp[1] = normalize(cross(vPos[1], vLineDir[1]));
+				vViewPerp[2] = normalize(cross(vPos[2], vLineDir[1]));
+				vViewPerp[3] = normalize(cross(vPos[2], vLineDir[2]));
+*/	
+				vViewPerp[1] = faceforward(vViewPerp[1], -vViewPerp[0], vViewPerp[1]);
+				vViewPerp[2] = faceforward(vViewPerp[2], -vViewPerp[3], vViewPerp[2]);
+	
+				vSemiDir[0] = normalize(vViewPerp[0] + vViewPerp[1]);
+				vSemiDir[1] = normalize(vViewPerp[2] + vViewPerp[3]);
+			}
+
+			float pfSizeFac[2];
+			
+			pfSizeFac[0] = 1.0 / abs(dot(vSemiDir[0], vViewPerp[1]));
+			pfSizeFac[1] = 1.0 / abs(dot(vSemiDir[1], vViewPerp[2]));
+			vSemiDir[0] *= pfSizeFac[0];
+			vSemiDir[1] *= pfSizeFac[1];
+
+			vSemiDir[1] = faceforward(vSemiDir[1], -vSemiDir[0], vSemiDir[1]);
+			
+/*
+			DrawDirC(vPos[1], 2 * fCurLineWidth * vViewPerp[0]);
+			DrawDirC(vPos[1], 2 * fCurLineWidth * vViewPerp[1]);
+			DrawDirC(vPos[2], 2 * fCurLineWidth * vViewPerp[2]);
+			DrawDirC(vPos[2], 2 * fCurLineWidth * vViewPerp[3]);
+
+			DrawDirC(vPos[1], 2 * fCurLineWidth * vSemiDir[0]);
+			DrawDirC(vPos[2], 2 * fCurLineWidth * vSemiDir[1]);
+						
+			DrawLine(vPos[1], vPos[2]);
+*/
+			// Evaluate correct segment time
+			vViewPerp[1] = faceforward(vViewPerp[1], -vSemiDir[0], vViewPerp[1]);
+			//DrawLine(vPos[1] + fCurLineWidth * vViewPerp[1], vPos[1] + fCurLineWidth * vSemiDir[0]);
+			//DrawLine(vPos[1] - fCurLineWidth * vViewPerp[1], vPos[1] - fCurLineWidth * vSemiDir[0]);
+			
+			vViewPerp[2] = faceforward(vViewPerp[2], -vSemiDir[1], vViewPerp[2]);
+			//DrawLine(vPos[2] + fCurLineWidth * vViewPerp[2], vPos[2] + fCurLineWidth * vSemiDir[1]);
+			//DrawLine(vPos[2] - fCurLineWidth * vViewPerp[2], vPos[2] - fCurLineWidth * vSemiDir[1]);
+			
+			float fTotalSegTex = xVertex[2].vTex.x - xVertex[1].vTex.x;
+			float fTotalSegTime = xVertex[2].vNormal.x - xVertex[1].vNormal.x;
+			float fTexPerLen = fTotalSegTex / fLineLen[1];
+			float fTimePerLen = fTotalSegTime / fLineLen[1];
+			
+			float pfDelta[2];
+			float pfTexX[4];
+			float pfTime[4];
+			
+			pfDelta[0] = fCurLineWidth * dot(vSemiDir[0] - vViewPerp[1], vLineDir[1]);
+			pfDelta[1] = fCurLineWidth * dot(vSemiDir[1] - vViewPerp[2], vLineDir[1]);
+			
+			pfTexX[0] = xVertex[1].vTex.x + fTexPerLen * pfDelta[0];			
+			pfTexX[1] = xVertex[1].vTex.x - fTexPerLen * pfDelta[0];
+			pfTexX[2] = xVertex[2].vTex.x + fTexPerLen * pfDelta[1];			
+			pfTexX[3] = xVertex[2].vTex.x - fTexPerLen * pfDelta[1];
+
+			pfTime[0] = xVertex[1].vNormal.x + fTimePerLen * pfDelta[0];			
+			pfTime[1] = xVertex[1].vNormal.x - fTimePerLen * pfDelta[0];
+			pfTime[2] = xVertex[2].vNormal.x + fTimePerLen * pfDelta[1];			
+			pfTime[3] = xVertex[2].vNormal.x - fTimePerLen * pfDelta[1];
+
+			
+			//return;
+			
+			vec4 vSPos[4], vSCenter[2];
+			vSCenter[0] = clu_matProjection * vec4(vPos[1], 1);
+			vSCenter[1] = clu_matProjection * vec4(vPos[2], 1);
+			vSPos[0] = clu_matProjection * vec4(vPos[1] + fCurLineWidth * vSemiDir[0], 1);
+			vSPos[1] = clu_matProjection * vec4(vPos[1] - fCurLineWidth * vSemiDir[0], 1);
+			vSPos[2] = clu_matProjection * vec4(vPos[2] + fCurLineWidth * vSemiDir[1], 1);
+			vSPos[3] = clu_matProjection * vec4(vPos[2] - fCurLineWidth * vSemiDir[1], 1);
+			
+			vSCenter[0] /= abs(vSCenter[0].z);
+			vSCenter[1] /= abs(vSCenter[1].z);
+			
+			for ( int i = 0; i < 4; ++i)
+			{
+				vSPos[i] /= abs(vSPos[i].z);
+			}
+		
+			vec2 vDist;
+			float pfLinePixelWidth[2];
+			
+			for ( int i = 0; i < 4; i += 2 )
+			{
+				vDist = vec2(vSPos[i+1] - vSPos[i]) / vPixelSize;
+				pfLinePixelWidth[i/2] = length(vDist);
+
+				if (pfLinePixelWidth[i/2] < fLinePixelWidthMin )
+				{
+					vec4 vSep = vec4(pfSizeFac[i/2] * fLinePixelWidthMin/2.0 * vPixelSize * normalize(vDist), 0, 0);
+					vSPos[i] = vSCenter[i/2] - vSep;
+					vSPos[i+1] = vSCenter[i/2] + vSep;
+					pfLinePixelWidth[i/2] = fLinePixelWidthMin;
+				}
+			}		
+			
+			AddVertex(vSPos[0], pfTexX[0],  1.0, pfTime[0], pfLinePixelWidth[0], 1);
+			AddVertex(vSPos[1], pfTexX[1], -1.0, pfTime[1], pfLinePixelWidth[0], 1);
+			AddVertex(vSPos[2], pfTexX[2],  1.0, pfTime[2], pfLinePixelWidth[1], 2);
+			AddVertex(vSPos[3], pfTexX[3], -1.0, pfTime[3], pfLinePixelWidth[1], 2);
+	
+/*		
+			AddVertex(vPos[1] + fCurLineWidth * vSemiDir[0], 1.0, 1);
+			AddVertex(vPos[1] - fCurLineWidth * vSemiDir[0], -1.0, 1);
+			AddVertex(vPos[2] + fCurLineWidth * vSemiDir[1], 1.0, 2);
+			AddVertex(vPos[2] - fCurLineWidth * vSemiDir[1], -1.0, 2);
+*/
+			EndPrimitive();
+			
+		}
+		
+		";
+		
+		sFSCode = @Shader"
+		#version 330
+		
+		in SFragData
+		{
+			vec4 vColor;
+			vec4 vTex;
+			float fTotalLen;
+			float fSegmentTime;
+			float fTotalTime;
+			float fLinePixelWidth;
+		} xFrag;
+
+		uniform float gl_ClipDistance[gl_MaxClipDistances];
+
+		out vec4 vFragColor;
+		
+		uniform vec4 clu_vColor;
+		uniform int clu_iPickedPartId;
+		uniform int clu_iInPickDrawMode;
+
+		uniform float fTime;
+		uniform float fTimeStep;
+		uniform float fPi;
+		uniform float fTimeScale;
+		uniform float fPointsPerUnitLength;
+		uniform float fGlowLength;
+		uniform int iAnimPointsOnly;
+		uniform int iDoAnimateAll;
+		uniform int iEnablePicking;
+		uniform float fLineWidth;
+		uniform int iDrawStyle3D;
+		
+		void main()
+		{
+			//vFragColor = xFrag.vColor;
+			//vFragColor = vec4(xFrag.fSegmentTime / xFrag.fTotalTime, 0.3, 0.3, 1);
+			//vFragColor = vec4(xFrag.vTex.x / xFrag.fTotalLen, 0.1, 0.1, 1);
+			//vFragColor = vec4(xFrag.vTex.y, 0.1, 0.1, 1);
+			//return;
+			
+			const float fRadius = 0.5;
+			const float fGlowSizePixel = 2.0;
+			const vec3 colSpec = vec3(1.0, 1.0, 1.0);
+			
+			// Intensity difference between specular reflection and line color
+			const float fDiffPart = 0.7;
+
+
+			for ( int i = 0; i < gl_MaxClipDistances; ++i)
+			{
+				if ( gl_ClipDistance[i] < 0.0 )
+				{
+					discard;
+				}
+			}
+
+			float fGlowSize = fGlowSizePixel / xFrag.fLinePixelWidth;
+			float fGlowRadius = fRadius - fGlowSize;
+	
+	        vec2 vPos = xFrag.vTex.st;
+			float fDelta;
+			
+			if ( xFrag.vTex.z > 0.5 )
+			{
+				fDelta = length(vPos);
+			}
+			else
+			{
+				fDelta = abs(vPos.y);
+			}
+			
+			float fFac = 1.0 - (fDelta*fDelta)/(fRadius*fRadius);
+			float fSpec = pow(clamp(fFac, 0.0, 1.0), 6.0);
+			
+			if (iDrawStyle3D == 0)
+			{
+				fSpec = 0;
+			}
+			float fGlow = clamp(1.0 - (fDelta-fGlowRadius)/(2.0*fGlowSize), 0.0, 1.0);
+			
+			if (clu_iInPickDrawMode != 0)
+			{
+				if (fGlow > 0.0 )
+				{
+					vFragColor = xFrag.vColor;
+				}
+				else
+				{
+					// Don't draw any fragment for invalid areas.
+					discard;
+				}
+			}
+			else
+			{
+				// Standard color for line.
+				// Generates a specular reflection in the line center and
+				// reduces line brightness towards the line borders.
+				vec3 colA = fDiffPart /* /3*(1.0 + 2*sqrt(fFac))*/ * xFrag.vColor.rgb
+					+ (1.0 - fDiffPart) * fSpec * colSpec;
+				
+				if ( (xFrag.vTex.w != 0.0 || iDoAnimateAll > 0))
+				{
+					float fCurrentTime = 0.0;
+					float fConstColorFactor;
+					float fVarColorFactor;
+					float fGlowLengthRatio;
+					int iPointsPerTrack = max(int(floor(xFrag.fTotalLen + 0.5) * fPointsPerUnitLength), 1);
+
+					if ( xFrag.vTex.w > 0.5 || iDoAnimateAll > 0 )
+					{
+						fCurrentTime = fTime;
+						fConstColorFactor = 0.4;
+						fVarColorFactor = 1.2;
+						fGlowLengthRatio = 5;
+					}
+					else if (xFrag.vTex.w < -0.5)
+					{
+						fCurrentTime = 0.5;
+						fConstColorFactor = 0.6;
+						fVarColorFactor = 0.9;
+						fGlowLengthRatio = 1;
+						iPointsPerTrack *= 3;
+					}
+
+					// Flow with correct speed					
+					float fLightTime, fLightDist;
+					
+					float fTimeToLenRatio = xFrag.fTotalTime / xFrag.fTotalLen;
+					float fGlowTime = fGlowLength * fTimeToLenRatio;
+					float fPointsPerUnitTime = fPointsPerUnitLength / fTimeToLenRatio;
+					float fAdjTotalTime = ceil((xFrag.fTotalTime + 2*fGlowTime) * fPointsPerUnitTime) / fPointsPerUnitTime;
+					float fMinLightDist = iPointsPerTrack * fAdjTotalTime;
+					
+					fLightTime = mod(fCurrentTime * fTimeScale, fAdjTotalTime ) - fGlowTime;
+					fLightTime = fLightTime - xFrag.fSegmentTime;
+					
+					for ( int i = -iPointsPerTrack-1; i < iPointsPerTrack+2; ++i )
+					{
+						fLightDist = fLightTime + float(i) / fPointsPerUnitTime; 
+						if (abs(fLightDist) < abs(fMinLightDist))
+							fMinLightDist = fLightDist;
+					}
+
+					fLightDist = fMinLightDist;
+
+
+					float fA = max(fLightDist, 0) / fGlowTime;
+					float fB = min(fLightDist, 0) * fGlowLengthRatio / fGlowTime; 
+					float fVal = exp(-(fA*fA) - (fB*fB));
+					float fAtt = fConstColorFactor + fVarColorFactor * fVal;
+					float fBorderDist = 1 - (abs(vPos.y) - fRadius) / (1.0 - fRadius);
+					
+					if ( iAnimPointsOnly > 0 && (xFrag.vTex.w > 0.5 || iDoAnimateAll > 0))
+					{
+						fA = exp(-(clamp(abs(vPos.y), 0.0, 1.0) / fRadius * 2 ));
+						vFragColor = vec4( (0.5 + fVal) * (xFrag.vColor.rgb + 0.8 * fSpec * colSpec), fA * fVal);
+						//vFragColor = vec4( 1, 0, 0, 1);
+					}
+					else
+					{
+						if ( abs(vPos.y) >= fGlowRadius)// - 0.05)
+						{
+							// Color in glow area outside line when glow is active
+							vFragColor = vec4(fVal*xFrag.vColor.rgb, 
+											fVal * (fGlow + fBorderDist));
+						}				
+						else
+						{
+							// Color on line when glow is active
+							vFragColor = vec4( fAtt * colA , fGlow);
+						}
+					}
+				}
+				else
+				{
+					// Color on line and in glow area during normal draw.
+					vFragColor = vec4( colA , fGlow );
+				}
+			}
+
+		}
+		";
+	
+		shPartId = Shader( sName + "PartId" );
+		EnableShaderForPicking(shPartId, true);
+		ShaderBuild(shPartId, [sVSCode], [sFSCode], [sGSCode]);
+		shPartId("Var", "iSelectedPartId", -1);
+		shPartId("Var", "fLinePixelWidthMin", 9);
+		
+		shPartId("Var", "colPicked", Color(0.957, 0.576, 0.510));
+		shPartId("Var", "colSelected", Color(0.953, 0.396, 0.745));
+		shPartId("Var", "colPickSel", Color(0.890, 0.243, 0.584));		
+		shPartId("Var", "fTimeScale", 1.0);
+		shPartId("Var", "fPointsPerUnitLength", 0.5);
+		shPartId("Var", "fGlowLength", 0.5);
+		shPartId("Var", "iAnimPointsOnly", 0);
+		shPartId("Var", "iDoAnimateAll", 0);
+		shPartId("Var", "iEnablePicking", 1);
+		shPartId("Var", "fMinLineLength", 0);
+		shPartId("Var", "fMinLineTime", 2);
+		shPartId("Var", "fLineWidth", 0.5);
+		shPartId("Var", "iDrawStyle3D", 1);
+		
+		shPartId break;
+	}
+
+}
+	
+// /////////////////////////////////////////////////////////////////////
+// Debugging
+
+if ( false )
+{
+	EnableAntiAliasing(true);
+	
+	if ( ExecMode & EM_CHANGE )
+	{	
+		shA = Shader_Line3d_PartId("test");
+		shDef = Shader("Default");
+		
+	    // Create the object
+	    vxA = Object( "Hello", OM_LINE_STRIP_ADJACENCY);
+	
+	    lData = [];
+	
+		lA = [	VecE3(-1,-0.2,0), VecE3(-0.5,0.3,0), VecE3(0.5,0,0.0), 
+				VecE3(0.5,1,0), VecE3(0.5,1.5,0), VecE3(1,1.5,0)];
+
+		dTotalLen = 0.0;
+		iIdx = 0;
+		iCnt = Size(lA);
+		loop
+		{
+			iIdx = iIdx + 1;
+			if ( iIdx >= iCnt ) break;
+			
+			dTotalLen = dTotalLen + abs(lA(iIdx+1) - lA(iIdx));
+		}
+		?dTotalLen;
+
+		lTex = List(6);
+		lNorm = List(6);
+		lTex(1) = [0,dTotalLen,0];
+		lNorm(1) = [0,iCnt,0];
+		dLen = 0;
+		iIdx = 0;
+		iCnt = Size(lA);
+		loop
+		{
+			iIdx = iIdx + 1;
+			if ( iIdx >= iCnt ) break;
+			
+			dLen = dLen + abs(lA(iIdx+1) - lA(iIdx));
+			lTex(iIdx+1) = [dLen, dTotalLen, 0];
+			lNorm(iIdx+1) = [iIdx, iCnt, 0];
+		}
+		?lTex;
+		
+	    // Set vertices.
+	    lData("vex") = lA;//Tensor( [[-1,-1,1], [-0.5,0,0], [-0.48,0,0], [-0.47,0.0,0], [2,1,0], [1, 1.5, 1]] );
+	
+	    // Set colors, one for each vertex.
+		lData("col") = Tensor( [[0.3,0.9,0.3], [1.0,0.0,0.0], [0.0,1.0,0.0], 
+								[0.0,0.0,1.0], [1,1,0], [0,1,1]] );
+		lData("tex") = lTex;
+		lData("norm") = lNorm;
+	    // Set an index list
+	    lData("idx") = Tensor( [ [1,1,2,3,4,5,5]] );
+	
+		lData("partid") = Tensor( [1, 1, 1, 1, 1, 1] );
+	    //?lData;
+	
+	    // Set the data to the object
+	    vxA << lData;
+	
+		scA = Scene("A");
+		scAAnim = Scene("AAnim");
+		scAPick = Scene("A_Picked");
+		EnableScene(scAAnim, true);
+		EnableScenePick(scA, true);
+		SetPickScene(scA, scAPick);
+		EnableSceneNotify(scA, true);
+		DrawToScene(scA);
+			:scAAnim;
+			:shA;
+			:White;
+			:vxA;
+			//DrawPlane(VecE3(0,0), VecE3(1,0), VecE3(0,1));
+			:shDef;
+		DrawToScene();
+	
+		DrawToScene(scAAnim);
+			:AnimShader(shA, "fTime", "fTimeStep");
+		DrawToScene();
+		
+		DrawToScene(scAPick);
+			:AnimShader(shA, "fTime", "fTimeStep");
+			:shA;
+			:White;
+			:vxA;
+			//DrawPlane(VecE3(0,0), VecE3(1,0), VecE3(0,1));
+			:shDef;
+		DrawToScene();
+	
+	}
+	//EnableAntiAliasing(true);
+	
+	?PickData;
+	bAnimPointsOnly = CheckBox("Anim Points Only", 1);
+	bDoAnimateAll = CheckBox("Do Animate All", 1);
+	
+	if ( ExecMode & EM_PICK_SELECT )
+	{
+		if ( PickData("click") == "left" )
+			shA("Var", "iSelectedPartId", PickData("part_id"));
+	}
+	else if ( ToolName == "Anim Points Only" )
+	{
+		shA("Var", "iAnimPointsOnly", bAnimPointsOnly);
+	}	
+	else if ( ToolName == "Do Animate All" )
+	{
+		shA("Var", "iDoAnimateAll", bDoAnimateAll);
+		EnableScene(scAAnim, bDoAnimateAll);
+	}
+	
+	//_2dView = true;	
+	:Red;
+	DrawFrame(3, "box_coord");
+	:DWhite + Alpha;
+	//DrawPlane(VecE3(0,0,-0.01), VecE3(3,0), VecE3(0,3));
+	shA("Var", "fLineWidth", Slider("Line Width", 1, 50, 1, 10)/100);
+	:White;
+	//SetTexture(imgA);
+	:scA;
+	
+	//TranslateFrame(0,0,0.5);
+		:MWhite;
+	SetPointSize(5);
+	:E3_DRAW_VEC_AS_POINT;
+	:DRAW_POINT_AS_DOT;
+	:lA;
+
+} // if debug true

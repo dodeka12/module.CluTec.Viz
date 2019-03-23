@@ -1,0 +1,156 @@
+// Test Adaptive redraw of scene
+
+if ( ExecMode & EM_CHANGE )
+{
+
+	GUI_Menu_CreateElement =
+	{
+		scEl -> _P(1);
+		sName -> _P(2);
+		refScene -> _P(3);
+		lBorder -> _P(4);
+		
+		: Red;
+		lSizeA = Size( GetTextImg( "X" ) );
+		imgT = GetTextImg( sName );
+		lSizeT = Size( imgT );
+		lSizeT(2) = lSizeA(2);
+		dAspect = lSizeT(2) / lSizeT(1);
+		
+		aliA = AmbientLight( "A" );
+		SetAmbientLight( aliA, Black );
+		
+		liA = Light( "A", 1 );
+		SetLightPos( liA, VecE3(1, 1, 1) );
+		SetLightAmbient( liA, Black );
+		SetLightDiffuse( liA, DWhite );
+		
+		frDef = Frame( "Default", false, "texture" );
+		frT = Frame( "Text", false, "texture" );
+		//ScaleFrame( frT, 1, 1, 1 );
+		//AnimRotateFrame( frT, 0, 0,0,1, "Sinus", 20, 2, 1 );
+		//AnimTranslateFrame( frT, 1,0,0, "Constant", 0.3 );
+		
+		texT = Texture( "Text" );
+		SetTextureImage( texT, imgT, true, 1 );
+		SetTextureBlendType( texT, "interpolate", "add" );
+		
+		scEl = Scene( "Menu:" + sName );
+		EnableSceneResetFrame( scEl, true );
+
+		EnableSceneNotify( scEl, true, "MouseDrag" );
+		EnableSceneNotify( scEl, true, "MouseClick" );
+		EnableSceneNotify( scEl, true, "MouseOver" );
+
+		if ( Type( refScene ) == "Scene:Scene" )
+		{
+			SetSceneViewport( scEl, 0, 0, lSizeT(1)+4, lSizeT(2)+4, true );
+			SetSceneViewportOriginRef( scEl, refScene, false, false );
+			SetSceneViewportLocal( scEl, false, false );
+		}
+		else
+		{
+			SetSceneViewport( scEl, 0, 1, lSizeT(1)+4, lSizeT(2)+4, true );
+			SetSceneViewportLocal( scEl, true, false );
+		}
+		SetSceneViewportAlign( scEl, 0, 1 );
+		SetSceneViewportBorder( scEl, lBorder(1), lBorder(2), lBorder(3), lBorder(4) );
+		//SetSceneOverlay( scEl, 0, 1, 0, 1, -1, 1 );
+		SetSceneViewVolume( scEl, -0.5, 0.5, -0.5, 0.5, 1, 5 );
+
+		EnableScenePick( scEl, true );
+		
+		//SetScenePixelOverlay( scEl );//, 0, 1, 0, 1, 0, 1, false );
+		//EnableSceneAdaptiveRedraw( scEl, true );
+		DrawToScene( scEl );
+			TranslateFrame( 0, 0, 4 );
+			:aliA;
+			:liA;
+			:texT;
+			//:frT;
+			:White;
+			//RotateFrame( 1,0,0, -25 );
+			//AnimRotateFrame( 0, 0,0,1, "Sinus", 4, 2, 1 );
+			//DrawPlane( VecE3(0.5,0.5), VecE3(1,0), VecE3(0,1) );
+			DrawPlane( VecE3(0,0), VecE3(1,0), VecE3(0,1) );
+			
+		DrawToScene( );
+		
+		scElPick = Scene( "Menu:MainPick:" + sName );
+		DrawToScene( scElPick );
+			TranslateFrame( 0, 0, 3.8 );
+			:aliA;
+			:liA;
+			:texT;
+			:frT;
+			:White;
+			TranslateFrame( 0, 0.05, 0 );
+			RotateFrame( 1,0,0, -15 );
+			//AnimRotateFrame( 0, 0,1,0, "Sinus", 10, 2, 1 );
+			//DrawPlane( VecE3(0.5,0.5), VecE3(1,0), VecE3(0,1) );
+			DrawPlane( VecE3(0,0), VecE3(1,0), VecE3(0,1) );
+			:frDef;
+			
+		DrawToScene();
+	
+		scElPickClick = Scene( "Menu:MainPickClick:" + sName );
+		DrawToScene( scElPickClick );
+			TranslateFrame( 0, 0, 4 );
+			:aliA;
+			:liA;
+			:texT;
+			//:frT;
+			:White;
+			//TranslateFrame( 0, 0.05, 0 );
+			//RotateFrame( 1,0,0, -25 );
+			//AnimRotateFrame( 0, 1,0,0, "Constant", 720 );
+			//DrawPlane( VecE3(0.5,0.5), VecE3(1,0), VecE3(0,1) );
+			DrawPlane( VecE3(0,0), VecE3(1,0), VecE3(0,1) );
+		
+		DrawToScene();
+	
+		SetPickScene( scEl, scElPick );
+		SetPickScene( scEl, scElPickClick, false, true );
+	}
+	
+	
+	lBorder = [ 2, 2, 2, 2 ];
+//	lBorder = [ 0, 0, 0, 0 ];
+	SetTextMagStep( 6 );
+	GUI_Menu_CreateElement( scEl1, "Hello", 0, lBorder );
+	GUI_Menu_CreateElement( scEl2, "World", scEl1, lBorder );
+	GUI_Menu_CreateElement( scEl3, "This is interesting", scEl2, lBorder );
+	GUI_Menu_CreateElement( scEl4, "Foo", scEl3, lBorder );
+	
+	scMenuBar = Scene( "MenuBar" );
+	EnableSceneResetFrame( scMenuBar, true );
+	SetSceneViewport( scMenuBar, 0, 1, 1, 200 );
+	SetSceneViewportAlign( scMenuBar, 0, 1 );
+	SetSceneOverlay( scMenuBar, 0, 1, 0, 1, -1, 1 );
+
+	DrawToScene( scMenuBar );
+		:scEl1;
+		:scEl2;
+		:scEl3;
+		:scEl4;
+	DrawToScene();
+
+/*
+	scMenuBar2 = Scene( "MenuBar2" );
+	EnableSceneResetFrame( scMenuBar2, true );
+	SetSceneViewport( scMenuBar2, 0, 0.9, 1, 200 );
+	SetSceneViewportAlign( scMenuBar2, 0, 1 );
+	SetSceneOverlay( scMenuBar2, 0, 1, 0, 1, -1, 1 );
+
+	DrawToScene( scMenuBar2 );
+		//:scEl1;
+		:scEl2;
+		//:scEl3;
+	DrawToScene();
+*/
+}
+
+?PickData;
+:scMenuBar;
+:scMenuBar2;
+//:scEl1;

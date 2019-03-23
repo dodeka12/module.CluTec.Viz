@@ -1,0 +1,90 @@
+// Test Adaptive redraw of scene
+
+StdGUI_ActObj_Create =
+{
+	scObj -> _P(1);
+	sName = _P(2);
+	lData -> _P(3);
+	
+	sType = lData("type");
+	vValue = lData("value");
+	lBasis -> lData("basis");
+	lRange -> lData("range");
+	dPickRad = lData("pick_rad");
+	
+	lCol -> lData("colors");
+	//colStd = lCol("std");
+	colAct = lCol("act");
+
+	shPing = ::Shader_Blob_Ping();
+	shDefault = Shader( sName + "_tex_Default" );
+		
+	shPing("Var", "fPi", Pi );
+	shPing("Var", "colMain", colAct );
+	//shPing("Var", "texImg", texHandle );
+	
+	scHandleObj = Scene(sName + "_HandleObj");
+	DrawToScene( scHandleObj );
+		if ( sType == "point" )
+		{
+			//DrawPoint(0,0,0);
+			DrawPlane(VecE3(0,0), VecE3(1,0), VecE3(0,1), 0.3*dPickRad);
+		}
+		//DrawPlane(VecE3(0,0), VecE3(iObjW,0), VecE3(0,iObjH) );
+	DrawToScene();
+	
+	scHandle = Scene( sName );
+	EnableScenePick( scHandle, true );
+	EnableSceneDrag( scHandle, 1, false, true );
+	EnableSceneNotify( scHandle, true, "MouseDrag" );
+	EnableSceneAutoTranslate( scHandle, true );
+	SetSceneDragBasis( scHandle, 1, false, lBasis );
+	EnableSceneDragRange( scHandle, 1, false, true );
+	SetSceneDragRange( scHandle, 1, false, lRange );
+	SetSceneDragData( scHandle, 1, false, 
+		[vValue(2), vValue(3), vValue(4)] );
+		
+	EnableSceneDragInScreenPlane( scHandle, 1, false, true );
+	SetSceneAutoDragControl( scHandle, 
+			[ [ 2, false ] /* Scale */, 
+			  [ 2, true  ] /* Rotate1 */, 
+			  [ 1, false ] /* Translate */,
+			  [ 1, true  ] /* Rotate2 */
+			] );
+
+
+		
+	DrawToScene( scHandle );
+		:scHandleObj;
+	DrawToScene();
+	
+	scHandlePick = Scene( sName + "_Pick" );
+	DrawToScene( scHandlePick );
+		if ( sType == "point" )
+		{
+			:scHandleObj;
+		}
+		
+		:AnimShader(shPing, "fTime", "fTimeStep" );
+		:shPing;
+		if ( sType == "point" )
+		{
+			dVal = 2 * dPickRad;
+			:White;
+			//DrawSphere(VecE3(0,0), dPickRad);
+			//DrawBox(VecE3(0,0), VecE3(dVal,0), 
+				//	VecE3(0,dVal), VecE3(0,0,dVal));
+			DrawPlane(VecE3(0,0), VecE3(dVal,0), VecE3(0,dVal));
+		}
+		:shDefault;
+	DrawToScene();
+	
+	SetPickScene( scHandle, scHandlePick );
+
+	scObj = Scene( sName + "_ActObj" );
+	DrawToScene( scObj );
+		:scHandle;
+	DrawToScene();
+	
+}
+

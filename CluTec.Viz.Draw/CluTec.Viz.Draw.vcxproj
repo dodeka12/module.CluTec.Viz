@@ -1,0 +1,467 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RTM|Win32">
+      <Configuration>RTM</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RTM|x64">
+      <Configuration>RTM</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{DB044828-EB7B-440A-BDBC-194709C08F6E}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>CluTecVizDraw</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RTM|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RTM|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(SolutionDir)_global.2.0\PropSheets\CluTec.Type.Lib.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(SolutionDir)_global.2.0\PropSheets\CluTec.Type.Lib.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(SolutionDir)_global.2.0\PropSheets\CluTec.Type.Lib.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='RTM|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(SolutionDir)_global.2.0\PropSheets\CluTec.Type.Lib.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(SolutionDir)_global.2.0\PropSheets\CluTec.Type.Lib.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='RTM|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(SolutionDir)_global.2.0\PropSheets\CluTec.Type.Lib.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;FL_DLL;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(CtIncDir_CluVizExt)libiconv;$(CtIncDir_CluVizExt);$(CtIncDir_CluTecCore);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+    <Lib>
+      <AdditionalDependencies>CluTec.Viz.OpenGL.Extensions.$(CtImpLib);IL.$(CtDepVer_DevIL).implib;ILU.$(CtDepVer_DevIL).implib;ILUT.$(CtDepVer_DevIL).implib</AdditionalDependencies>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;FL_DLL;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(CtIncDir_CluVizExt)libiconv;$(CtIncDir_CluVizExt);$(CtIncDir_CluTecCore);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+    </Link>
+    <Lib>
+      <AdditionalDependencies>CluTec.Viz.OpenGL.Extensions.$(CtImpLib);IL.$(CtDepVer_DevIL).implib;ILU.$(CtDepVer_DevIL).implib;ILUT.$(CtDepVer_DevIL).implib</AdditionalDependencies>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;FL_DLL;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(CtIncDir_CluVizExt)libiconv;$(CtIncDir_CluVizExt);$(CtIncDir_CluTecCore);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+    <Lib>
+      <AdditionalDependencies>CluTec.Viz.OpenGL.Extensions.$(CtImpLib);IL.$(CtDepVer_DevIL).implib;ILU.$(CtDepVer_DevIL).implib;ILUT.$(CtDepVer_DevIL).implib</AdditionalDependencies>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RTM|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;FL_DLL;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(CtIncDir_CluVizExt)libiconv;$(CtIncDir_CluVizExt);$(CtIncDir_CluTecCore);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+    <Lib>
+      <AdditionalDependencies>CluTec.Viz.OpenGL.Extensions.$(CtImpLib);IL.$(CtDepVer_DevIL).implib;ILU.$(CtDepVer_DevIL).implib;ILUT.$(CtDepVer_DevIL).implib</AdditionalDependencies>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;FL_DLL;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(CtIncDir_CluVizExt)libiconv;$(CtIncDir_CluVizExt);$(CtIncDir_CluTecCore);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+    <Lib>
+      <AdditionalDependencies>CluTec.Viz.OpenGL.Extensions.$(CtImpLib);IL.$(CtDepVer_DevIL).implib;ILU.$(CtDepVer_DevIL).implib;ILUT.$(CtDepVer_DevIL).implib</AdditionalDependencies>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RTM|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;FL_DLL;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(CtIncDir_CluVizExt)libiconv;$(CtIncDir_CluVizExt);$(CtIncDir_CluTecCore);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+    <Lib>
+      <AdditionalDependencies>CluTec.Viz.OpenGL.Extensions.$(CtImpLib);IL.$(CtDepVer_DevIL).implib;ILU.$(CtDepVer_DevIL).implib;ILUT.$(CtDepVer_DevIL).implib</AdditionalDependencies>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="CLUDrawBase.cpp" />
+    <ClCompile Include="FLTKToolBox.cpp" />
+    <ClCompile Include="GDITextRenderer.cpp" />
+    <ClCompile Include="ImageReference.cpp" />
+    <ClCompile Include="ImageRepository.cpp" />
+    <ClCompile Include="MatrixStack.cpp" />
+    <ClCompile Include="OGLAmbientLight.cpp" />
+    <ClCompile Include="OGLAnimColor.cpp" />
+    <ClCompile Include="OGLAnimRotation.cpp" />
+    <ClCompile Include="OGLAnimScale.cpp" />
+    <ClCompile Include="OGLAnimShader.cpp" />
+    <ClCompile Include="OGLAnimTranslation.cpp" />
+    <ClCompile Include="OGLBaseElement.cpp" />
+    <ClCompile Include="OGLBaseElementList.cpp" />
+    <ClCompile Include="OGLBaseTransform.cpp" />
+    <ClCompile Include="OGLBEReference.cpp" />
+    <ClCompile Include="OGLBERepository.cpp" />
+    <ClCompile Include="OGLBitmap.cpp" />
+    <ClCompile Include="OGLBlend.cpp" />
+    <ClCompile Include="OGLClipPlane.cpp" />
+    <ClCompile Include="OGLColor.cpp" />
+    <ClCompile Include="OGLDirectWrite.cpp" />
+    <ClCompile Include="OGLDisplayList.cpp" />
+    <ClCompile Include="OGLDrawBase.cpp" />
+    <ClCompile Include="OGLFilterE3.cpp" />
+    <ClCompile Include="OGLFilterEl2.cpp" />
+    <ClCompile Include="OGLFilterN3.cpp" />
+    <ClCompile Include="OGLFilterP3.cpp" />
+    <ClCompile Include="OGLFont.cpp" />
+    <ClCompile Include="OGLFrame.cpp" />
+    <ClCompile Include="OGLFrameStack.cpp" />
+    <ClCompile Include="OGLImage.cpp" />
+    <ClCompile Include="OGLImage_Arithmetic.cxx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="OGLImage_Color.cxx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="OGLImage_Exec_AnyType.cxx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="OGLImage_Exec_EqualDataType.cxx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="OGLImage_Exec_EqualType.cxx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="OGLImage_Exec_Single.cxx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="OGLImage_Form.cxx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="OGLImage_Mask.cxx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="OGLImage_Pixel.cxx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="OGLLatexText.cpp" />
+    <ClCompile Include="OGLLight.cpp" />
+    <ClCompile Include="OGLLighting.cpp" />
+    <ClCompile Include="OGLLineWidth.cpp" />
+    <ClCompile Include="OGLMaterial.cpp" />
+    <ClCompile Include="OGLMultisample.cpp" />
+    <ClCompile Include="OGLMVFilter.cpp" />
+    <ClCompile Include="OGLMVFilterBase.cpp" />
+    <ClCompile Include="OGLPeek.cpp" />
+    <ClCompile Include="OGLPixelZoom.cpp" />
+    <ClCompile Include="OGLPointParameter.cpp" />
+    <ClCompile Include="OGLPointSprites.cpp" />
+    <ClCompile Include="OGLReadBitmap.cpp" />
+    <ClCompile Include="OGLRenderBuffer.cpp" />
+    <ClCompile Include="OGLRenderTarget.cpp" />
+    <ClCompile Include="OGLRotation.cpp" />
+    <ClCompile Include="OGLScale.cpp" />
+    <ClCompile Include="OGLScene.cpp" />
+    <ClCompile Include="OGLShader.cpp" />
+    <ClCompile Include="OGLText.cpp" />
+    <ClCompile Include="OGLTexture.cpp" />
+    <ClCompile Include="OGLTool.cpp" />
+    <ClCompile Include="OGLTranslation.cpp" />
+    <ClCompile Include="OGLVertex.cpp" />
+    <ClCompile Include="OGLVertexList.cpp" />
+    <ClCompile Include="OGLVexListE3.cpp" />
+    <ClCompile Include="OGLVexListN3.cpp" />
+    <ClCompile Include="OGLVexListP2.cpp" />
+    <ClCompile Include="OGLVexListP3.cpp" />
+    <ClCompile Include="OGLWindow.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="OGLWinFLTK.cpp" />
+    <ClCompile Include="OGLWinGLUT.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="OGLWinMFCstatic.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="TempLib.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="bmpdef.h" />
+    <ClInclude Include="CameraTransform.h" />
+    <ClInclude Include="cludraw.h" />
+    <ClInclude Include="CLUDrawBase.h" />
+    <ClInclude Include="FLTKToolBox.h" />
+    <ClInclude Include="GDITextRenderer.h" />
+    <ClInclude Include="glxext.h" />
+    <ClInclude Include="ImageReference.h" />
+    <ClInclude Include="ImageRepository.h" />
+    <ClInclude Include="IOGLWinBase.h" />
+    <ClInclude Include="MatrixStack.h" />
+    <ClInclude Include="OGLAmbientLight.h" />
+    <ClInclude Include="OGLAnimColor.h" />
+    <ClInclude Include="OGLAnimRotation.h" />
+    <ClInclude Include="OGLAnimScale.h" />
+    <ClInclude Include="OGLAnimShader.h" />
+    <ClInclude Include="OGLAnimTranslation.h" />
+    <ClInclude Include="OGLBaseElement.h" />
+    <ClInclude Include="OGLBaseElementList.h" />
+    <ClInclude Include="OGLBaseTransform.h" />
+    <ClInclude Include="OGLBEReference.h" />
+    <ClInclude Include="OGLBERepository.h" />
+    <ClInclude Include="OGLBitmap.h" />
+    <ClInclude Include="OGLBlend.h" />
+    <ClInclude Include="OGLClipPlane.h" />
+    <ClInclude Include="OGLColor.h" />
+    <ClInclude Include="OGLDirectWrite.h" />
+    <ClInclude Include="OGLDisplayList.h" />
+    <ClInclude Include="OGLDrawBase.h" />
+    <ClInclude Include="OGLFilterE3.h" />
+    <ClInclude Include="OGLFilterEl2.h" />
+    <ClInclude Include="OGLFilterN3.h" />
+    <ClInclude Include="OGLFilterP3.h" />
+    <ClInclude Include="OGLFont.h" />
+    <ClInclude Include="OGLFrame.h" />
+    <ClInclude Include="OGLFrameStack.h" />
+    <ClInclude Include="OGLImage.h" />
+    <ClInclude Include="OGLImageTypeDef.h" />
+    <ClInclude Include="OGLLatexText.h" />
+    <ClInclude Include="OGLLight.h" />
+    <ClInclude Include="OGLLighting.h" />
+    <ClInclude Include="OGLLineWidth.h" />
+    <ClInclude Include="OGLMaterial.h" />
+    <ClInclude Include="OGLMultisample.h" />
+    <ClInclude Include="OGLMVFilter.h" />
+    <ClInclude Include="OGLMVFilterBase.h" />
+    <ClInclude Include="OGLObjColorCube.h" />
+    <ClInclude Include="OGLPeek.h" />
+    <ClInclude Include="OGLPixelZoom.h" />
+    <ClInclude Include="OGLPointParameter.h" />
+    <ClInclude Include="OGLPointSprites.h" />
+    <ClInclude Include="OGLReadBitmap.h" />
+    <ClInclude Include="OGLRenderBuffer.h" />
+    <ClInclude Include="OGLRenderTarget.h" />
+    <ClInclude Include="OGLRotation.h" />
+    <ClInclude Include="OGLScale.h" />
+    <ClInclude Include="OGLScene.h" />
+    <ClInclude Include="OGLSceneWindow.h" />
+    <ClInclude Include="OGLShader.h" />
+    <ClInclude Include="OGLText.h" />
+    <ClInclude Include="OGLTexture.h" />
+    <ClInclude Include="OGLTool.h" />
+    <ClInclude Include="OGLTranslation.h" />
+    <ClInclude Include="OGLVertex.h" />
+    <ClInclude Include="OGLVertexList.h" />
+    <ClInclude Include="OGLVexListE3.h" />
+    <ClInclude Include="OGLVexListN3.h" />
+    <ClInclude Include="OGLVexListP2.h" />
+    <ClInclude Include="OGLVexListP3.h" />
+    <ClInclude Include="OGLWindow.h" />
+    <ClInclude Include="OGLWinFLTK.h" />
+    <ClInclude Include="OGLWinGLUT.h" />
+    <ClInclude Include="OGLWinMFCstatic.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="targetver.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

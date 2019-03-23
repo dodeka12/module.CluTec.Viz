@@ -1,0 +1,71 @@
+/// Image Scene: Step 7
+
+// Things that should only be done once at the start of the script
+if ( ExecMode & EM_CHANGE )
+{
+	// Include the Image Scene function
+	//# include "StdGUI_ImageScene.clu"
+	///# include "StdGUILib.cbn"
+	
+	///////////////////////////////////////////////////////////
+	// Create a light element to switch lighting off
+	// Light 1 is the standard light, which is by default switched on.
+	liA = Light( "A", 1 /* Light 1 */); 
+	// Disable the light. Note that the light still has to be 
+	// applied with the ':' operator to take effect.
+	EnableLight( liA, false );
+	
+	// Create an ambient light element, to set ambient light to maximum
+	aliA = AmbientLight( "A" );
+	// Set ambient light to white.
+	SetAmbientLight( aliA, White );
+	
+	///////////////////////////////////////////////////////////
+	
+	// Load an example image
+	imgA = ReadImg( "ImgEx1.jpg" );
+	
+	// Size of image
+	lImgSize = Size( imgA );
+	
+	// Create the first image scene
+	StdGUI_ImageScene_Create( lImage, "Test", imgA );
+	
+	// Set zoom range
+	StdGUI_ImageScene_SetZoomRange( lImage, 0.25, 1024 );
+	
+	// Draw on top of image
+	scDraw = lImage("scene_draw");
+	DrawToScene(scDraw);
+		:Red;
+		DrawLine( VecE3(0,0), VecE3(100,100) );
+	DrawToScene();
+}
+
+// Apply lights.
+// Switch localized light off
+:liA;
+// Set Ambient light to maximum
+:aliA;
+
+Button("Reset View");
+
+if ( ToolName == "Reset View" )
+{
+	StdGUI_ImageScene_ResetView(lImage);
+}
+
+shImage = lImage("shader_std");
+
+// Let user vary the contrast of the image
+dContrast = Slider( "Contrast", -2, 2, 0.01, 0 );
+SetShaderUniformVar( shImage, "fContrast", dContrast );
+
+// Let user vary the brightness of the image
+dBrightness = Slider( "Brightness", 0, 4, 0.01, 1 );
+SetShaderUniformVar( shImage, "fBrightness", dBrightness );
+
+// Draw the image scene
+:lImage("scene_main");
+
+

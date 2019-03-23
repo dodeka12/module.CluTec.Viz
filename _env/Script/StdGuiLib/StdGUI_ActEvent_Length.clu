@@ -1,0 +1,72 @@
+// Standard Interaction Event for drawing a line
+////////////////////////////////////////////////
+
+StdGUI_ActEvent_Length_Create =
+{
+	// Event structure that has previously been created by
+	// StdGUI_ActScene_AddEvent()
+	lEvent -> _P(1);
+
+	// Scene to draw to
+	scDraw -> _P(2);
+	
+	lEvent("scene_draw") = scDraw;
+	lEvent("func_drag") = ::StdGUI_ActEvent_Length_Mouse;
+	lEvent("func_click") = { };
+	lEvent("func_key") = { };
+}
+
+////////////////////////////////////////////////
+// Mouse interaction function
+StdGUI_ActEvent_Length_Mouse =
+{
+	lEvent -> _P(1);
+	sEvent -> _P(2);
+	
+	scImageDraw -> lEvent( "scene_draw" );
+	
+	if ( sEvent == "start" )
+	{
+		// dragging start
+	}
+	else if ( sEvent == "drag" )
+	{
+		// dragging
+		
+		// Get dragging coordinates in the local coordinate frame
+		lLocalPos -> PickData( "local" );
+		// Get start position
+		vPosStart = VecE3( lLocalPos(1) );
+		// Get current position
+		vPosCurrent = VecE3( lLocalPos(2) );
+		// Get delta movement to previous position
+		vPosDelta = VecE3( lLocalPos(3) );
+		
+		// Clear image drawing scene
+		ClearScene( scImageDraw );
+		// Draw to image drawing scene
+		DrawToScene( scImageDraw );
+			// Draw a line from start to end position
+			:Green;
+			DrawLine( vPosStart, vPosCurrent );
+			
+			// Print length of line
+			:White;
+			// Draw length value at the center of the line
+			SetImgPos( vPosStart + (vPosCurrent - vPosStart)/2 );
+			// Align text with its center on the draw point
+			SetImgAlign( 0.5, 0.5 );
+			// Convert the value into a string and draw it
+			:String( abs( vPosCurrent - vPosStart ) );
+			
+		// Draw to global context
+		DrawToScene();
+	}
+	else if ( sEvent == "end" )
+	{
+		// dragging end
+		
+		// Clear image drawing scene to delete line
+		ClearScene( scImageDraw );
+	}
+}

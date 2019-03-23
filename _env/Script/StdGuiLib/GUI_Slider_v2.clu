@@ -1,0 +1,100 @@
+// Test Adaptive redraw of scene
+
+StdGUI_Slider_Create =
+{
+	scBut -> _P(1);
+	sName = _P(2);
+	sImageFile = _P(3);
+	lExtend -> _P(4); // Width and Height
+	lCol -> _P(5); // Color Text, Background
+
+	?ReadImage( "Slider_Handle.png", imgHandle );
+	?ReadImage( "Slider_BG.png", imgBG );
+	
+	iWidth = 1;
+	
+	lS = Size(imgBG);
+	iHeight = iWidth * lS(2)/lS(1);
+	lS = Size(imgHandle);
+	iObjW = iWidth / 10;
+	iObjH = iObjW * lS(2)/lS(1);
+	iWidth = iWidth + iObjW;
+
+	shPing = ::Shader_Blob_Ping_Image();
+	shDefault = Shader( "Default" );
+	
+	texHandle = Texture("Handle");
+	SetTextureImage( texHandle, imgHandle);
+	SetTextureBlendType( texHandle, "interpolate", "modulate" );
+	
+	texBG = Texture("BG");
+	SetTextureImage( texBG, imgBG);
+	SetTextureBlendType( texBG, "interpolate", "interpolate" );
+	
+	shPing("Var", "fPi", Pi );
+	shPing("Var", "colMain", Blue );
+	shPing("Var", "texImg", texHandle );
+	
+	scHandleObj = Scene("HandleObj");
+	DrawToScene( scHandleObj );
+		SetTexture(imgHandle);
+		DrawPlane(VecE3(0,0), VecE3(iObjW,0), VecE3(0,iObjH) );
+		SetTexture();
+	DrawToScene();
+	
+	scHandle = Scene( "Handle" );
+	EnableScenePick( scHandle, true );
+	EnableSceneDrag( scHandle, 1, false, true );
+	EnableSceneNotify( scHandle, true, "MouseDrag" );
+	EnableSceneAutoTranslate( scHandle, true );
+	SetSceneDragBasis( scHandle, 1, false, [ VecE3(1,0), VecE3(0,0), VecE3(0,0) ] );
+	EnableSceneDragRange( scHandle, 1, false, true );
+	SetSceneDragRange( scHandle, 1, false, [ [ 0, 1], [0,0], [0,0] ] );
+//	EnableSceneDragInProjBasis( scHandle, 1, false, true );
+	EnableSceneDragInScreenPlane( scHandle, 1, false, true );
+	SetSceneAutoDragControl( scHandle, 
+			[ [ 2, false ] /* Scale */, 
+			  [ 2, true  ] /* Rotate1 */, 
+			  [ 1, false ] /* Translate */,
+			  [ 1, true  ] /* Rotate2 */
+			] );
+
+
+		
+	DrawToScene( scHandle );
+		:scHandleObj;
+	DrawToScene();
+	
+	scHandlePick = Scene( "RingPick" );
+	DrawToScene( scHandlePick );
+		:AnimShader(shPing, "fTime", "fTimeStep" );
+		:shPing;
+		:scHandleObj;
+		:shDefault;
+	DrawToScene();
+	
+	SetPickScene( scHandle, scHandlePick );
+
+	
+	scSlider = Scene( "Slider" );
+	DrawToScene( scSlider );
+		:White + Alpha;
+		:texBG;
+		DrawPlane(VecE3((iWidth - iObjW)/2,0), VecE3(iWidth,0), VecE3(0,iHeight));
+		SetTexture();
+		TranslateFrame(0,0,0.01);
+		:scHandle;
+
+	DrawToScene();
+	
+}
+
+:MWhite;
+?PickData;
+if (ExecMode & EM_PICK_DRAG )
+{
+	if ( PickData("name", 2) == "Slider" )
+		?dVal = PickData( "drag", 3, 1 );
+}
+
+:scSlider;

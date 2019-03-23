@@ -1,0 +1,604 @@
+//////////////////////////////////////////////////////////////////////////////////
+// 2d Point Shader
+//
+// Vertex Data:
+// 		clu_in_vVertex.xyz: 2d position (xy) and z-level of point.
+//		clu_in_vTex0.x: if zero, point size is set by uniform fPointSize. 
+//						Otherwise, gives point size in units determined by uniform iPointSizeMode.
+//		clu_in_vColor: Color of point.
+//		clu_in_iPartId: Part Id of point.
+//
+// Uniforms for animation:
+// 		float fTime
+// 		float fTimeStep
+//
+// Uniforms for picking
+//		int iSelectedPartId: the part id of the selected element
+//		vec4 colPicked: the color of the picked (mouse over) element
+//		vec4 colSelected: the color of the selected element, given by iSelectedPartId.
+//		vec4 colPickSel: the color of the selected element when picked (mouse over).
+//		int iEnablePicking: Bool whether picking effects are enabled.
+//
+// Uniforms for appearance
+//		float fPointSize: The global point size. Units are detemined by the iLineWidthMode uniform.
+//		float fPointPixelSizeMin: Minimal line width in pixels
+//		int iPointSizeMode: One of the following values:
+// 			0: Point size is given in screen pixels (default)
+// 			1: Point size is given in model view space
+//	
+//		float fGlowWidth: The width of the glow surrounding the circle when picked. Units are determined 
+//							by the iGlowWidthMode uniform.
+//		float fGlowPixelWidthMin: The minimal glow width in pixels.
+//		int iGlowWidthMode: One of the following values:
+//			0: Line width is given in screen pixels (default)
+//			1: Line width is given in model view space
+//
+//		float fDegPerSecond: Speed of pulse animation when selected.
+//
+//		int iDrawStyle: One of the following drawing styles of the circles
+//			0: Flat style
+//			1: 3D style
+		
+
+if ( ExecMode & EM_CHANGE )
+{
+	Shader_Point2d_PartId =
+	{
+		sName = _P(1);
+		
+		//////////////////////////////////////////////////////////////////////////////////
+		// Vertex Shader
+		//////////////////////////////////////////////////////////////////////////////////
+		sVSCode = @Shader"
+		#version 330
+
+		in vec4 clu_in_vVertex;
+		in vec4 clu_in_vTex0;
+		in vec4 clu_in_vColor;
+		in int clu_in_iPartId;
+		
+		out SVertexData
+		{
+			vec4 vColor;
+			vec4 vTex;
+			float fIsPickedPartId;
+		} xVertex;
+		
+		uniform int clu_iPickedPartId;
+		uniform int clu_iInPickDrawMode;
+		
+		uniform mat4 clu_matModelViewProjection;
+		
+		uniform int iSelectedPartId;
+		uniform vec4 colPicked;
+		uniform vec4 colSelected;
+		uniform vec4 colPickSel;
+		uniform int iEnablePicking;
+		
+		void main()
+		{
+			int iPartId = clu_in_iPartId & 0x000FFFFF;
+			vec3 vPos = clu_in_vVertex.xyz;
+
+			xVertex.fIsPickedPartId = 0.0;			
+			
+			if ( clu_iInPickDrawMode == 0)
+			{
+				if ( iPartId == clu_iPickedPartId && iEnablePicking > 0)
+				{
+					if ( iPartId == iSelectedPartId )
+						xVertex.vColor = colPickSel;
+					else
+						xVertex.vColor = colPicked;
+				
+					xVertex.fIsPickedPartId = 1.0;		
+					vPos.z += 0.1;
+				}
+				else if ( iPartId == iSelectedPartId  && iEnablePicking > 0 )
+				{
+					xVertex.vColor = colSelected;
+					xVertex.fIsPickedPartId = -1.0;		
+					vPos.z += 0.1;
+				}
+				else
+				{
+					xVertex.vColor = vec4(0.8 * clu_in_vColor.rgb, clu_in_vColor.a);	
+				}
+			}
+			else
+			{
+				xVertex.vColor = clu_in_vColor;
+			}
+				
+			xVertex.vTex = clu_in_vTex0;
+			gl_Position = vec4(vPos, 1.0);		
+		}
+		";
+		
+		//////////////////////////////////////////////////////////////////////////////////
+		// Geometry Shader
+		//////////////////////////////////////////////////////////////////////////////////
+		sGSCode = @Shader"
+		#version 330
+		
+		//precision highp float;
+		
+		layout (points) in;
+//		layout (line_strip, max_vertices = 24) out;
+		layout (triangle_strip, max_vertices = 4) out;
+	
+		in SVertexData
+		{
+			vec4 vColor;
+			vec4 vTex;
+			float fIsPickedPartId;
+		} xVertex[];
+		
+		out SFragData
+		{
+			vec4 vColor;
+			vec4 vTex;
+			float fCurPointSize;
+			float fCurGlowWidth;
+			float fCurBorderWidth;
+		} xFrag;
+			
+		uniform mat4 clu_matModelViewProjection;
+		uniform mat4 clu_matModelView;
+		uniform mat4 clu_matProjection;
+		//uniform mat4 clu_matInvModelViewProjection;
+		//uniform vec4 clu_vOpticalCenter;
+		uniform int clu_piViewport[4];
+		//uniform float clu_pfDepthRange[2];
+		uniform int clu_iInPickDrawMode;
+		
+		uniform float fPointSize;
+		uniform float fPointPixelSizeMin;
+		
+		// Line Width Modes:
+		// 0: Line width is given in screen pixels (default)
+		// 1: Line width is given in model view space
+		// 2: Line width is given as percentage of radius in model view space
+		uniform int iPointSizeMode;
+	
+		uniform float fGlowWidth;
+		uniform float fGlowPixelWidthMin;
+		
+		// Line Width Modes:
+		// 0: Line width is given in screen pixels (default)
+		// 1: Line width is given in model view space
+		// 2: Line width is given as percentage of radius in model view space
+		uniform int iGlowWidthMode;
+	
+	
+		
+		void DrawLine(vec3 vA, vec3 vB)
+		{
+			xFrag.vColor = vec4(1, 1, 1, 1);
+			gl_Position = clu_matProjection * vec4(vA, 1);
+			EmitVertex();
+
+			xFrag.vColor = vec4(1, 0.5, 0.2, 1);
+			gl_Position = clu_matProjection * vec4(vB, 1);
+			EmitVertex();
+			
+			EndPrimitive();
+		}
+
+		void DrawDir(vec3 vA, vec3 vDir)
+		{
+			xFrag.vColor = vec4(1, 1, 1, 1);
+			gl_Position = clu_matProjection * vec4(vA, 1);
+			EmitVertex();
+
+			xFrag.vColor = vec4(1, 0.5, 0.2, 1);
+			gl_Position = clu_matProjection * vec4(vA + vDir, 1);
+			EmitVertex();
+			
+			EndPrimitive();
+		}
+		
+		void DrawDirC(vec3 vA, vec3 vDir)
+		{
+			xFrag.vColor = vec4(1, 1, 1, 1);
+			gl_Position = clu_matProjection * vec4(vA - 0.5*vDir, 1);
+			EmitVertex();
+
+			xFrag.vColor = vec4(1, 0.5, 0.2, 1);
+			gl_Position = clu_matProjection * vec4(vA + 0.5*vDir, 1);
+			EmitVertex();
+			
+			EndPrimitive();
+		}
+		
+		float EvalPixelPerUnitLengthMV()
+		{
+			vec2 vPixelSize_ns;
+			// Size of a pixel in normalized screen coordinates in x and y.
+			vPixelSize_ns.x = 2.0 / float(clu_piViewport[2]);
+			vPixelSize_ns.y = 2.0 / float(clu_piViewport[3]);
+
+			// One unit length in model view space given in normalized screen coordinates.
+			float fUnitLength_mv_ns = length(clu_matModelViewProjection * vec4(1.0, 0, 0, 0));
+			// Number of screen pixels per unit length in model view space.
+			float fPixelPerUnitLength_mv = fUnitLength_mv_ns / vPixelSize_ns.x;
+		
+			return fPixelPerUnitLength_mv;
+		}
+		
+		float EvalSizeMV(float fSize, float fPixelSizeMin, float fPixelSizeOffset, int iSizeMode, 
+								float fPixelPerUnitLength_mv)
+		{
+			float fCurSize = 0.0;
+			
+			// Size given in pixels
+			if (iSizeMode == 0)
+			{
+				fCurSize = fPixelSizeOffset + fSize;
+				fCurSize = max(fCurSize, fPixelSizeMin);
+				fCurSize /= fPixelPerUnitLength_mv;
+			}
+			// Size given in model view coordinates
+			else if (iSizeMode == 1)
+			{
+				// line width in screen pixels
+				fCurSize = fPixelPerUnitLength_mv * fSize + fPixelSizeOffset;
+				fCurSize = max(fCurSize, fPixelSizeMin);
+				fCurSize /= fPixelPerUnitLength_mv;
+			}
+		
+			return fCurSize;
+		}
+		
+		void main()
+		{
+			const float c_fPickedPartPointPixSizeIncrease = 2.0;
+			const float c_fBorderWidth = 1.5;
+			
+			vec3 vCenter = vec3(gl_in[0].gl_Position);
+			
+			// Number of screen pixels per unit length in model view space.
+			float fPixelPerUnitLength_mv = EvalPixelPerUnitLengthMV();
+
+			// Increment of line width when picked.
+			float fPixelPointSizeInc = (xVertex[0].fIsPickedPartId != 0.0 ? c_fPickedPartPointPixSizeIncrease : 0.0);
+			
+			// If the per-point point size is zero use the global point size.
+			float fCurPointSize = (xVertex[0].vTex.x == 0.0 ? fPointSize : xVertex[0].vTex.x);
+			fCurPointSize = EvalSizeMV(fCurPointSize, fPointPixelSizeMin, fPixelPointSizeInc, iPointSizeMode, fPixelPerUnitLength_mv);
+			
+			float fCurGlowWidth = EvalSizeMV(fGlowWidth, fGlowPixelWidthMin, 0, iGlowWidthMode, fPixelPerUnitLength_mv);
+			float fCurBorderWidth = EvalSizeMV(c_fBorderWidth, c_fBorderWidth, 0, 0, fPixelPerUnitLength_mv);
+			
+			float fWidth = fCurPointSize / 2.0 + fCurBorderWidth + fCurGlowWidth;
+			
+			vec4 vSCenter = clu_matModelViewProjection * vec4(vCenter, 1);
+			vec4 vSWidthX = clu_matModelViewProjection * vec4(fWidth, 0, 0, 0);
+			vec4 vSWidthY = clu_matModelViewProjection * vec4(0, fWidth, 0, 0);
+							
+			xFrag.vColor = xVertex[0].vColor;
+			xFrag.vTex = vec4(-fWidth, -fWidth, 0, xVertex[0].fIsPickedPartId);
+			xFrag.fCurPointSize = fCurPointSize;
+			xFrag.fCurGlowWidth = fCurGlowWidth;
+			xFrag.fCurBorderWidth = fCurBorderWidth;
+			gl_Position = vSCenter - vSWidthX - vSWidthY;
+			EmitVertex();
+			
+			xFrag.vColor = xVertex[0].vColor;
+			xFrag.vTex = vec4(fWidth, -fWidth, 0, xVertex[0].fIsPickedPartId);
+			xFrag.fCurPointSize = fCurPointSize;
+			xFrag.fCurGlowWidth = fCurGlowWidth;
+			xFrag.fCurBorderWidth = fCurBorderWidth;
+			gl_Position = vSCenter + vSWidthX - vSWidthY;
+			EmitVertex();
+			
+			xFrag.vColor = xVertex[0].vColor;
+			xFrag.vTex = vec4(-fWidth, fWidth, 0, xVertex[0].fIsPickedPartId);
+			xFrag.fCurPointSize = fCurPointSize;
+			xFrag.fCurGlowWidth = fCurGlowWidth;
+			xFrag.fCurBorderWidth = fCurBorderWidth;
+			gl_Position = vSCenter - vSWidthX + vSWidthY;
+			EmitVertex();
+			
+			xFrag.vColor = xVertex[0].vColor;
+			xFrag.vTex = vec4(fWidth, fWidth, 0, xVertex[0].fIsPickedPartId);
+			xFrag.fCurPointSize = fCurPointSize;
+			xFrag.fCurGlowWidth = fCurGlowWidth;
+			xFrag.fCurBorderWidth = fCurBorderWidth;
+			gl_Position = vSCenter + vSWidthX + vSWidthY;
+			EmitVertex();
+			
+			
+			EndPrimitive();
+			
+		}
+		
+		";
+
+	
+		//////////////////////////////////////////////////////////////////////////////////
+		// Fragment Shader
+		//////////////////////////////////////////////////////////////////////////////////
+		sFSCode = @Shader"
+		#version 330
+
+		in SFragData
+		{
+			vec4 vColor;
+			vec4 vTex;
+			float fCurPointSize;
+			float fCurGlowWidth;
+			float fCurBorderWidth;
+		} xFrag;				
+		
+		out vec4 vFragColor;
+
+		uniform int clu_iPickedPartId;
+		uniform int clu_iInPickDrawMode;
+		
+		uniform float fTime;
+		uniform float fTimeStep;
+		
+		uniform float fDegPerSecond;
+
+		// Draw Style:
+		// 0: Flat style
+		// 1: 3D style
+		uniform float iDrawStyle;
+		
+		void main()
+		{
+			const float c_fPi = 3.14159265359;
+			const vec3 c_colSpec = vec3(1.0, 1.0, 1.0);
+			const float c_fSpecularIntensity = 0.5;
+			
+			const float c_fSelectionIntensityScale = 0.5;
+			const float c_fSelectionIntensityOffset = 0.9;
+			const float c_fSelectionPulseAmplitude = 0.125;
+
+			float fCurPointSize = xFrag.fCurPointSize;
+			float fCurGlowWidth = xFrag.fCurGlowWidth;
+			float fCurBorderWidth = xFrag.fCurBorderWidth;
+
+			vec2 vPos = xFrag.vTex.st;
+			float fDist = length(vPos);
+
+			float fTotalHalfPointSize = fCurPointSize / 2.0 + fCurBorderWidth + fCurGlowWidth;
+			float fHalfPointBorderSize = fCurPointSize / 2.0 + fCurBorderWidth;
+			
+			if (clu_iInPickDrawMode != 0)
+			{
+				if (fDist > fHalfPointBorderSize)
+				{
+					discard;
+					return;
+				}
+				vFragColor = xFrag.vColor;
+			}
+			else
+			{
+				if (fDist > fTotalHalfPointSize)
+				{
+					discard;
+					return;
+				}
+				
+				vec3 colA;
+				float fAlpha = 1.0;
+				
+				if (iDrawStyle != 0)
+				{
+					float fRelDist = clamp(fDist / fHalfPointBorderSize, 0.0, 1.0);
+					float fFac = 0.5*cos(c_fPi/2.0 * fRelDist) + 0.5;
+					float fSpec = c_fSpecularIntensity * clamp(pow(1-fRelDist, 1.25), 0.0, 1.0);
+					float fBorder = pow(clamp((fHalfPointBorderSize - fDist) / fCurBorderWidth, 0.0, 1.0), 2.0);
+
+					colA = ((1 - fSpec) * fFac * xFrag.vColor.rgb + fSpec * c_colSpec);
+					fAlpha = fBorder;
+
+					// if mouse over
+					if ( xFrag.vTex.w > 0.5 )
+					{
+						float fAngleRad = fDegPerSecond * fTime * c_fPi / 180.0;
+						float fSelDist = fDist
+								+ c_fSelectionPulseAmplitude*fCurGlowWidth*cos(fAngleRad);
+						
+						// Rotating light
+						//vec2 vLightPos = vec2(cos(fAngleRad), sin(fAngleRad));
+						//float fRadial = dot(vLightPos, vPos);
+						//float fPerp = length(vPos - fRadial * vLightPos);
+						//fRadial -= xFrag.fRadius;
+						//fPerp -= xFrag.fRadius * 10.0 * fPi/180.0;
+						//vLightPos *= xFrag.fRadius;
+						//float fDist1 = length(vLightPos - vPos);
+						//float fDist2 = length(vLightPos + vPos);
+						//float fDist = min(fDist1, fDist2);
+						
+						float fRelDist = clamp(fSelDist / fTotalHalfPointSize, 0.0, 1.0);
+						float fFac = c_fSelectionIntensityScale * cos(c_fPi/1.2 * (1-fRelDist)) + c_fSelectionIntensityOffset;
+						float fGlow = clamp((fTotalHalfPointSize - fSelDist) / fCurGlowWidth, 0.0, 1.0);
+	
+						//float fVal = exp(-fDist*fDist);
+						
+						colA *= (1 +fFac);
+						fAlpha += fGlow;
+					}
+				}
+				else
+				{
+					// if mouse over
+					if ( xFrag.vTex.w > 0.5 )
+					{
+						float fAngleRad = fDegPerSecond * fTime * c_fPi / 180.0;
+						fHalfPointBorderSize += abs(c_fSelectionPulseAmplitude*fCurGlowWidth*cos(fAngleRad));
+					}
+					
+					float fFac = (fDist <= fHalfPointBorderSize ? 1.0 : 0.0);
+					float fBorder = clamp((fHalfPointBorderSize - fDist) / fCurBorderWidth, 0.0, 1.0);
+					
+					colA = fFac * xFrag.vColor.rgb;
+					fAlpha = fBorder;
+				}	
+	
+				vFragColor = vec4(colA, fAlpha);				
+			}
+		}
+		";
+		
+		shPartId = Shader( sName + "PartId 2d" );
+		EnableShaderForPicking(shPartId, true);
+		ShaderBuild( shPartId, [sVSCode], [sFSCode], [sGSCode] );
+		shPartId("Var", "iSelectedPartId", -1);
+		shPartId("Var", "iEnablePicking", true);
+		shPartId("Var", "colPicked", Red);
+		shPartId("Var", "colSelected", Green);
+		shPartId("Var", "colPickSel", Yellow);
+
+		// Draw Style:
+		// 0: Flat style
+		// 1: 3D style
+		shPartId("Var", "iDrawStyle", 1);
+				
+		// Line/Glow Width Modes:
+		// 0: Line width is given in screen pixels (default)
+		// 1: Line width is given in model view space
+		// 2: Line width is given as percentage of radius in model view space
+		shPartId("Var", "fPointPixelSizeMin", 1);
+		shPartId("Var", "fPointSize", 1);
+		shPartId("Var", "iPointSizeMode", 0);
+
+		shPartId("Var", "fGlowPixelWidthMin", 2);
+		shPartId("Var", "fGlowWidth", 20);
+		shPartId("Var", "iGlowWidthMode", 0);
+		
+		shPartId("Var", "fDegPerSecond", 180);
+		
+		shPartId break;
+	}
+}
+
+// /////////////////////////////////////////////////////////////////////
+// Debugging
+
+if ( false )
+{
+	if ( ExecMode & EM_CHANGE )
+	{	
+		shA = Shader_Point2d_PartId("test");
+		shDef = Shader("Default");
+		
+	    // Create the object
+	    vxA = Object( "Hello", OM_POINTS);
+	
+	    lData = [];
+	
+	    // Set vertices.
+	    lData("vex") = Tensor( [[-1,-1,0], [-0.5,0,0], [-0.48,0.5,0], [0.47,0.0,0], [2,1,0], [1, 1.5, 0]] );
+	
+		lData("tex") = Tensor( [[0,0,0], [5,0,0], [7,0,0], [9,0,0], [0,0,0], [0,0,0]] );
+	    // Set colors, one for each vertex.
+	    lData("col") = Tensor( [[0.3,0.9,0.3], [1.0,0.0,0.0], [0.0,1.0,0.0], [0.0,0.0,1.0], [1,1,0], [0,1,1]] );
+	
+	    // Set an index list
+	    //lData("idx") = Tensor( [ [1,1,2,3,4,5,6,6]] );
+	
+		lData("partid") = Tensor( [1, 2, 3, 4, 5, 6] );
+	    //?lData;
+	
+	    // Set the data to the object
+	    vxA << lData;
+	
+		scA = Scene("A");
+		scAPick = Scene("A_Picked");
+		EnableScenePick(scA, true);
+		SetPickScene(scA, scAPick);
+		EnableSceneNotify(scA, true);
+		DrawToScene(scA);
+			//EnablePointSprites(true);
+			:shA;
+			:White;
+			:vxA;
+			//DrawPlane(VecE3(0,0), VecE3(1,0), VecE3(0,1));
+			:shDef;
+			//EnablePointSprites(false);
+		DrawToScene();
+	
+		DrawToScene(scAPick);
+			//EnablePointSprites(true);
+			:AnimShader(shA, "fTime", "fTimeStep");
+			:shA;
+			:White;
+			:vxA;
+			//DrawPlane(VecE3(0,0), VecE3(1,0), VecE3(0,1));
+			:shDef;
+			//EnablePointSprites(false);
+		DrawToScene();
+	
+	}
+	//EnableAntiAliasing(true);
+	
+	_2dView = true;
+	//EnableAntiAliasing(true);
+	?PickData;
+	
+	if ( ExecMode & EM_PICK_SELECT )
+	{
+		if ( PickData("click") == "left" )
+		{
+			?"Picked";
+			shA("Var", "iSelectedPartId", PickData("part_id"));
+		}
+	}
+	
+	bEnablePicking = CheckBox("Enable Picking", true);
+	bDrawStyle3D = CheckBox("Draw Style 3D", true);
+	
+	iPointSizeMode = Choice("Point Size Mode", ["Pixel", "Object", "Radius %"], 1);
+	fPointSize = Slider("Point Size", 1, 100, 1, 10);
+
+	iGlowWidthMode = Choice("Glow Width Mode", ["Pixel", "Object", "Radius %"], 1);
+	fGlowWidth = Slider("Glow Width", 1, 100, 1, 20);
+	
+	if ( iPointSizeMode == 2 )
+	{
+		fPointSize = fPointSize / 100.0;
+		:White;
+		DrawLine(VecE3(0,0), VecE3(fPointSize, 0));
+	}
+	else if ( iPointSizeMode == 3 )
+	{
+		fPointSize = fPointSize / 100.0;
+	}
+	
+	if ( iGlowWidthMode == 2 )
+	{
+		fGlowWidth = fGlowWidth / 100.0;
+	}
+	else if ( iGlowWidthMode == 3 )
+	{
+		fGlowWidth = fGlowWidth / 100.0;
+	}
+	
+
+	_2dView = true;	
+	:Red;
+	//DrawFrame(3, "box_coord");
+	:DWhite + Alpha;
+	//DrawPlane(VecE3(0,0,-0.01), VecE3(3,0), VecE3(0,3));
+	
+	shA("Var", "iEnablePicking", bEnablePicking);
+	shA("Var", "iDrawStyle", bDrawStyle3D);
+	
+	shA("Var", "iPointSizeMode", iPointSizeMode - 1);
+	shA("Var", "fPointSize", fPointSize);
+	shA("Var", "iGlowWidthMode", iGlowWidthMode - 1);
+	shA("Var", "fGlowWidth", fGlowWidth);
+	:White;
+
+
+	DrawFrame(3);
+	//SetTexture(imgA);
+	:scA;
+
+
+} // if debug true

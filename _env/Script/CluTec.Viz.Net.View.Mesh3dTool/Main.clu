@@ -1,0 +1,168 @@
+_BGColor = Black;
+// Things that should only be done once at the start of the script
+if ( ExecMode & EM_CHANGE )
+{
+	// Include the Image Scene function
+	//# include "StdGUILib_v3_0.cbn"
+	
+	///////////////////////////////////////////////////////////
+
+	imgX = Image(1,1); 
+	objMesh = Object("Mesh");
+	texX = Texture("Mesh");
+
+	bDebug = false;
+	if (bDebug)
+	{
+		:White;
+		ReadImage("Demo.jpg", imgX);
+		SetObjectForm(objMesh, "grid", [1, 1, 10, 10] );
+		SetTextureImage(texX, imgX, false);
+	}
+	else
+	{
+		SetTextureImage(texX, imgX);
+	}
+
+	////////////////////////////////////////////////////////////////////////////////////
+	// Rectify Shader
+	Shader_MeshTex =
+	{
+		sName = _P(1);
+		
+		sVSCode = @Shader"
+		#version 330
+		
+		/////////////////////////////////////////////////////////////////////
+		// Vertex Shader
+		in vec4 clu_in_vVertex;
+		//in vec4 clu_in_vColor;
+		in vec4 clu_in_vNormal;
+		in vec4 clu_in_vTex0;
+		//in int clu_in_iPartId;
+			
+		out SVertexData
+		{
+			vec2 vTex;
+			int iIsValid;
+		} xVertex;
+		
+		//uniform int clu_iPickedPartId;
+		//uniform int clu_iInPickDrawMode;
+		uniform mat4 clu_matModelViewProjection;
+
+		void main()
+		{
+			xVertex.vTex = clu_in_vTex0.xy;
+			xVertex.iIsValid = int(clu_in_vTex0.z >= 1.0);
+			
+			gl_Position = clu_in_vVertex;
+		}
+		";
+
+
+		sGSCode = @Shader"
+		#version 330
+		
+		//precision highp float;
+		
+		layout (triangles) in;
+		layout (triangle_strip, max_vertices = 3) out;
+	
+		in SVertexData
+		{
+			vec2 vTex;
+			int iIsValid;
+		} xVertex[];
+		
+		out SFragData
+		{
+			vec2 vTex;
+		} xFrag;
+		
+		uniform mat4 clu_matModelViewProjection;
+
+		
+		void main()
+		{
+			if (xVertex[0].iIsValid != 0 && xVertex[1].iIsValid != 0 && xVertex[2].iIsValid != 0)
+			{
+				float fMinZ, fMaxZ;
+				fMinZ = fMaxZ = gl_in[0].gl_Position.z;
+				fMinZ = min(fMinZ, gl_in[1].gl_Position.z);
+				fMinZ = min(fMinZ, gl_in[2].gl_Position.z);
+
+				fMaxZ = max(fMaxZ, gl_in[1].gl_Position.z);
+				fMaxZ = max(fMaxZ, gl_in[2].gl_Position.z);
+				
+				if (fMaxZ - fMinZ < 0.05)
+				{
+					for (int i = 0; i < 3; ++i)
+					{
+						xFrag.vTex = xVertex[i].vTex;
+						gl_Position = clu_matModelViewProjection * gl_in[i].gl_Position;
+						EmitVertex();
+					}
+					EndPrimitive();
+				}
+			}
+		}
+		
+		";
+		
+		/////////////////////////////////////////////////////////////////////
+		// Fragment Shader
+		sFSCode = @Shader"
+		#version 330
+		
+		in SFragData
+		{
+			vec2 vTex;
+		} xFrag;
+		
+		out vec4 vFragColor;
+		
+		uniform sampler2D texImage; 
+		
+		void main()
+		{
+			vFragColor = texture(texImage, xFrag.vTex);
+		}
+		";
+		
+		shMeshTex = Shader("MeshTex_" + sName);
+		ShaderBuild( shMeshTex, [ sVSCode ], [ sFSCode], [sGSCode] );
+		
+		shMeshTex break;
+	}
+	
+	shDef = Shader("Default");
+	shMeshTex = Shader_MeshTex("A");
+	shMeshTex("Var", "texImage", texX);
+
+	scMain = Scene("Main");
+	DrawToScene(scMain);
+		:White;
+		//DrawLine(VecE3(0,0), VecE3(1,0));
+		:texX;
+		:shMeshTex;
+		:objMesh;
+		:shDef;
+		SetTexture();
+	DrawToScene();
+}
+
+DrawFrame(3, "box_coord", [20, 20, 20], DWhite, 1.1*DWhite);
+
+if ( ToolName == "SetMesh" )
+{
+	// No need to do anything, since the object variable is already set.
+}
+else if ( ToolName == "SetImage" )
+{
+	SetTextureImage(texX, imgX);
+}
+
+:scMain;
+
+

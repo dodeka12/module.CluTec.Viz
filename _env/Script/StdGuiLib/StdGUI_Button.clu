@@ -1,0 +1,61 @@
+// GUI Functions
+
+StdGUI_Button_Create =
+{
+	scBut -> _P(1);
+	sName = _P(2);
+	sTitle = _P(3);
+	lExtend -> _P(4); // Width and Height
+	lCol -> _P(5); // Color Text, Background
+	
+	[ iWidth, iHeight ] = lExtend;
+	iTextW = 0.8 * iWidth;
+	iTextH = 0.6 * iHeight;
+	
+	[ colText, colBG, colBGAct ] = lCol;
+	
+	scBut = Scene( sName );
+	scButStd = Scene( sName + "-Standard" );
+	scButPick = Scene( sName + "-Pick" );
+	//SetScenePixelOverlay( scButStd );
+	DrawToScene( scButStd );
+		//DrawPlane( VecE3(0,0,0.04), VecE3(iWidth,0,0), VecE3(0,iHeight,0) );
+		DrawCylinder( VecE3( -iTextW/2 - iTextW/10, 0, 0 ), VecE3( 1.2*iTextW , 0, 0 ), iTextH/2-0.005 );
+
+		SetTextMagStep( 15 );
+		//SetImgPos( iWidth/2, iHeight/2, 0.05 );
+		//SetImgAlign( 0.5, 0.5 );
+		:colText;
+		imgT = GetTextImg( sTitle );
+		SetTexture( imgT, false, true, true );
+		TranslateFrame("texture", 0.5, 0.5, 0.0);
+		RotateFrame("texture", 0,0,1, -90);
+		TranslateFrame("texture", -0.5, -0.5, 0.0);
+
+		:colBG;
+		DrawCylinder( VecE3( -iTextW/2, 0, 0 ), VecE3( iTextW, 0, 0 ), iTextH/2 );
+		//DrawPlane( VecE3(0,0,0.05), VecE3(iTextW,0,0), VecE3(0,iTextH,0) );
+		SetTexture();
+		
+	DrawToScene();
+	
+	DrawToScene( scButPick );
+		//TranslateFrame( 0.3, 0.3, 0 );
+		//ScaleFrame( 1.1, 1.1, 1 );
+		//AnimScaleFrame( 0.05, 0.05, 0.5, "Sinus2", 0.9 );
+		RotateFrame(0,1,0, 35);
+		:colBGAct;
+		:scButStd;
+		
+	EnableScenePick( scBut, true );
+	EnableSceneNormalize( scBut, true );
+	EnableSceneNotify( scBut, true, "MouseClick" );	
+	SetPickScene( scBut, scButPick );
+	DrawToScene( scBut );
+		//TranslateFrame( 0.3, 0.3, 0 );
+		//:Color( 0.2, 0.5, 0.5 );
+		:colBG;
+		:scButStd;
+	DrawToScene();
+		
+}

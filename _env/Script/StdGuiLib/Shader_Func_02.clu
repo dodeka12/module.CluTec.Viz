@@ -1,0 +1,176 @@
+
+if ( ExecMode & EM_CHANGE )
+{
+	//////////////////////////////////////////////////
+	/// Shader of a blob
+	Shader_Blob =
+	{
+		sVSCode = "
+			void main()
+			{
+				vec2 texpos = gl_MultiTexCoord0.st;
+				gl_TexCoord[0] = vec4( texpos, 0.0, 0.0 );
+				gl_Position = ftransform();
+			}
+		";
+	
+	
+		sFSCode = "
+			uniform float fPi;
+			uniform vec3 colMain;
+			
+			void main()
+			{
+				vec2 vPos = gl_TexCoord[0].st;
+				float fDelta = length(vPos - vec2(0.5,0.5));
+				
+				float fFac = exp(-pow(fDelta / 0.3, 2.0)) * cos( fDelta * 2.0*fPi );
+	
+				gl_FragColor = vec4( colMain.rgb, fFac );
+			}
+		";
+		
+		shA = Shader( "Shader_Blob" );
+		
+		ShaderBuild( shA, [ sVSCode ], [ sFSCode ] );
+		EnableShaderForPicking( shA, false );
+		
+		shA break;
+	}
+
+	//////////////////////////////////////////////////////
+	// Animated Blob
+	
+	Shader_Blob_Ping =
+	{
+		sVSCode = "
+			void main()
+			{
+				vec2 texpos = gl_MultiTexCoord0.st;
+				gl_TexCoord[0] = vec4( texpos, 0.0, 0.0 );
+				gl_Position = ftransform();
+			}
+		";
+	
+	
+		sFSCode = "
+			uniform float fTime;
+			uniform float fTimeStep;
+			uniform float fPi;
+			uniform vec3 colMain;
+			
+			void main()
+			{
+				vec2 vPos = gl_TexCoord[0].st;
+				float fDelta = length(vPos - vec2(0.5,0.5));
+				
+				float fPos = mod( fTime, 1.0 );
+				float fFac = exp(-pow(fDelta / 0.3, 2.0)) * cos( (fDelta - fPos) * 2.0*fPi );
+	
+				gl_FragColor = vec4( colMain.rgb, fFac );
+			}
+		";
+		
+		shA = Shader( "Shader_Blob_Ping" );
+		
+		ShaderBuild( shA, [ sVSCode ], [ sFSCode ] );
+		EnableShaderForPicking( shA, false );
+		
+		shA break;
+	}
+
+
+	//////////////////////////////////////////////////////
+	// Animated Blob
+	
+	Shader_Blob_Ping_Image =
+	{
+		sVSCode = "
+			void main()
+			{
+				vec2 texpos = gl_MultiTexCoord0.st;
+				gl_TexCoord[0] = vec4( texpos, 0.0, 0.0 );
+				gl_Position = ftransform();
+			}
+		";
+	
+	
+		sFSCode = "
+			uniform float fTime;
+			uniform float fTimeStep;
+			uniform float fPi;
+			uniform vec3 colMain;
+			
+			uniform sampler2D texImg;
+			
+			void main()
+			{
+				vec2 vPos = gl_TexCoord[0].st;
+				float fDelta = length(vPos - vec2(0.5,0.5));
+				
+				vec4 vCol = texture2D( texImg, vPos );
+				float fPos = mod( fTime, 1.0 );
+				float fFac = exp(-pow(fDelta / 0.3, 2.0)) * cos( (fDelta - fPos) * 2.0*fPi );
+	
+				gl_FragColor = vec4( 0.7 * vCol.rgb + 0.3 * colMain , 0.6*vCol.a + 0.4*fFac );
+			}
+		";
+		
+		shA = Shader( "Shader_Blob_Ping_Image" );
+		
+		ShaderBuild( shA, [ sVSCode ], [ sFSCode ] );
+		EnableShaderForPicking( shA, false );
+		
+		shA break;
+	}
+
+
+	//////////////////////////////////////////////////////
+	// Animated Blob diffusing up and down
+	
+	Shader_Blob_UpDown =
+	{
+		sVSCode = "
+			void main()
+			{
+				vec2 texpos = gl_MultiTexCoord0.st;
+				gl_TexCoord[0] = vec4( texpos, 0.0, 0.0 );
+				gl_Position = ftransform();
+			}
+		";
+	
+	
+		sFSCode = "
+			uniform float fTime;
+			uniform float fTimeStep;
+			uniform float fPi;
+			uniform vec3 colMain;
+			
+			void main()
+			{
+				vec2 vPos = gl_TexCoord[0].st;
+				vec2 vDelta = vPos - vec2(0.5,0.5);
+				float fDelta = length(vDelta);
+				
+				float fPos = mod( fTime, 1.0 )/2.0;
+				float fFac1 = exp(-pow(fDelta / 0.3, 2.0)) *
+							 exp(-pow( ((vDelta.y + fPos))/0.1, 2.0 ));
+
+				float fFac2 = exp(-pow(fDelta / 0.3, 2.0)) *
+							 exp(-pow( ((vDelta.y - fPos))/0.1, 2.0 ));
+
+	
+				gl_FragColor = vec4( colMain.rgb, (fFac1 + fFac2));
+			}
+		";
+		
+		shA = Shader( "Shader_Blob_UpDown" );
+		
+		ShaderBuild( shA, [ sVSCode ], [ sFSCode ] );
+		EnableShaderForPicking( shA, false );
+		
+		shA break;
+	}
+
+
+}

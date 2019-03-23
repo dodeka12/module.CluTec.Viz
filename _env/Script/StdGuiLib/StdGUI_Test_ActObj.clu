@@ -1,0 +1,37 @@
+// Test StdGUI_ActObj
+
+if ( ExecMode & EM_CHANGE )
+{
+	//# include "StdGUILib.clu"
+
+	lData = [];
+	lData("type") = "point";
+	lData("value") = VecE3(0,0,0);
+	lData("basis") = [ VecE3(1,0), VecE3(0,1), VecE3(0,0) ];
+	lData("range") = [ [-1,1], [-1,1], [0,0] ];
+	lData("pick_rad") = 0.2;
+	lCol -> lData("colors");
+	lCol = [];
+	lCol("act") = Blue;
+	
+	StdGUI_ActObj_Create( scObj, "Test", lData );
+	
+
+}
+
+?PickData;
+if ( StdGUI_Event_Click(sName, sMouseBut, lPos) )
+{
+	?sName;
+	?sMouseBut;
+	?lPos;
+}
+
+?sName;
+?sMouseBut;
+?lPos;
+
+:scObj;
+
+
+

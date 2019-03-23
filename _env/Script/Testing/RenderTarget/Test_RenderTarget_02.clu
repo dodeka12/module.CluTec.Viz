@@ -1,0 +1,87 @@
+// Render Target Test 1
+EnableAntiAliasing(true);
+
+if ( ExecMode & EM_CHANGE )
+{
+	rtDef = RenderTarget("Default");
+	rtA = RenderTarget("A");
+	SetRenderTargetSize(rtA, 1920, 1080, 8);
+
+	scA = Scene("A");
+	DrawToScene(scA);
+		:MRed;
+		DrawSphere(VecE3(0,0), 1);
+		:Blue;
+		DrawLine(VecE3(-1,-1), VecE3(1,1));
+	DrawToScene();
+	
+	scBG = Scene("BG");
+	SetSceneViewport(scBG, 0, 0, 1, 1);
+	SetSceneDepthLevel(scBG, -1);
+	EnableSceneResetFrame(scBG, true);
+	SetSceneOverlay(scBG, 0, 1, 0, 1, -1, 1, false);
+	DrawToScene(scBG);
+		:MWhite;
+		DrawPlane(VecE3(0.5, 0.5), VecE3(1,0), VecE3(0,1));
+	DrawToScene();
+	
+	scWorld = Scene("World");
+	SetSceneViewport(scWorld, 0, 0, 1, 1);
+	DrawToScene(scWorld);
+		:scA;
+		:scBG;
+	DrawToScene();
+	
+	imgA = Image(1,1);
+	scImage = Scene("Image");
+	EnableSceneResetFrame(scImage, true);
+	SetSceneOverlay(scImage, -1, 1, -1, 1, -1, 1, true);
+	SetSceneViewport(scImage, 0.5, 0, 0.5, 1);
+	DrawToScene(scImage);
+		SetImageAlign(0.5, 0.5);
+		:imgA;
+	DrawToScene();
+	
+	scTest = Scene("Test");
+	EnableSceneResetFrame(scTest, true);
+	SetSceneViewport(scTest, 0, 0, 1, 1);
+	SetSceneOverlay(scTest, 0, 1, 0, 1, -1, 1, false);
+	SetSceneDepthLevel(scTest, 1);
+	DrawToScene(scTest);
+		:Black;
+		SetImagePos(0.1, 0.1, 0);
+		SetImageAlign(0, 0);
+		:"Rendered by CluViz 7";
+	DrawToScene();
+	
+	// Create a scene in which we draw to the render target.
+	// This scene is disabled by default. However, we pass this
+	// scene to the EnableRenderTargetSnapshot() function. This
+	// switches the scene on for a single complete render pass.
+	scRender = Scene("Render");
+	EnableScene(scRender, false);
+	DrawToScene(scRender);
+		:rtA;
+		:scWorld;
+		:rtDef;
+		// We may have a number of blocks, where the render 
+		// target is switched on.
+		:rtA;
+		:scTest;
+		:rtDef;
+	DrawToScene();
+}
+
+:scWorld;
+:scRender;
+
+//GetRenderTargetImage(rtA, imgA);
+//?imgA;
+
+Button("Save");
+if (ToolName == "Save")
+{
+	?"Hello";
+	EnableRenderTargetSnapshot(rtA, scRender, @"C:\Users\perwass\Pictures\RenderTarget_02.jpg");
+}
+

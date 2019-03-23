@@ -1,0 +1,5 @@
+lMask_E3 = [0, 1, 2, 3, 0, 0, 0, 0];
+?mA = Matrix([1,2]);
+
+?Matrix2MV(mA, lMask_E3);
+

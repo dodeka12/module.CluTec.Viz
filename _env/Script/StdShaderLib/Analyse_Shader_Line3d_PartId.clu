@@ -1,0 +1,56 @@
+// Intensity and Alpha distribution in Line Shader
+
+fRadius = 0.5;
+fGlowSize = 0.05;
+fGlowRadius = fRadius - fGlowSize;
+colSpec = VecE3(1.0, 1.0, 1.0);
+			
+// Intensity difference between specular reflection and line color
+fDiffPart = 0.7;
+
+GlowFunc =
+{
+	fDelta = _P(1);
+	
+			
+	fFac = 1.0 - (fDelta*fDelta)/(::fRadius*::fRadius);
+	fFac = min([fFac, 1.0]);
+	fFac = max([fFac, 0.0]);
+	
+	fSpec = pow(fFac, 6.0);
+			
+	fGlow = 1.0 - (fDelta-::fGlowRadius)/(2*::fGlowSize);
+	fGlow = min([fGlow, 1.0]);
+	fGlow = max([fGlow, 0.0]);
+
+	fGlow break;
+}
+			
+/*			
+				// Standard color for line.
+				// Generates a specular reflection in the line center and
+				// reduces line brightness towards the line borders.
+				vec3 colA = fDiffPart/3*(1.0 + 2*sqrt(fFac)) * xFrag.vColor.rgb
+					+ (1.0 - fDiffPart) * fSpec * colSpec;
+	
+*/
+>
+_BGColor = White;
+_2dView = true;
+TranslateFrame(0.5, 0.5, 0);
+ScaleFrame(4, 4, 1);
+TranslateFrame(-0.5, -0.5, 0);
+
+:MWhite;
+DrawLine(VecE3(0.0, 0.0, -0.1), VecE3(0, 1, -0.1));
+DrawLine(VecE3(0.0, 0.0, -0.1), VecE3(1, 0, -0.1));
+
+:Color(1.000, 0.533, 0.769);
+DrawLine(VecE3(fRadius, 0.0, -0.1), VecE3(fRadius, 1, -0.1));
+
+:Color(0.533, 0.624, 1.000);
+DrawLine(VecE3(fGlowRadius, 0.0, -0.1), VecE3(fGlowRadius, 1, -0.1));
+
+:Blue;
+fY = 0.0;
+:Plot(VecE3(fY, GlowFunc(fY)), [fY, 0.0, 1.0, 100]);

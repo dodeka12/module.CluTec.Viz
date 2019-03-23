@@ -1,0 +1,3 @@
+_BGColor = White;
+:MWhite;
+DrawFrame(3, "box_coord", 10, DWhite);

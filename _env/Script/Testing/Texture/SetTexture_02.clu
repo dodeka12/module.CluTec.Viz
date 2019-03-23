@@ -1,0 +1,58 @@
+// Texture mapping of text
+DefVarsE3();
+
+if ( ExecMode & EM_CHANGE )
+{
+	SetTextMagStep(12);
+	// Color for text
+	:Red;
+	// Only need to create text image once
+	imgText = GetTextImg( "Hello World^2" );
+	imgText2 = GetTextImg( "Hello abc^2" );
+	
+	imgX = GetTextImg( "X_X^X");
+	lS = Size(imgX);
+}
+
+:White;
+
+scText = StartOverlay();
+
+	SetImgPos(30, 50, 0 );
+	SetImgAlign( 0, 0 );
+	:imgText;
+
+
+	// Set imgText as texture
+	SetTexture( imgText, false /* Without repitition */,
+						 true  /* It is a text image */,
+						 true  /* Adjust aspect ratio */,
+						 1  /* Scale texture */ ,
+						 [20, 5] /* Width, Height of plane to which texture is mapped */,
+						 [0.0, 0.0] /* Align factor horizontal, vertical */, 
+						 [true, true] /* Allow up- and down-scaling of texture */
+				);
+						 
+	DrawPlane( 50*e1 + 50*e2, 20*e1, -5*e2 );
+	
+	// Switch texture mapping off
+	SetTexture();
+
+	// Set imgText as texture
+	SetTexture( imgText2, false /* Without repitition */,
+						 true  /* It is a text image */,
+						 true  /* Adjust aspect ratio */,
+						 1  /* Scale texture */ ,
+						 [20, 5] /* Width, height of plane to which texture is mapped */,
+						 [0.0, 0.0] /* Align factor horizontal, vertical */, 
+						 [false, true] /* Allow up- and down-scaling of texture */
+				);
+						 
+	DrawPlane( 50*e1 + 40*e2, 20*e1, -5*e2 );
+	
+	// Switch texture mapping off
+	SetTexture();
+
+EndOverlay();
+
+:scText;

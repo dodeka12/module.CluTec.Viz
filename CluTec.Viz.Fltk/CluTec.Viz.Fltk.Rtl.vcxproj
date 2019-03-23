@@ -1,0 +1,695 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RTM|Win32">
+      <Configuration>RTM</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RTM|x64">
+      <Configuration>RTM</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{DA147196-507C-4491-A598-7D87AA5F7ABC}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>CluTecVizFltk</RootNamespace>
+    <ProjectName>CluTec.Viz.Fltk.rtl</ProjectName>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RTM|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RTM|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(SolutionDir)_global.2.0\PropSheets\CluTec.Type.Rtl.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(SolutionDir)_global.2.0\PropSheets\CluTec.Type.Rtl.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(SolutionDir)_global.2.0\PropSheets\CluTec.Type.Rtl.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='RTM|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(SolutionDir)_global.2.0\PropSheets\CluTec.Type.Rtl.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(SolutionDir)_global.2.0\PropSheets\CluTec.Type.Rtl.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='RTM|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(SolutionDir)_global.2.0\PropSheets\CluTec.Type.Rtl.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;FL_DLL;FL_LIBRARY;_WINDOWS;WIN32_LEAN_AND_MEAN;VC_EXTRA_LEAN;WIN32_EXTRA_LEAN;_CRT_SECURE_NO_DEPRECATE;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <AdditionalDependencies>opengl32.lib;wsock32.lib;comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;FL_DLL;FL_LIBRARY;_WINDOWS;WIN32_LEAN_AND_MEAN;VC_EXTRA_LEAN;WIN32_EXTRA_LEAN;_CRT_SECURE_NO_DEPRECATE;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <AdditionalDependencies>opengl32.lib;wsock32.lib;comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;FL_DLL;FL_LIBRARY;_WINDOWS;WIN32_LEAN_AND_MEAN;VC_EXTRA_LEAN;WIN32_EXTRA_LEAN;_CRT_SECURE_NO_DEPRECATE;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>opengl32.lib;wsock32.lib;comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RTM|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;FL_DLL;FL_LIBRARY;_WINDOWS;WIN32_LEAN_AND_MEAN;VC_EXTRA_LEAN;WIN32_EXTRA_LEAN;_CRT_SECURE_NO_DEPRECATE;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>opengl32.lib;wsock32.lib;comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;FL_DLL;FL_LIBRARY;_WINDOWS;WIN32_LEAN_AND_MEAN;VC_EXTRA_LEAN;WIN32_EXTRA_LEAN;_CRT_SECURE_NO_DEPRECATE;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>opengl32.lib;wsock32.lib;comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RTM|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;FL_DLL;FL_LIBRARY;_WINDOWS;WIN32_LEAN_AND_MEAN;VC_EXTRA_LEAN;WIN32_EXTRA_LEAN;_CRT_SECURE_NO_DEPRECATE;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>opengl32.lib;wsock32.lib;comctl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="cmap.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="dump_compose.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="filename_absolute.cpp" />
+    <ClCompile Include="filename_expand.cpp" />
+    <ClCompile Include="filename_ext.cpp" />
+    <ClCompile Include="filename_isdir.cpp" />
+    <ClCompile Include="filename_list.cpp" />
+    <ClCompile Include="filename_match.cpp" />
+    <ClCompile Include="filename_setext.cpp" />
+    <ClCompile Include="Fl.cpp" />
+    <ClCompile Include="flstring.c" />
+    <ClCompile Include="Fl_abort.cpp" />
+    <ClCompile Include="Fl_add_idle.cpp" />
+    <ClCompile Include="Fl_Adjuster.cpp" />
+    <ClCompile Include="fl_arc.cpp" />
+    <ClCompile Include="fl_arci.cpp" />
+    <ClCompile Include="Fl_arg.cpp" />
+    <ClCompile Include="fl_ask.cpp" />
+    <ClCompile Include="Fl_Bitmap.cpp" />
+    <ClCompile Include="Fl_BMP_Image.cpp" />
+    <ClCompile Include="Fl_Box.cpp" />
+    <ClCompile Include="fl_boxtype.cpp" />
+    <ClCompile Include="Fl_Browser.cpp" />
+    <ClCompile Include="Fl_Browser_.cpp" />
+    <ClCompile Include="Fl_Browser_load.cpp" />
+    <ClCompile Include="Fl_Button.cpp" />
+    <ClCompile Include="fl_call_main.c" />
+    <ClCompile Include="Fl_Chart.cpp" />
+    <ClCompile Include="Fl_Check_Browser.cpp" />
+    <ClCompile Include="Fl_Check_Button.cpp" />
+    <ClCompile Include="Fl_Choice.cpp" />
+    <ClCompile Include="Fl_Clock.cpp" />
+    <ClCompile Include="fl_color.cpp" />
+    <ClCompile Include="Fl_Color_Chooser.cpp" />
+    <ClCompile Include="fl_color_mac.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="fl_color_win32.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Fl_compose.cpp" />
+    <ClCompile Include="Fl_Counter.cpp" />
+    <ClCompile Include="fl_cursor.cpp" />
+    <ClCompile Include="fl_curve.cpp" />
+    <ClCompile Include="Fl_Dial.cpp" />
+    <ClCompile Include="fl_diamond_box.cpp" />
+    <ClCompile Include="Fl_display.cpp" />
+    <ClCompile Include="fl_dnd.cpp" />
+    <ClCompile Include="fl_dnd_mac.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="fl_dnd_win32.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="fl_dnd_x.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Fl_Double_Window.cpp" />
+    <ClCompile Include="fl_draw.cpp" />
+    <ClCompile Include="fl_draw_image.cpp" />
+    <ClCompile Include="fl_draw_image_mac.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="fl_draw_image_win32.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="fl_draw_pixmap.cpp" />
+    <ClCompile Include="fl_engraved_label.cpp" />
+    <ClCompile Include="Fl_File_Browser.cpp" />
+    <ClCompile Include="Fl_File_Chooser.cpp" />
+    <ClCompile Include="Fl_File_Chooser2.cpp" />
+    <ClCompile Include="fl_file_dir.cpp" />
+    <ClCompile Include="Fl_File_Icon.cpp" />
+    <ClCompile Include="Fl_File_Icon2.cpp" />
+    <ClCompile Include="Fl_File_Input.cpp" />
+    <ClCompile Include="fl_font.cpp" />
+    <ClCompile Include="fl_font_mac.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="fl_font_win32.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="fl_font_x.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="fl_font_xft.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Fl_get_key.cpp" />
+    <ClCompile Include="Fl_get_key_mac.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Fl_get_key_win32.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Fl_get_system_colors.cpp" />
+    <ClCompile Include="Fl_GIF_Image.cpp" />
+    <ClCompile Include="Fl_Gl_Choice.cpp" />
+    <ClCompile Include="Fl_Gl_Overlay.cpp" />
+    <ClCompile Include="Fl_Gl_Window.cpp" />
+    <ClCompile Include="Fl_grab.cpp" />
+    <ClCompile Include="Fl_Group.cpp" />
+    <ClCompile Include="Fl_Help_Dialog.cpp" />
+    <ClCompile Include="Fl_Help_View.cpp" />
+    <ClCompile Include="Fl_Image.cpp" />
+    <ClCompile Include="fl_images_core.cpp" />
+    <ClCompile Include="Fl_Input.cpp" />
+    <ClCompile Include="Fl_Input_.cpp" />
+    <ClCompile Include="Fl_JPEG_Image.cpp" />
+    <ClCompile Include="fl_labeltype.cpp" />
+    <ClCompile Include="Fl_Light_Button.cpp" />
+    <ClCompile Include="fl_line_style.cpp" />
+    <ClCompile Include="Fl_lock.cpp" />
+    <ClCompile Include="Fl_mac.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Fl_Menu.cpp" />
+    <ClCompile Include="Fl_Menu_.cpp" />
+    <ClCompile Include="Fl_Menu_add.cpp" />
+    <ClCompile Include="Fl_Menu_Bar.cpp" />
+    <ClCompile Include="Fl_Menu_Button.cpp" />
+    <ClCompile Include="Fl_Menu_global.cpp" />
+    <ClCompile Include="Fl_Menu_Window.cpp" />
+    <ClCompile Include="Fl_Multi_Label.cpp" />
+    <ClCompile Include="fl_oval_box.cpp" />
+    <ClCompile Include="fl_overlay.cpp" />
+    <ClCompile Include="fl_overlay_visual.cpp" />
+    <ClCompile Include="Fl_Overlay_Window.cpp" />
+    <ClCompile Include="Fl_own_colormap.cpp" />
+    <ClCompile Include="Fl_Pack.cpp" />
+    <ClCompile Include="Fl_Pixmap.cpp" />
+    <ClCompile Include="fl_plastic.cpp" />
+    <ClCompile Include="Fl_PNG_Image.cpp" />
+    <ClCompile Include="Fl_PNM_Image.cpp" />
+    <ClCompile Include="Fl_Positioner.cpp" />
+    <ClCompile Include="Fl_Preferences.cpp" />
+    <ClCompile Include="Fl_Progress.cpp" />
+    <ClCompile Include="fl_read_image.cpp" />
+    <ClCompile Include="fl_read_image_mac.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="fl_read_image_win32.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="fl_rect.cpp" />
+    <ClCompile Include="Fl_Repeat_Button.cpp" />
+    <ClCompile Include="Fl_Return_Button.cpp" />
+    <ClCompile Include="Fl_Roller.cpp" />
+    <ClCompile Include="fl_rounded_box.cpp" />
+    <ClCompile Include="fl_round_box.cpp" />
+    <ClCompile Include="Fl_Round_Button.cpp" />
+    <ClCompile Include="Fl_Scroll.cpp" />
+    <ClCompile Include="Fl_Scrollbar.cpp" />
+    <ClCompile Include="fl_scroll_area.cpp" />
+    <ClCompile Include="fl_set_font.cpp" />
+    <ClCompile Include="fl_set_fonts.cpp" />
+    <ClCompile Include="fl_set_fonts_mac.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="fl_set_fonts_win32.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="fl_set_fonts_x.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="fl_set_fonts_xft.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="fl_set_gray.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="fl_shadow_box.cpp" />
+    <ClCompile Include="Fl_Shared_Image.cpp" />
+    <ClCompile Include="fl_shortcut.cpp" />
+    <ClCompile Include="fl_show_colormap.cpp" />
+    <ClCompile Include="Fl_Single_Window.cpp" />
+    <ClCompile Include="Fl_Slider.cpp" />
+    <ClCompile Include="fl_symbols.cpp" />
+    <ClCompile Include="Fl_Sys_Menu_Bar.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Fl_Tabs.cpp" />
+    <ClCompile Include="Fl_Text_Buffer.cpp" />
+    <ClCompile Include="Fl_Text_Display.cpp" />
+    <ClCompile Include="Fl_Text_Editor.cpp" />
+    <ClCompile Include="Fl_Tile.cpp" />
+    <ClCompile Include="Fl_Tiled_Image.cpp" />
+    <ClCompile Include="Fl_Tooltip.cpp" />
+    <ClCompile Include="Fl_Valuator.cpp" />
+    <ClCompile Include="Fl_Value_Input.cpp" />
+    <ClCompile Include="Fl_Value_Output.cpp" />
+    <ClCompile Include="Fl_Value_Slider.cpp" />
+    <ClCompile Include="fl_vertex.cpp" />
+    <ClCompile Include="Fl_visual.cpp" />
+    <ClCompile Include="Fl_Widget.cpp" />
+    <ClCompile Include="Fl_win32.cpp" />
+    <ClCompile Include="Fl_Window.cpp" />
+    <ClCompile Include="Fl_Window_fullscreen.cpp" />
+    <ClCompile Include="Fl_Window_hotspot.cpp" />
+    <ClCompile Include="Fl_Window_iconize.cpp" />
+    <ClCompile Include="Fl_Wizard.cpp" />
+    <ClCompile Include="Fl_x.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="Fl_XBM_Image.cpp" />
+    <ClCompile Include="Fl_XPM_Image.cpp" />
+    <ClCompile Include="glut_compatability.cpp" />
+    <ClCompile Include="glut_font.cpp" />
+    <ClCompile Include="gl_draw.cpp" />
+    <ClCompile Include="gl_start.cpp" />
+    <ClCompile Include="numericsort.c" />
+    <ClCompile Include="scandir.c" />
+    <ClCompile Include="scandir_win32.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='RTM|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="vsnprintf.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="dirent.h" />
+    <ClInclude Include="Enumerations.H" />
+    <ClInclude Include="fastarrow.h" />
+    <ClInclude Include="filename.H" />
+    <ClInclude Include="Fl.H" />
+    <ClInclude Include="flstring.h" />
+    <ClInclude Include="Fl_Adjuster.H" />
+    <ClInclude Include="fl_ask.H" />
+    <ClInclude Include="Fl_Bitmap.H" />
+    <ClInclude Include="Fl_BMP_Image.H" />
+    <ClInclude Include="Fl_Box.H" />
+    <ClInclude Include="Fl_Browser.H" />
+    <ClInclude Include="Fl_Browser_.H" />
+    <ClInclude Include="Fl_Button.H" />
+    <ClInclude Include="Fl_Chart.H" />
+    <ClInclude Include="Fl_Check_Browser.H" />
+    <ClInclude Include="Fl_Check_Button.H" />
+    <ClInclude Include="Fl_Choice.H" />
+    <ClInclude Include="Fl_Clock.H" />
+    <ClInclude Include="fl_cmap.h" />
+    <ClInclude Include="Fl_Color_Chooser.H" />
+    <ClInclude Include="Fl_config.h" />
+    <ClInclude Include="Fl_Counter.H" />
+    <ClInclude Include="Fl_Dial.H" />
+    <ClInclude Include="Fl_Double_Window.H" />
+    <ClInclude Include="fl_draw.H" />
+    <ClInclude Include="Fl_Export.H" />
+    <ClInclude Include="Fl_File_Browser.H" />
+    <ClInclude Include="Fl_File_Chooser.H" />
+    <ClInclude Include="Fl_File_Icon.H" />
+    <ClInclude Include="Fl_File_Input.H" />
+    <ClInclude Include="Fl_Fill_Dial.H" />
+    <ClInclude Include="Fl_Fill_Slider.H" />
+    <ClInclude Include="Fl_Float_Input.H" />
+    <ClInclude Include="Fl_Font.H" />
+    <ClInclude Include="Fl_FormsBitmap.H" />
+    <ClInclude Include="Fl_FormsPixmap.H" />
+    <ClInclude Include="Fl_Free.H" />
+    <ClInclude Include="Fl_GIF_Image.H" />
+    <ClInclude Include="Fl_gl.h" />
+    <ClInclude Include="fl_glut.H" />
+    <ClInclude Include="Fl_Gl_Choice.H" />
+    <ClInclude Include="Fl_Gl_Window.H" />
+    <ClInclude Include="Fl_Group.H" />
+    <ClInclude Include="Fl_Help_Dialog.H" />
+    <ClInclude Include="Fl_Help_View.H" />
+    <ClInclude Include="Fl_Hold_Browser.H" />
+    <ClInclude Include="Fl_Hor_Fill_Slider.H" />
+    <ClInclude Include="Fl_Hor_Nice_Slider.H" />
+    <ClInclude Include="Fl_Hor_Slider.H" />
+    <ClInclude Include="Fl_Hor_Value_Slider.H" />
+    <ClInclude Include="Fl_Image.H" />
+    <ClInclude Include="Fl_Input.H" />
+    <ClInclude Include="Fl_Input_.H" />
+    <ClInclude Include="Fl_Int_Input.H" />
+    <ClInclude Include="Fl_JPEG_Image.H" />
+    <ClInclude Include="Fl_Light_Button.H" />
+    <ClInclude Include="Fl_Line_Dial.H" />
+    <ClInclude Include="Fl_math.h" />
+    <ClInclude Include="Fl_Menu.H" />
+    <ClInclude Include="Fl_Menu_.H" />
+    <ClInclude Include="Fl_Menu_Bar.H" />
+    <ClInclude Include="Fl_Menu_Button.H" />
+    <ClInclude Include="Fl_Menu_Item.H" />
+    <ClInclude Include="Fl_Menu_Window.H" />
+    <ClInclude Include="fl_message.H" />
+    <ClInclude Include="Fl_Multiline_Input.H" />
+    <ClInclude Include="Fl_Multiline_Output.H" />
+    <ClInclude Include="Fl_Multi_Browser.H" />
+    <ClInclude Include="Fl_Multi_Label.H" />
+    <ClInclude Include="Fl_Nice_Slider.H" />
+    <ClInclude Include="Fl_Object.H" />
+    <ClInclude Include="Fl_Output.H" />
+    <ClInclude Include="Fl_Overlay_Window.H" />
+    <ClInclude Include="Fl_Pack.H" />
+    <ClInclude Include="Fl_Pixmap.H" />
+    <ClInclude Include="Fl_PNG_Image.H" />
+    <ClInclude Include="Fl_PNM_Image.H" />
+    <ClInclude Include="Fl_Positioner.H" />
+    <ClInclude Include="Fl_Preferences.H" />
+    <ClInclude Include="Fl_Progress.H" />
+    <ClInclude Include="Fl_Radio_Button.H" />
+    <ClInclude Include="Fl_Radio_Light_Button.H" />
+    <ClInclude Include="Fl_Radio_Round_Button.H" />
+    <ClInclude Include="Fl_Repeat_Button.H" />
+    <ClInclude Include="Fl_Return_Button.H" />
+    <ClInclude Include="Fl_Roller.H" />
+    <ClInclude Include="Fl_Round_Button.H" />
+    <ClInclude Include="Fl_Round_Clock.H" />
+    <ClInclude Include="Fl_Scroll.H" />
+    <ClInclude Include="Fl_Scrollbar.H" />
+    <ClInclude Include="Fl_Secret_Input.H" />
+    <ClInclude Include="Fl_Select_Browser.H" />
+    <ClInclude Include="Fl_Shared_Image.H" />
+    <ClInclude Include="fl_show_colormap.H" />
+    <ClInclude Include="fl_show_input.H" />
+    <ClInclude Include="Fl_Simple_Counter.H" />
+    <ClInclude Include="Fl_Single_Window.H" />
+    <ClInclude Include="Fl_Slider.H" />
+    <ClInclude Include="Fl_Sys_Menu_Bar.H" />
+    <ClInclude Include="Fl_Tabs.H" />
+    <ClInclude Include="Fl_Text_Buffer.H" />
+    <ClInclude Include="Fl_Text_Display.H" />
+    <ClInclude Include="Fl_Text_Editor.H" />
+    <ClInclude Include="Fl_Tile.H" />
+    <ClInclude Include="Fl_Tiled_Image.H" />
+    <ClInclude Include="Fl_Timer.H" />
+    <ClInclude Include="Fl_Toggle_Button.H" />
+    <ClInclude Include="Fl_Toggle_Light_Button.H" />
+    <ClInclude Include="Fl_Toggle_Round_Button.H" />
+    <ClInclude Include="Fl_Tooltip.H" />
+    <ClInclude Include="Fl_Valuator.H" />
+    <ClInclude Include="Fl_Value_Input.H" />
+    <ClInclude Include="Fl_Value_Output.H" />
+    <ClInclude Include="Fl_Value_Slider.H" />
+    <ClInclude Include="Fl_Widget.H" />
+    <ClInclude Include="Fl_Window.H" />
+    <ClInclude Include="Fl_Wizard.H" />
+    <ClInclude Include="Fl_XBM_Image.H" />
+    <ClInclude Include="Fl_XColor.H" />
+    <ClInclude Include="Fl_XPM_Image.H" />
+    <ClInclude Include="forms.H" />
+    <ClInclude Include="gl2opengl.h" />
+    <ClInclude Include="gl_draw.H" />
+    <ClInclude Include="mac.H" />
+    <ClInclude Include="mediumarrow.h" />
+    <ClInclude Include="slowarrow.h" />
+    <ClInclude Include="win32.H" />
+    <ClInclude Include="x.H" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

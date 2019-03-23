@@ -1,0 +1,25 @@
+// Create resource file for StdGUILib
+
+if ( ExecMode & EM_CHANGE )
+{
+	?ReadImage( "Slider_Handle.png", imgHandle );
+	?ReadImage( "Slider_BG.png", imgBG );
+	
+	?lC = imgHandle(1,1);
+	?lBox = GetImageBoundingBox( imgHandle, Color(lC(1), lC(2), lC(3), lC(4)) );
+	ReshapeImage( imgHandle, lBox(3), lBox(4) );
+	
+}
+
+Button("Save resources");
+if ( ToolName == "Save resources" )
+{
+	lRes = [];
+	lSlider -> lRes("slider");
+	lSlider = [];
+	lSlider("handle") = imgHandle;
+	lSlider("bg") = imgBG;
+	
+	?WriteVar( "StdGUILib_v3_0.crs", lRes, "bin2", [0,0,9] );
+}
+

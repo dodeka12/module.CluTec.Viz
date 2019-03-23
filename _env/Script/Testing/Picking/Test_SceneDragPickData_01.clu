@@ -1,0 +1,26 @@
+
+if ( ExecMode & EM_CHANGE )
+{
+	scA = Scene("A");
+	EnableSceneResetFrame(scA, true);
+	SetSceneViewAngle(scA, 40);
+	EnableScenePick(scA, true);
+	EnableSceneDrag(scA, 1, false, true);
+	EnableSceneDrag(scA, 1, true, true);
+	EnableSceneDrag(scA, 2, false, true);
+	EnableSceneDrag(scA, 2, true, true);
+	EnableSceneNotify(scA, true);
+	DrawToScene(scA);
+		:Red;
+		DrawPlane(VecE3(0,0), VecE3(1,0), VecE3(0,1));
+	DrawToScene();
+}
+
+?PickData;
+:scA;
+
+if ( ExecMode & EM_PICK_SELECT )
+{
+	?"Select";
+	?Type(PickData(["click"]));
+}

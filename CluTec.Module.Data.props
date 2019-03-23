@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros">
+    <CtModName>CluTec.Viz</CtModName>
+    <CtModVerA>8</CtModVerA>
+    <CtModVerB>0</CtModVerB>
+    <CtModVerC>0</CtModVerC>
+    <CtModVerD>0</CtModVerD>
+    <CtDepVer_CluTecCore>2.0</CtDepVer_CluTecCore>
+    <CtDepVer_CluVizExt>8.0</CtDepVer_CluVizExt>
+    <CtDepVer_DevIL>1.7.2</CtDepVer_DevIL>
+    <CtDepVer_LibXml>2.7.6</CtDepVer_LibXml>
+    <CtDepVer_Zlib>1.2.6</CtDepVer_Zlib>
+  </PropertyGroup>
+  <PropertyGroup />
+  <ItemDefinitionGroup />
+  <ItemGroup>
+    <BuildMacro Include="CtModName">
+      <Value>$(CtModName)</Value>
+    </BuildMacro>
+    <BuildMacro Include="CtModVerA">
+      <Value>$(CtModVerA)</Value>
+    </BuildMacro>
+    <BuildMacro Include="CtModVerB">
+      <Value>$(CtModVerB)</Value>
+    </BuildMacro>
+    <BuildMacro Include="CtModVerC">
+      <Value>$(CtModVerC)</Value>
+    </BuildMacro>
+    <BuildMacro Include="CtModVerD">
+      <Value>$(CtModVerD)</Value>
+    </BuildMacro>
+    <BuildMacro Include="CtDepVer_CluTecCore">
+      <Value>$(CtDepVer_CluTecCore)</Value>
+    </BuildMacro>
+    <BuildMacro Include="CtDepVer_CluVizExt">
+      <Value>$(CtDepVer_CluVizExt)</Value>
+    </BuildMacro>
+    <BuildMacro Include="CtDepVer_DevIL">
+      <Value>$(CtDepVer_DevIL)</Value>
+    </BuildMacro>
+    <BuildMacro Include="CtDepVer_LibXml">
+      <Value>$(CtDepVer_LibXml)</Value>
+    </BuildMacro>
+    <BuildMacro Include="CtDepVer_Zlib">
+      <Value>$(CtDepVer_Zlib)</Value>
+    </BuildMacro>
+  </ItemGroup>
+</Project>

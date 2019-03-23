@@ -1,0 +1,203 @@
+if ( ExecMode & EM_CHANGE )
+{
+	Shader_Plane3d_PartId =
+	{
+		sName = _P(1);
+
+		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		// The vertex shader
+		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		sVSCode = @Shader"
+		#version 330
+		
+		in vec4 clu_in_vTex0;
+		in vec4 clu_in_vVertex;
+		in vec4 clu_in_vColor;
+		in vec4 clu_in_vNormal;
+		
+		out SFragData
+		{
+			vec4 vColor;
+			vec2 vTex;	
+			vec2 vNorm;
+		} xFrag;
+		
+		uniform mat4 clu_matModelView;
+		uniform mat4 clu_matProjection;
+		uniform int iSelectedPartId;
+		
+		void main()
+		{
+			// Use this variable. It's required by the script but not by this shader
+			if (iSelectedPartId == -2)
+			{
+				return;
+			}
+
+			xFrag.vTex.xy = clu_in_vTex0.xy;
+			xFrag.vColor = clu_in_vColor;
+			xFrag.vNorm = clu_in_vNormal.xy;
+				
+			vec4 vEyeCoord = clu_matModelView * clu_in_vVertex;
+			gl_Position = clu_matProjection * vEyeCoord;
+		}
+		";
+
+		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		// The fragment shader
+		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		sFSCode = @Shader"
+		#version 330
+
+		in SFragData
+		{
+			vec4 vColor;
+			vec2 vTex;
+			vec2 vNorm;
+		} xFrag;
+		
+		out vec4 vFragColor;
+
+		uniform int u_eColorMode;
+		uniform float u_fBlurRatio;
+		uniform vec4 u_xMultiColor1;
+		uniform vec4 u_xMultiColor2;
+		
+		void main()
+		{			
+			float fAspectRatio = xFrag.vNorm.x / xFrag.vNorm.y;
+			
+			float fPerc = u_fBlurRatio;
+			float fIPerc = 1.0 - fPerc;
+			
+			// Use the color mode
+			vec4 colorResult= xFrag.vColor;
+			if (u_eColorMode == 1)
+			{
+				// Change color to simulate a checkerboard pattern
+				int iX = int(xFrag.vTex.x * fAspectRatio / 0.05);
+				int iY = int(xFrag.vTex.y / 0.05);
+				if(iX % 2 == 0 && iY % 2 != 0)
+				{
+					colorResult = u_xMultiColor1;
+				}
+				else if(iX % 2 != 0 && iY % 2 == 0)
+				{
+					colorResult = u_xMultiColor1;
+				}
+				else
+				{
+					colorResult = u_xMultiColor2;
+				}
+			}
+
+			// Blur the border of the plane
+			if(u_fBlurRatio > 0.0f)
+			{
+				float fAlpha = 1.0;
+				if(xFrag.vTex.x < fPerc && xFrag.vTex.y < fPerc)
+				{
+					float d = length(xFrag.vTex.xy - vec2(fPerc, fPerc));
+					fAlpha = exp(-pow(d / 0.1, 2.0));
+				}
+				else if(xFrag.vTex.x > fIPerc && xFrag.vTex.y > fIPerc)
+				{
+					float d = length(xFrag.vTex.xy - vec2(fIPerc, fIPerc));
+					fAlpha = exp(-pow(d / 0.1, 2.0));
+				}
+				else if(xFrag.vTex.x < fPerc && xFrag.vTex.y > fIPerc)
+				{
+					float d = length(xFrag.vTex.xy - vec2(fPerc, fIPerc));
+					fAlpha = exp(-pow(d / 0.1, 2.0));
+				}	
+				else if(xFrag.vTex.x > fIPerc && xFrag.vTex.y < fPerc)
+				{
+					float d = length(xFrag.vTex.xy - vec2(fIPerc, fPerc));
+					fAlpha = exp(-pow(d / 0.1, 2.0));
+				}		
+				else if(xFrag.vTex.x < fPerc)
+				{
+					float d = length(xFrag.vTex.xy - vec2(fPerc, xFrag.vTex.y));
+					fAlpha = exp(-pow(d / 0.1, 2.0));
+				}		
+				else if(xFrag.vTex.y < fPerc)
+				{
+					float d = length(xFrag.vTex.xy - vec2(xFrag.vTex.x, fPerc));
+					fAlpha = exp(-pow(d / 0.1, 2.0));
+				}			
+				else if(xFrag.vTex.x > fIPerc)
+				{
+					float d = length(xFrag.vTex.xy - vec2(fIPerc, xFrag.vTex.y));
+					fAlpha = exp(-pow(d / 0.1, 2.0));
+				}		
+				else if(xFrag.vTex.y > fIPerc)
+				{
+					float d = length(xFrag.vTex.xy - vec2(xFrag.vTex.x, fIPerc));
+					fAlpha = exp(-pow(d / 0.1, 2.0));
+				}
+				// Apply alpha value
+				colorResult.w = fAlpha;
+			}
+			
+			// Change color	
+			vFragColor = vec4(colorResult);
+		}
+		";
+		
+		shPartId = Shader("Shader_Plane3d_PartId_" + sName);
+		EnableShaderForPicking(shPartId, false);
+		ShaderBuild( shPartId, [sVSCode], [sFSCode] );
+		
+		shPartId("Var", "u_fBlurRatio", 0.2);
+		shPartId("Var", "u_eColorMode", 1);
+		shPartId("Var", "u_xMultiColor1", Color(0.369, 0.369, 0.369));
+		shPartId("Var", "u_xMultiColor2", Color(0.412, 0.412, 0.412));
+		
+		shPartId break;
+	}
+}
+
+
+// /////////////////////////////////////////////////////////////////////
+// Debugging
+
+if ( false )
+{
+	if ( ExecMode & EM_CHANGE )
+	{	
+		_BGColor = Color(0.0, 0.0, 0.0);
+		shaderPlanes3D = Shader_Plane3d_PartId("shaderPlanes3D");
+		
+		fCol = 0.412;
+		
+		fWidth = 2.0;
+		fHeight = 2.0;		
+	    lData = [];
+	    // Set vertices.
+	    lData("vex") = Tensor( [[0,0,0], [fWidth,fHeight,0], [0,fHeight,0], [fWidth,0,0], [0,0,0], [fWidth,fHeight,0]]);
+	    // Set colors, one for each vertex.
+	    lData("col") = Tensor( [[fCol,fCol,fCol], [fCol,fCol,fCol], [fCol,fCol,fCol], [fCol,fCol,fCol], [fCol,fCol,fCol], [fCol,fCol,fCol]] );
+	    // Set texture coordinates, one for each vertex.
+		lData("tex") = Tensor( [[0.0,0.0], [1.0,1.0], [0.0,1.0], [1.0,0.0], [0.0,0.0], [1.0,1.0]] );
+		// Set normal, we store the plane width and height in it
+		lData("norm") = Tensor( [[fWidth,fHeight], [fWidth,fHeight], [fWidth,fHeight], [fWidth,fHeight], [fWidth,fHeight], [fWidth,fHeight]] );
+		
+		// Set the data to the object
+		objectPlane = Object( "objectPlane", OM_TRIANGLES);
+		objectPlane << lData;
+	
+		sceneMain = Scene("sceneMain");
+		EnableScenePick(sceneMain, true);
+		EnableSceneNotify(sceneMain, true);
+		DrawToScene(sceneMain);
+			EnablePointSprites(true);
+			:shaderPlanes3D;
+			:objectPlane;
+			DrawPlane(VecE3(0,0), VecE3(2,0), VecE3(0,2));
+			:Shader("Default");
+			EnablePointSprites(false);
+		DrawToScene();	
+	}
+	
+	:sceneMain;
+}

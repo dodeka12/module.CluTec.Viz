@@ -1,0 +1,915 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="dump_compose.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fl_call_main.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="flstring.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="numericsort.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="scandir.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="scandir_win32.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="vsnprintf.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cmap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="filename_absolute.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="filename_expand.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="filename_ext.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="filename_isdir.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="filename_list.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="filename_match.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="filename_setext.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_abort.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_add_idle.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_Adjuster.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fl_arc.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fl_arci.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_arg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fl_ask.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_Bitmap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_BMP_Image.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_Box.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fl_boxtype.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_Browser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_Browser_.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_Browser_load.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_Button.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_Chart.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_Check_Browser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_Check_Button.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_Choice.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_Clock.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fl_color.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_Color_Chooser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fl_color_mac.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fl_color_win32.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_compose.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_Counter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fl_cursor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fl_curve.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_Dial.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fl_diamond_box.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_display.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fl_dnd.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fl_dnd_mac.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fl_dnd_win32.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fl_dnd_x.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_Double_Window.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fl_draw.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fl_draw_image.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fl_draw_image_mac.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fl_draw_image_win32.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fl_draw_pixmap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fl_engraved_label.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_File_Browser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_File_Chooser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_File_Chooser2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fl_file_dir.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_File_Icon.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_File_Icon2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_File_Input.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fl_font.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fl_font_mac.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fl_font_win32.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fl_font_x.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fl_font_xft.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_get_key.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_get_key_mac.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_get_key_win32.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_get_system_colors.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_GIF_Image.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_Gl_Choice.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_Gl_Overlay.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_Gl_Window.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_grab.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_Group.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_Help_Dialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_Help_View.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_Image.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fl_images_core.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_Input.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_Input_.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_JPEG_Image.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fl_labeltype.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_Light_Button.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fl_line_style.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_lock.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_mac.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_Menu.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_Menu_.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_Menu_add.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_Menu_Bar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_Menu_Button.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_Menu_global.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_Menu_Window.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_Multi_Label.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fl_oval_box.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fl_overlay.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fl_overlay_visual.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_Overlay_Window.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_own_colormap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_Pack.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_Pixmap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fl_plastic.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_PNG_Image.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_PNM_Image.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_Positioner.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_Preferences.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_Progress.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fl_read_image.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fl_read_image_mac.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fl_read_image_win32.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fl_rect.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_Repeat_Button.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_Return_Button.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_Roller.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fl_round_box.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_Round_Button.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fl_rounded_box.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_Scroll.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fl_scroll_area.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_Scrollbar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fl_set_font.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fl_set_fonts.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fl_set_fonts_mac.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fl_set_fonts_win32.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fl_set_fonts_x.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fl_set_fonts_xft.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fl_set_gray.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fl_shadow_box.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_Shared_Image.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fl_shortcut.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fl_show_colormap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_Single_Window.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_Slider.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fl_symbols.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_Sys_Menu_Bar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_Tabs.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_Text_Buffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_Text_Display.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_Text_Editor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_Tile.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_Tiled_Image.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_Tooltip.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_Valuator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_Value_Input.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_Value_Output.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_Value_Slider.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="fl_vertex.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_visual.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_Widget.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_win32.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_Window.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_Window_fullscreen.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_Window_hotspot.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_Window_iconize.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_Wizard.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_x.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_XBM_Image.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Fl_XPM_Image.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gl_draw.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="gl_start.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="glut_compatability.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="glut_font.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="dirent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Enumerations.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="fastarrow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="filename.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Adjuster.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="fl_ask.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Bitmap.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_BMP_Image.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Box.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Browser.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Browser_.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Button.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Chart.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Check_Browser.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Check_Button.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Choice.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Clock.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="fl_cmap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Color_Chooser.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_config.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Counter.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Dial.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Double_Window.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="fl_draw.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Export.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_File_Browser.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_File_Chooser.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_File_Icon.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_File_Input.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Fill_Dial.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Fill_Slider.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Float_Input.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Font.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_FormsBitmap.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_FormsPixmap.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Free.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_GIF_Image.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_gl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Gl_Choice.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Gl_Window.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="fl_glut.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Group.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Help_Dialog.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Help_View.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Hold_Browser.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Hor_Fill_Slider.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Hor_Nice_Slider.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Hor_Slider.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Hor_Value_Slider.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Image.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Input.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Input_.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Int_Input.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_JPEG_Image.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Light_Button.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Line_Dial.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_math.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Menu.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Menu_.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Menu_Bar.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Menu_Button.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Menu_Item.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Menu_Window.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="fl_message.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Multi_Browser.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Multi_Label.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Multiline_Input.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Multiline_Output.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Nice_Slider.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Object.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Output.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Overlay_Window.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Pack.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Pixmap.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_PNG_Image.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_PNM_Image.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Positioner.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Preferences.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Progress.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Radio_Button.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Radio_Light_Button.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Radio_Round_Button.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Repeat_Button.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Return_Button.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Roller.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Round_Button.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Round_Clock.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Scroll.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Scrollbar.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Secret_Input.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Select_Browser.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Shared_Image.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="fl_show_colormap.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="fl_show_input.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Simple_Counter.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Single_Window.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Slider.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Sys_Menu_Bar.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Tabs.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Text_Buffer.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Text_Display.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Text_Editor.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Tile.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Tiled_Image.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Timer.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Toggle_Button.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Toggle_Light_Button.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Toggle_Round_Button.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Tooltip.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Valuator.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Value_Input.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Value_Output.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Value_Slider.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Widget.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Window.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_Wizard.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_XBM_Image.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_XColor.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Fl_XPM_Image.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="flstring.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="forms.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gl_draw.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="gl2opengl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="mac.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="mediumarrow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="slowarrow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="win32.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="x.H">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

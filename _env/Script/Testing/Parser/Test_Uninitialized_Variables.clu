@@ -1,0 +1,96 @@
+// Testing Unitialized Variables
+// When a variable name is encountered the first time, a variable of 
+// type "Void" is created. You can assign values to such a variable
+// but you cannot use them.
+
+
+// Variable is created but not initialized
+xB;
+// Type of variable is "Void"
+?Type(xB);
+
+// It is allowed to create a reference to an unintialized variable.
+rA -> xA;
+
+// Uncommenting the next line will cause a runtime error, 
+// since xA is not initialized.
+//?rA; 
+
+// This initialized xA, since rA is just a reference to xA.
+rA = 1;
+
+// Print xA and rA.
+?rA;
+?xA;
+
+////////////////////////////////////////////////////////////
+// Passing an uninitialized variable to a function
+fA = 
+{
+	dA = _P(1);
+	dB = _P(2);
+	
+	?dA;
+	?dB;
+	
+	// Runtime error occurs here, if _P(2) is uninitialized variable.
+	//?dC = dA + dB;
+}
+
+// xC is not initialized.
+fA(rA, xC);
+ 
+////////////////////////////////////////////////////////////
+// Initializing an uninitialized variable in a function
+fB = 
+{
+	dA -> _P(1);
+	
+	dA = 2;
+}
+
+fB(xD);
+?xD;
+
+////////////////////////////////////////////////////////////
+// Test list of uninitialized variable
+
+lA = [xE];
+?lA;
+
+?lA(1); 
+rE -> lA(1);
+?rE; 
+?Type(rE);
+
+?rE = 1.234;
+?Type(rE);
+?lA;
+
+////////////////////////////////////////////////////////////
+// Test reference to reference to void
+
+xF;
+rF -> xF;
+?rG -> rF;
+
+//?rG + 1.2; // Error using uninitialized variable
+
+rG = 1.345;
+?rG;
+?rF;
+?xF;
+
+////////////////////////////////////////////////////////////
+// Test reference to void in list
+
+xH;
+rH -> xH;
+//?rH; // Error
+
+lH = [rH];
+?lH;
+
+lH(1) = 2.345;
+?lH;
+//?xH; // Error reference is not retained when placed in list.

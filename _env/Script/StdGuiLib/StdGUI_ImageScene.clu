@@ -1,0 +1,604 @@
+// Define Function to create an image scene
+StdGUI_ImageScene_Create =
+{
+	// Return values:
+	// 1. the image scene data structure
+	lData -> _P(1);
+	
+	lData = [];
+	
+	// The main scene
+	scMain -> lData("scene_main");
+	
+	// The image scene
+	scImage -> lData("scene_image");
+	
+	// The scene drawn before the image plane
+	scPre -> lData("scene_pre");
+	
+	// The scene drawn after the image plane
+	scPost -> lData("scene_post");
+	
+	// The scene drawing the image plane 
+	scPlane -> lData("scene_plane");
+	
+	// The standard shader
+	shImage -> lData("shader_std");
+
+	// The standard shader
+	shImage_usampler -> lData("shader_usampler");
+	
+	// The texture
+	texImage -> lData("tex");
+	
+	// A layer scene for drawing
+	scDraw -> lData("scene_draw");
+	
+	// A frame for rotating the image
+	frImage -> lData("frame_image");
+	frImage = Frame("Image");
+	
+	// Input Values:
+	// The scene name
+	sName = _P(2);
+	// The image to be drawn
+	// Note that the image is not copied at this step.
+	// Only an image reference is copied.
+	imgA = _P(3); 
+		
+	lImgSize -> lData("image_size");
+	
+	// Get the image size
+	lImgSize = Size( imgA );
+	
+	///////////////////////////////////////////////////////////
+	// Create Image Shader
+			
+	// Vertex shader code
+	sVSCode = @Shader"
+			void main()
+			{
+				gl_TexCoord[0] = gl_MultiTexCoord0;
+				gl_TexCoord[1] = gl_MultiTexCoord1;
+				gl_Position = ftransform();
+			}
+		";
+
+	// Fragment shader code
+	// This code is executed in parallel by the graphics card
+	// for each pixel that is to be drawn on the screen.
+	sFSCode = @Shader"
+		uniform sampler2D texImage; // ID of image texture
+		uniform float fBrightness;	// Brightness variable
+		uniform float fContrast;	// Contrast variable
+		
+		uniform float fBorderLeft;
+		uniform float fBorderRight;
+		uniform float fBorderBottom;
+		uniform float fBorderTop;
+		
+		uniform float fBlendBorder;
+
+		uniform int iIsColor;
+		
+		void main()
+		{
+			vec4 colVal;
+
+			// Get color of image at position given by texture coordinate.
+			// Only get RGB values and neglect the alpha channel
+			colVal = textureLod(texImage, gl_TexCoord[0].st, 0);
+			
+			// set the alpha value to one
+			colVal.a = 1.0;
+			// Estimate new intensity of pixel
+			float fI = fBrightness * exp( fContrast * ( length( colVal ) - 0.5 ) );
+			
+			float fW = fBlendBorder;
+			float fX = clamp((fW + abs(gl_TexCoord[0].s - 0.5) * 2.0 - 1.0) / fW, 0.0, 1.0);
+			float fY = clamp((fW + abs(gl_TexCoord[0].t - 0.5) * 2.0 - 1.0) / fW, 0.0, 1.0);
+			
+			fX = 1.0 - fX;
+			fY = 1.0 - fY;
+			
+			float fA = fX * fY * float(
+							gl_TexCoord[0].s >= fBorderLeft 
+						&& 	gl_TexCoord[0].s <= 1.0 - fBorderRight
+						&& 	gl_TexCoord[0].t >= fBorderBottom 
+						&& 	gl_TexCoord[0].t <= 1.0 - fBorderTop);
+			
+			if (iIsColor == 0)
+			{
+				colVal.rgb = colVal.rrr;
+			}
+
+			// Set resultant color
+			gl_FragColor = vec4( fI * colVal.rgb /* rgb */, fA * colVal.a /* alpha channel */ );
+		}
+	";
+
+
+	// Fragment shader code
+	// This code is executed in parallel by the graphics card
+	// for each pixel that is to be drawn on the screen.
+	sFSCode_usampler = @Shader"
+		
+		uniform usampler2D texImage; // ID of image texture
+		uniform float fBrightness;	// Brightness variable
+		uniform float fContrast;	// Contrast variable
+		
+		uniform float fBorderLeft;
+		uniform float fBorderRight;
+		uniform float fBorderBottom;
+		uniform float fBorderTop;
+		
+		uniform float fBlendBorder;
+		uniform int iIsColor;
+
+
+		void main()
+		{
+			vec4 colVal;
+
+			// Get color of image at position given by texture coordinate.
+			// having a usampler, we flip the texture coordinate for y
+			colVal = vec4(textureLod(texImage, vec2(gl_TexCoord[0].s, 1.0 - gl_TexCoord[0].t), 0)) / 255.0;
+			
+			// set the alpha value to be 1
+			colVal.a = 1.0;
+			
+			// Estimate new intensity of pixel
+			float fI = fBrightness * exp( fContrast * ( length( colVal ) - 0.5 ) );
+			
+			float fW = fBlendBorder;
+			float fX = clamp((fW + abs(gl_TexCoord[0].s - 0.5) * 2.0 - 1.0) / fW, 0.0, 1.0);
+			float fY = clamp((fW + abs(gl_TexCoord[0].t - 0.5) * 2.0 - 1.0) / fW, 0.0, 1.0);
+			
+			fX = 1.0 - fX;
+			fY = 1.0 - fY;
+			
+			float fA = fX * fY * float(
+							gl_TexCoord[0].s >= fBorderLeft 
+						&& 	gl_TexCoord[0].s <= 1.0 - fBorderRight
+						&& 	gl_TexCoord[0].t >= fBorderBottom 
+						&& 	gl_TexCoord[0].t <= 1.0 - fBorderTop);
+			
+			
+			if (iIsColor == 0)
+			{
+				colVal.rgb = colVal.rrr;
+			}
+
+			// Set resultant color
+			gl_FragColor = vec4( fI * colVal.rgb /* rgb */, fA * colVal.a /* alpha channel */ );
+
+		}
+	";
+
+	// Create a default shader that resets the use of shaders
+	shDefault = Shader( "Default" );
+	
+	// Create the image shader
+	shImage = Shader( sName + "_shader" );
+	// Build the shader. 
+	// This functions compiles the code in the respective strings.
+	ShaderBuild( shImage, [ sVSCode ], [ sFSCode ] );
+	
+	// Set initial contrast variable
+	SetShaderUniformVar( shImage, "fContrast", 0 );
+	
+	// Set initial brightness variable
+	SetShaderUniformVar( shImage, "fBrightness", 1 );
+
+	SetShaderUniformVar( shImage, "fBorderLeft", 0 );
+	SetShaderUniformVar( shImage, "fBorderRight", 0 );
+	SetShaderUniformVar( shImage, "fBorderBottom", 0 );
+	SetShaderUniformVar( shImage, "fBorderTop", 0 );
+
+	SetShaderUniformVar( shImage, "fBlendBorder", 0 );
+	SetShaderUniformVar( shImage, "iIsColor", 1 );
+
+
+
+	// Create the image shader
+	shImage_usampler = Shader( sName + "_shader_usampler" );
+	// Build the shader. 
+	// This functions compiles the code in the respective strings.
+	ShaderBuild( shImage_usampler, [ sVSCode ], [ sFSCode_usampler ] );
+	
+	// Set initial contrast variable
+	SetShaderUniformVar( shImage_usampler, "fContrast", 0 );
+	
+	// Set initial brightness variable
+	SetShaderUniformVar( shImage_usampler, "fBrightness", 1 );
+
+	SetShaderUniformVar( shImage_usampler, "fBorderLeft", 0 );
+	SetShaderUniformVar( shImage_usampler, "fBorderRight", 0 );
+	SetShaderUniformVar( shImage_usampler, "fBorderBottom", 0 );
+	SetShaderUniformVar( shImage_usampler, "fBorderTop", 0 );
+
+	SetShaderUniformVar( shImage_usampler, "fBlendBorder", 0 );
+	SetShaderUniformVar( shImage_usampler, "iIsColor", 1 );
+
+
+	EnableShader(shImage_usampler, false);
+	
+	///////////////////////////////////////////////////////////
+
+	///////////////////////////////////////////////////////////
+	// Create Image Texture
+	
+	// empty texture to reset texture mapping
+	texDefault = Texture( "Empty1" );
+	SetTextureUnit( texDefault, 1 );
+
+	// Create a texture element
+	texImage = Texture( sName + "_image" );
+	
+	// Set the image as texture
+	// MipMaps are switched off. Usually, when textures are used 
+	// to make objects in a 3D-World look good, MipMaps are generated
+	// which a scaled down versions of the original texture.
+	// These smaller versions of the texture are used, when an 
+	// object is further away and thus so small that the full
+	// texture details cannot be seen in any case.
+	SetTextureImage( texImage, imgA, false /* no MipMaps */);
+	
+	// Switch texture interpolation off, so that single pixels
+	// are seen when zooming in.
+	EnableTextureInterpolate( texImage, false );
+	///////////////////////////////////////////////////////////
+
+	
+	///////////////////////////////////////////////////////////
+	// Create Draw Scene
+	// This is only a dummy scene, which allows the drawing of 
+	// elements in the same coordinate system as the image
+	scDraw = Scene( sName + "_draw" );
+
+	// Create Scene that contains all textures and shaders
+	scPre = Scene( sName + "_scene_pre" );
+	DrawToScene( scPre );
+		:texImage;
+		:shImage;
+		:shImage_usampler;
+	DrawToScene();
+	
+	// Create Scene that resets all textures and shaders
+	scPost = Scene( sName + "_scene_post" );
+	DrawToScene( scPost );
+		:texDefault;
+		:shDefault;
+	DrawToScene();
+	
+	
+	///////////////////////////////////////////////////////////
+	// Create Scene
+	scMain = Scene( sName );
+	scImage = Scene( sName + "_image" );
+	
+	lPixCnt = Size(texImage)("size");
+	lHalfPixCnt = floor(lPixCnt / 2);
+	dAspect = lPixCnt(2) / lPixCnt(1);
+	
+	// Create scene that draws plane to which image is mapped
+	scPlane = Scene( sName + "_scene_plane" );
+	DrawToScene(scPlane);
+		// Draw a plane which has the size of the image
+		// onto which the image is mapped.
+		// The color of this plane is multiplied with the 
+		// texture color. So we set it to 'white' to see
+		// the original image.
+		:White;
+		DrawPlane(  VecE3(lPixCnt/2), /* center */
+					VecE3( lPixCnt(1), 0 ), /* x-extent */
+					VecE3( 0, lPixCnt(2) ) /* y-extent */ );
+	DrawToScene();
+	
+	// Reset the current draw frame.
+	// This has the effect that entities of the scene
+	// are not affected by any frames set before.
+	// However, all scenes store the active frame when they are started
+	// and restore it, when they end.
+	EnableSceneResetFrame( scMain, true );
+	
+	SetSceneOverlay( scMain, 0, lPixCnt(1), 0, lPixCnt(2), -5, 5, true );
+	
+	// Enable picking of scene, i.e. mouse interaction with scene is enabled
+	EnableScenePick( scImage, true );
+
+	// Define which mouse button does what.
+	// A pair of a number and a boolean defines the interaction state.
+	// The number can be 1 or 2 representing the left or right mouse button.
+	// The boolean denotes whether the CTRL-key is pressed at the same time.
+	// For example, [1, true] denotes the left mouse button with CTRL pressed.
+	SetSceneAutoDragControl( scImage, 
+		[	// 1: Left, 2: Right; false: no ctrl, true: ctrl
+			[ 2, false], // Scale
+			[ 1, true ], // Rotate 1
+			[ 1, false], // Translate
+			[ 2, true ]  // Rotate 2
+		] );
+	
+	///////////////////////////////////////////////////////////////////////////////
+	/// Auto translation
+	
+	// Enable dragging of scene, i.e. if a mouse button is pressed on the scene
+	// and the mouse is moved, messages are sent to the scene.
+	EnableSceneDrag( scImage, 1 /* left mouse button */, false /* no CTRL pressed */, 
+					            true /* enabled */);
+
+	// Allow the scene to automatically react to mouse interaction for translation	
+	EnableSceneAutoTranslate( scImage, true );
+
+	// Drag in by amount mouse is moved in screen plane	
+	EnableSceneDragInScreenPlane( scImage, 1, false, true );
+	
+	// Initialize the scene drag data to zero, to center the image.
+	SetSceneDragData( scImage, 1, false, [ 0, 0, 0 ] );
+
+/*
+	// Enable the restraining of the translation to a certain region
+	EnableSceneDragRange( scImage, 1, false, true );
+	
+	// Set the allowed translation region
+	SetSceneDragRange( scImage, 1, false, 
+		[ [ -lHalfImgSize(1), lHalfImgSize(1) ], 
+		  [ 0, 0 ], 
+		  [ -lHalfImgSize(2), lHalfImgSize(2) ] ] );
+*/
+
+	///////////////////////////////////////////////////////////////////////////////
+	/// Auto scaling
+
+	// Enable dragging of scene, i.e. if a mouse button is pressed on the scene
+	// and the mouse is moved, messages are sent to the scene.
+	EnableSceneDrag( scImage, 2 /* right mouse button */, false /* no CTRL pressed */, 
+					            true /* enabled */);
+
+	// Allow the scene to automatically react to mouse interaction for scaling
+	EnableSceneAutoScale( scImage, true );
+
+	
+	// Set the factor with which the mouse movement is scaled
+	SetSceneDragFactor( scImage, 2, false, [ 1, 1, 1 ] );
+
+	// Set the basis of scaling. By default moving the mouse varies the x and z
+	// components. This can be transformed to arbitrary axes with this function. 
+	// In this case, moving the mouse away and toward the user should result 
+	// in a scaling in the x and y axes. 
+	SetSceneDragBasis( scImage, 2, false, [ VecE3(0,0,0), VecE3(0,0,0), VecE3( 1, 1, 0 ) ] );
+	
+	// Initialize the scene drag data to zero, to set scaling to unity
+	SetSceneDragData( scImage, 2, false, [ 0, 0, 0 ] );
+
+	// Set scale function to exponential scaling. The feel of the scaling
+	// is more natural in this way.		
+	SetSceneScaleFunc( scImage, "exp" );
+	
+	// Setting scaling type to 'global' always scales relative to center of viewport.
+	// If the scaling type is 'mouse', the center of scaling is the initial mouse position.
+	//SetSceneScaleType( scImage, "global" );
+	SetSceneScaleType( scImage, "mouse" );
+	
+	// Enable the restraining of the scaling to a certain range
+	EnableSceneDragRange( scImage, 2, false, true );
+	
+	// Set the allowed scaling range.
+	// Here, scaling range is set between 1/4 size and 8x size.
+	// The 'log' function is used, since the scaling function is 'exp'.
+	SetSceneDragRange( scImage, 2, false, 
+		[ [ 0, 0 ], [ 0, 0 ], [ log(0.25), log(8) ] ] );
+	
+
+	///////////////////////////////////////////////////////////////////////////////
+	// Define what is to be drawn inside the scene
+	DrawToScene( scImage );
+		// Image Rotation	
+		//:frImage;
+		
+		// Set textures and shaders
+		:scPre;
+		
+		// Draw the image plane
+		:scPlane;
+		
+		// Reset texture and shaders
+		:scPost;		
+		
+		TranslateFrame( 0, 0, 0.01 );
+		:scDraw;
+		
+	DrawToScene();
+	///////////////////////////////////////////////////////////
+	
+	DrawToScene( scMain );
+		:frImage;
+		:scImage;
+	DrawToScene();
+	
+} // end of function
+
+///////////////////////////////////////////////////////////
+
+StdGUI_ImageScene_ResetView =
+{
+	lData -> _P(1);
+	
+	scImage -> lData("scene_image");
+
+	// Initialize the scene drag data to zero, to center the image.
+	SetSceneDragData( scImage, 1, false, [ 0, 0, 0 ] );
+	SetSceneDragData( scImage, 2, false, [ 0, 0, 0 ] );
+
+}
+
+///////////////////////////////////////////////////////////
+//// Set Zoom Range
+StdGUI_ImageScene_SetZoomRange =
+{
+	lData -> _P(1);
+	
+	dMin = _P(2);
+	dMax = _P(3);
+	
+	scImage -> lData("scene_image");
+	SetSceneDragRange( scImage, 2, false, 
+		[ [ 0, 0 ], [ 0, 0 ], [ log(dMin), log(dMax) ] ] );
+
+}
+
+///////////////////////////////////////////////////////////
+//// Set Image Scalew
+StdGUI_ImageScene_SetZoom =
+{
+	lData -> _P(1);
+	
+	dZoom = _P(2);
+	
+	scImage -> lData("scene_image");
+	SetSceneDragData( scImage, 2, false, [ 0, 0, log(dZoom) ] );
+}
+
+StdGUI_ImageScene_SetViewport =
+{
+	lData -> _P(1);
+	dX = _P(2);
+	dY = _P(3);
+	dW = _P(4);
+	dH = _P(5);
+	
+	scImage -> lData("scene_image");
+	lImgSize -> lData("image_size");
+
+	SetSceneViewport(scImage, dX, dY, dW, dH);
+	SetSceneOverlay( scImage, 0, lImgSize(1), 0, lImgSize(2), -5, 5, true );
+
+}
+
+///////////////////////////////////////////////////////////
+// New image
+StdGUI_ImageScene_NewImage =
+{
+	lData -> _P(1);
+	imgA = _P(2);
+	
+	scImage -> lData("scene_image");
+	texImage -> lData("tex");
+	scPlane -> lData("scene_plane");
+	lImgSize -> lData("image_size");
+	
+	// get the shaders
+	shImage -> lData("shader_std");
+	shImage_usampler -> lData("shader_usampler");
+	SetShaderUniformVar( shImage, "iIsColor", 1);
+	EnableShader(shImage, true);
+	EnableShader(shImage_usampler, false);	
+
+	lImgSize = Size(imgA);
+	
+	SetTextureImage( texImage, imgA, false /* no MipMaps */);
+	SetSceneOverlay( scImage, 0, lImgSize(1), 0, lImgSize(2), -5, 5, true );
+
+	ClearScene( scPlane );
+	DrawToScene( scPlane );
+		// Draw a plane which has the size of the image
+		// onto which the image is mapped.
+		// The color of this plane is multiplied with the 
+		// texture color. So we set it to 'white' to see
+		// the original image.
+		:White;
+		DrawPlane(  VecE3(lImgSize/2), /* center */
+					VecE3( lImgSize(1), 0 ), /* x-extent */
+					VecE3( 0, lImgSize(2) ) /* y-extent */ );
+	DrawToScene();
+}
+
+
+
+
+///////////////////////////////////////////////////////////
+// Update image
+StdGUI_ImageScene_UpdateTexturePlane =
+{
+	lData -> _P(1);
+		
+	scPlane -> lData("scene_plane");
+	scImage -> lData("scene_image");
+	lImgSize -> lData("image_size");
+	texture -> lData("tex");
+
+	lImgSize = Size(texture)(1)(2);
+	
+	// Set the scene size to exactly match the texture size
+	SetSceneOverlay( scImage, 0, lImgSize(1), 0, lImgSize(2), -5, 5, true );
+
+	ClearScene( scPlane );
+	DrawToScene( scPlane );
+		// Draw a plane which has the size of the image
+		// onto which the image is mapped.
+		// The color of this plane is multiplied with the 
+		// texture color. So we set it to 'white' to see
+		// the original image.
+		:White;
+		DrawPlane(  VecE3(lImgSize/2), /* center */
+					VecE3( lImgSize(1), 0 ), /* x-extent */
+					VecE3( 0, lImgSize(2) ) /* y-extent */ );
+	DrawToScene();
+
+}
+
+
+
+///////////////////////////////////////////////////////////
+// Update image
+StdGUI_ImageScene_UpdateTexture =
+{
+	lData -> _P(1);
+	isColor -> _P(2);
+	isInteropTexture -> _P(3);
+
+
+	// get the shaders
+	shImage -> lData("shader_std");
+	shImage_usampler -> lData("shader_usampler");
+
+
+	SetShaderUniformVar( shImage, "iIsColor", isColor );
+	SetShaderUniformVar( shImage_usampler, "iIsColor", isColor );
+	
+	// enable the usampler shader for cuda interop textures
+	if (isInteropTexture)
+	{
+		EnableShader(shImage, false);
+		EnableShader(shImage_usampler, true);
+	}
+	else
+	{
+		EnableShader(shImage, true);
+		EnableShader(shImage_usampler, false);	
+	}
+
+
+	::StdGUI_ImageScene_UpdateTexturePlane(lData);
+}
+
+
+
+///////////////////////////////////////////////////////////
+// Update image
+StdGUI_ImageScene_UpdateImage =
+{
+	lData -> _P(1);
+	imgA = _P(2);
+	
+	// get the shaders
+	shImage -> lData("shader_std");
+	shImage_usampler -> lData("shader_usampler");
+	
+	SetShaderUniformVar( shImage, "iIsColor", 1);
+	EnableShader(shImage, true);
+	EnableShader(shImage_usampler, false);	
+	
+	SetTextureImage( lData("tex"), imgA, false /* no MipMaps */);
+}

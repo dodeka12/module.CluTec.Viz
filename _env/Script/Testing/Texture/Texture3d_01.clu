@@ -1,0 +1,85 @@
+// Test 3d-texture
+
+if ( ExecMode & EM_CHANGE)
+{
+
+	texDef = Texture("default", "tex_3d");
+	texA = Texture("A");
+	
+	
+	?tB = Tensor([0.5, 1, 2, 1, 0.5]) / 6;
+	
+	//?tB([-1, [3,1,2]],1);
+	tA = Tensor(4, [3, 5, 5, 3]);
+	tA(-2, 1, -1, -2) = 1 * tB(-1);
+	tA(-2, 2, -1, -2) = 2 * tB(-1);
+	tA(-2, 3, -1, -2) = 3 * tB(-1);
+	tA(-2, 4, -1, -2) = 2 * tB(-1);
+	tA(-2, 5, -1, -2) = 1 * tB(-1);
+	//?tA;
+	
+	SetTexture3d(texA, tA, false /* MipMap */, 1 /* Tex Unit */, true /* Normalize */);
+	SetTextureWrapType(texA, "repeat");
+	EnableTextureInterpolate(texA, true);
+	
+	shDef = Shader("Default");
+	shA = Shader("A");
+	// The vertex shader
+	sVSCode = @Shader"
+		#version 330
+	
+		in vec4 clu_in_vVertex;
+		in vec4 clu_in_vTex0;
+				
+		out SFragData
+		{
+			vec4 vTex;
+		} xFrag;
+
+		uniform mat4 clu_matModelViewProjection;
+		
+		uniform float fDepth;
+
+		void main()
+		{
+			vec4 vVertex = clu_in_vVertex;
+			
+			xFrag.vTex.xy = clu_in_vTex0.st;
+			xFrag.vTex.z = fDepth;
+			
+			gl_Position = clu_matModelViewProjection * vVertex;		
+		}
+		
+	";
+	
+	sFSCode = @Shader"
+		#version 330
+
+		in SFragData
+		{
+			vec4 vTex;
+		} xFrag;
+		
+		out vec4 vFragColor;
+
+		uniform sampler3D tex3d;
+		
+		void main()
+		{
+			vFragColor = texture(tex3d, xFrag.vTex.xyz);
+		}
+
+	";
+	
+	ShaderBuild( shA, [sVSCode], [sFSCode] );
+	shA("Var", "tex3d", texA);
+}
+
+dDepth = Slider("Depth", 0, 1, 0.01, 0);
+shA("Var", "fDepth", dDepth);
+
+:texA;
+:shA;
+DrawPlane(VecE3(0,0), VecE3(1,0), VecE3(0,1));
+:texDef;
+:shDef;

@@ -1,0 +1,41 @@
+// This example shows how texture mapping can be combined
+// with automatic aspect ratio correction. This is 
+// particularly useful for displaying text.
+// Move the visualization closer to you to see
+// the effect on the size of the texture mapped text.
+// Vary the up- and down-scaling flags to try out the 
+// various possibilities.
+
+_BGColor = Color(0.902, 0.902, 0.902);
+EnableAntiAliasing( true );
+
+DefVarsE3();
+DrawFrame( 1, "axes" );
+
+:White;
+imgText = GetTextImg( "Hello World" );
+lS = Size( imgText );
+
+SetTexture( imgText, false, true );
+
+PushFrame("texture");
+	:MGreen;
+	AutoTextureFrame( [1, 1], /* Extent of plane texture is mapped to in local coordinates */
+					  lS, /* Pixel size of texture */
+					  [0.5,0.5], /* Align factors of texture */
+					  [false, true] /* Up- and down-scaling flags */
+					 );
+	DrawPlane( id, e1, e2 );
+PopFrame("texture");
+
+frA = Frame( "A", true );
+AutoTextureFrame( frA, 
+				  [1, 1], /* Extent of plane texture is mapped to in local coordinates */
+				  lS, /* Pixel size of texture */
+				  [0.5,0.5], /* Align factors of texture */
+				  [false, true] /* Up- and down-scaling flags */
+				 );
+ScaleFrame( frA, 2, 2, 1 );
+:frA;
+
+DrawSphere( 2*e1, 1 );

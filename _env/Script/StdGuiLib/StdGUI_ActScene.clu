@@ -1,0 +1,196 @@
+// Define Function to create an image scene
+StdGUI_ActScene_Create =
+{
+	// Return values:
+	// The data structure
+	lData -> _P(1);
+	
+	lData = [];
+	
+	// The scene that is made sensitive for labelling
+	scMain -> lData("scene_main");
+	
+	lEventList -> lData("event_list");
+	lEventList = [];
+	
+	// Input Values:
+	// 2. The scene to make label sensitive
+	scMain = _P(2);
+	
+	// 3. the mouse controls to listen for
+	lCtrl -> _P(3);
+	
+	// Enable general notification of script
+	EnableSceneNotify( scMain, true );
+	// Enable notification of the mouse dragging (EM_PICK_DRAG)
+	EnableSceneNotify( scMain, true, "MouseDrag" );
+	// Enable notification of mouse clicking (EM_PICK_SELECT)
+	EnableSceneNotify( scMain, true, "MouseClick" );
+
+	iCnt = Size(lCtrl);
+	i = 0;
+	loop
+	{
+		i = i + 1;
+		if ( i > iCnt ) break;
+		
+		// Enable dragging for given mouse button and key combination
+		EnableSceneDrag( scMain, lCtrl(i,1), lCtrl(i,2), true );
+	}
+}
+
+//////////////////////////////////////////////////////////
+// Register an event
+// Must define functions for elements "func_mouse" and "func_key" 
+// for this to have any effect.
+StdGUI_ActScene_AddEvent =
+{
+	lData -> _P(1);
+	
+	sEventName = _P(2);
+	sSceneName = _P(3);
+	sMouseBut = _P(4);
+	bCtrl = _P(5);
+	
+	if ( sMouseBut == "left" )
+	{
+		if ( bCtrl ) iDragType = 2;
+		else iDragType = 1;
+	}
+	else if ( sMouseBut == "right" )
+	{
+		if ( bCtrl ) iDragType = 4;
+		else iDragType = 3;
+	}	
+	else iDragType = 0;
+
+	lEventList -> lData("event_list");
+	lEvent -> lEventList(sEventName);
+	lEvent = [];
+	
+	lEvent("enabled") = true;
+	lEvent("scene_name") = sSceneName;
+	lEvent("mouse_but") = sMouseBut;
+	lEvent("key_ctrl") = bCtrl;
+	lEvent("drag_type") = iDragType;
+	lEvent("func_drag") = {};
+	lEvent("func_click") = {};
+	lEvent("func_key") = {};
+}
+
+//////////////////////////////////////////////////////////
+// Handle events
+StdGUI_ActScene_HandleEvent =
+{
+	lActScene -> _P(1);
+	
+	if ( ExecMode & EM_PICK_DRAG )
+	{
+		::StdGUI_ActScene_Event_Drag( lActScene );
+	}
+	else if ( ExecMode & EM_PICK_SELECT )
+	{
+		::StdGUI_ActScene_Event_Click( lActScene );
+	}
+	else if ( ExecMode & EM_KEYDOWN )
+	{
+		::StdGUI_ActScene_Event_Key( lActScene );
+	}
+}
+
+//////////////////////////////////////////////////////////
+// Test drag event
+
+StdGUI_ActScene_Event_Drag =
+{
+	lData -> _P(1);
+	
+	sName = PickData("name", 1);
+	iDragType = PickData( "drag", 1 );
+	
+	lEventList -> lData("event_list");
+	iCnt = Size(lEventList);
+	iIdx = 0;
+	loop
+	{
+		iIdx = iIdx + 1;
+		if ( iIdx > iCnt ) break;
+	
+		lEvent -> lEventList(iIdx, 2);
+		
+		if ( lEvent("enabled") )
+		{
+			if ( sName == lEvent("scene_name") 
+				&& iDragType == lEvent("drag_type") )
+			{
+				sEvent = PickData( "event" );
+				lEvent("func_drag")( lEvent, sEvent );
+			}
+		}
+	}	
+}
+
+//////////////////////////////////////////////////////////
+// Test click event
+
+StdGUI_ActScene_Event_Click =
+{
+	lData -> _P(1);
+	
+	sName = PickData("name", 1);
+	sBut = PickData("click");
+	bCtrl = PickData("ctrl");
+	
+	lEventList -> lData("event_list");
+	iCnt = Size(lEventList);
+	iIdx = 0;
+	loop
+	{
+		iIdx = iIdx + 1;
+		if ( iIdx > iCnt ) break;
+	
+		lEvent -> lEventList(iIdx, 2);
+		
+		if ( lEvent("enabled") )
+		{
+			if ( sName == lEvent("scene_name") 
+				&& sBut == lEvent("mouse_but") 
+				&& bCtrl == lEvent("key_ctrl") )
+			{
+				lEvent("func_click")( lEvent );
+			}
+		}
+	}	
+}
+
+
+//////////////////////////////////////////////////////////
+// Test key event
+
+StdGUI_ActScene_Event_Key =
+{
+	lData -> _P(1);
+	
+	lName = PickData( "name" );
+	sKey = ToolName;
+
+	lEventList -> lData("event_list");
+	iCnt = Size(lEventList);
+	iIdx = 0;
+	loop
+	{
+		iIdx = iIdx + 1;
+		if ( iIdx > iCnt ) break;
+	
+		lEvent -> lEventList(iIdx, 2);
+		
+		if ( lEvent("enabled") )
+		{
+			if ( sum(lName == lEvent("scene_name")) ) 
+			{
+				lEvent("func_key")( lEvent, sKey, lName );
+			}
+		}
+	}	
+}
+

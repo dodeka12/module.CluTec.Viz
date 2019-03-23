@@ -1,0 +1,25 @@
+//# include "Shader_Func_02.clu"
+
+if ( ExecMode & EM_CHANGE )
+{
+	shPing = Shader_Blob_Ping_Image();
+	shDefault = Shader( "Default" );
+	
+	?ReadImage("MyBut.png", imgA);
+	texImg = Texture("Image");
+	SetTextureImage( texImg, imgA);
+	
+	shPing("Var", "fPi", Pi );
+	shPing("Var", "colMain", Blue );
+	shPing("Var", "texImg", texImg );
+}
+
+
+:AnimShader(shPing, "fTime", "fTimeStep" );
+:texImg;
+:shPing;
+DrawPlane( VecE3(0,-1.5), VecE3( 1, 0 ), VecE3(0,1) );
+:shDefault;
+
+
+
